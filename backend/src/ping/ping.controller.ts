@@ -13,6 +13,8 @@ export class PingController {
    */
   @Get()
   send(): Ping {
+    // eslint-disable-next-line
+    console.log(process.env)
     return { ping: 'PONG' };
   }
 }
