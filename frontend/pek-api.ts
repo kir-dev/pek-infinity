@@ -1,3 +1,5 @@
+'use client';
+
 import { DefaultApi, Configuration } from '../pek-client';
 
 function getBasePath(): string {
