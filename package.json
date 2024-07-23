@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "concurrently \"yarn workspace backend run build:watch\" \"yarn workspace frontend run dev\" \"yarn run watch:openapi\"",
     "build": "yarn workspaces run build",
-    "lint": "npx eslint .",
+    "lint": "yarn workspaces run lint",
     "format": "npx prettier -c --write .",
     "generate": "npx @openapitools/openapi-generator-cli generate -i ./backend/openapi.yaml -g typescript-axios -o ./pek-client",
     "watch:openapi": "nodemon --watch backend/openapi.yaml --exec \"yarn generate\""
