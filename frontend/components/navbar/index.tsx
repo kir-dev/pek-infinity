@@ -1,8 +1,10 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
+import Link from 'next/link';
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import * as React from 'react';
+
 import {
   NavigationMenuItem,
   NavigationMenuLink,
@@ -11,10 +13,11 @@ import {
   NavigationMenuViewport,
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
-import { Input } from '../ui/input';
+
 import { Button } from '../ui/button';
-import { WidgetDropdown } from './widget-dropdown';
+import { Input } from '../ui/input';
 import { MatrixDropdown } from './matrix-dropdown';
+import { WidgetDropdown } from './widget-dropdown';
 
 export interface DropdownLink {
   title: string;
@@ -26,14 +29,12 @@ const matrixComponents: DropdownLink[] = [
   {
     title: 'Alert Dialog',
     href: '/',
-    description:
-      'A modal dialog that interrupts the user with important content and expects a response.',
+    description: 'A modal dialog that interrupts the user with important content and expects a response.',
   },
   {
     title: 'Hover Card',
     href: '/',
-    description:
-      'For sighted users to preview content available behind a link.',
+    description: 'For sighted users to preview content available behind a link.',
   },
   {
     title: 'Progress',
@@ -49,8 +50,7 @@ const matrixComponents: DropdownLink[] = [
   {
     title: 'Tabs',
     href: '/',
-    description:
-      'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
+    description: 'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
   },
   {
     title: 'Tooltip',
@@ -78,30 +78,25 @@ const widgetComponents: DropdownLink[] = [
   },
 ];
 
-export const Navbar = React.forwardRef<
-  React.ElementRef<typeof NavigationMenuPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
+export const Navbar = forwardRef<
+  ElementRef<typeof NavigationMenuPrimitive.Root>,
+  ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
 >(({ className, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
-    className={cn(
-      'relative z-10 flex w-screen flex-1 items-center justify-between sm:p-4',
-      className,
-    )}
+    className={cn('relative z-10 flex w-screen flex-1 items-center justify-between sm:p-4', className)}
     {...props}
   >
     <NavigationMenuList>
       <NavigationMenuItem>
-        <Link href="/" legacyBehavior passHref>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-            PÉK
-          </NavigationMenuLink>
+        <Link href='/' legacyBehavior passHref>
+          <NavigationMenuLink className={navigationMenuTriggerStyle()}>PÉK</NavigationMenuLink>
         </Link>
       </NavigationMenuItem>
       <NavigationMenuItem>
-        <div className="flex w-full max-w-sm items-center space-x-2">
-          <Input type="text" />
-          <Button type="submit">Search</Button>
+        <div className='flex w-full max-w-sm items-center space-x-2'>
+          <Input type='text' />
+          <Button type='submit'>Search</Button>
         </div>
       </NavigationMenuItem>
     </NavigationMenuList>
@@ -109,15 +104,11 @@ export const Navbar = React.forwardRef<
     <NavigationMenuList>
       <WidgetDropdown components={widgetComponents} />
       <MatrixDropdown components={matrixComponents} />
-      <Link href="/" legacyBehavior passHref>
-        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-          ⚙️
-        </NavigationMenuLink>
+      <Link href='/' legacyBehavior passHref>
+        <NavigationMenuLink className={navigationMenuTriggerStyle()}>⚙️</NavigationMenuLink>
       </Link>
     </NavigationMenuList>
-    <NavigationMenuViewport className="fixed right-0">
-      {/* navigation dropdown content */}
-    </NavigationMenuViewport>
+    <NavigationMenuViewport className='fixed right-0'>{/* navigation dropdown content */}</NavigationMenuViewport>
   </NavigationMenuPrimitive.Root>
 ));
 Navbar.displayName = 'Navbar';

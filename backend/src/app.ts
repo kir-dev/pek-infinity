@@ -1,14 +1,16 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+
+import { Logger, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { type NestExpressApplication } from '@nestjs/platform-express';
-import { Logger, VersioningType } from '@nestjs/common';
 import {
-  SwaggerModule,
   DocumentBuilder,
   type OpenAPIObject,
+  SwaggerModule,
 } from '@nestjs/swagger';
 import yaml from 'yaml';
+
 import { AppModule } from './app.module';
 
 export async function bootstrap(): Promise<{

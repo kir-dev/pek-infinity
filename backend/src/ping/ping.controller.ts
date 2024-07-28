@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+
 import { Ping } from './entities/ping.entity';
 
 @Controller('ping')
