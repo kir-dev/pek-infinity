@@ -1,4 +1,4 @@
-import { DefaultApi, Configuration } from '../pek-client';
+import { Configuration, DefaultApi } from '../pek-client';
 
 function getBasePath(): string {
   if (process.env.NEXT_PUBLIC_API_URL) {
