@@ -1,0 +1,237 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Group {
+  id                      String           @id @default(cuid())
+  name                    String
+  description             String
+  parent                  Group?           @relation("ParentGroup", fields: [parentId], references: [id])
+  parentId                String?
+  children                Group[]          @relation("ParentGroup")
+  isCommunity             Boolean // kor-e
+  isResort                Boolean // reszort-e
+  isTaskForce             Boolean // task force-e
+  hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
+  isArchived              Boolean
+  memberships             Membership[]
+  awardGuideLines         AwardGuideline[]
+  // derived avaiableFlares String[]
+  policies                Policy[]
+
+  Scoreboard               Scoreboard[]
+  AwardGuideLineCollection AwardGuideLineCollection[]
+  Role                     Role[]
+}
+
+model Membership {
+  id               String             @id @default(cuid())
+  user             User               @relation(fields: [userId], references: [id])
+  userId           String
+  group            Group              @relation(fields: [groupId], references: [id])
+  groupId          String
+  isArchived       Boolean
+  flairs           String[]
+  membershipStatus MembershipStatus[]
+}
+
+model MembershipStatus {
+  id           String     @id @default(cuid())
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+  status       String
+  createdAt    DateTime   @default(now())
+  endedAt      DateTime?
+}
+
+model User {
+  id          String       @id @default(cuid())
+  //humanId     String//TODO: add history so later someone else cannot use the same humanId
+  email       String       @unique
+  firstName   String
+  lastName    String
+  nickname    String
+  password    String
+  isArchived  Boolean
+  memberships Membership[]
+  roles       RoleOnUser[]
+
+  Scoreboard        Scoreboard[]        @relation(map: "fk807db188b31cf015")
+  EntryAwardRequest EntryAwardRequest[]
+  PointAwardRequest PointAwardRequest[]
+  PointAwardHistory PointAwardHistory[]
+}
+
+model AwardGuideLineCollection {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   String
+
+  Scoreboard     Scoreboard[]
+  AwardGuideline AwardGuideline[]
+}
+
+model AwardGuideline {
+  id                         String                   @id @default(cuid())
+  name                       String // 0 times NULL, Should frontend list these values?
+  description                String
+  postCategory               PostCategory
+  maxPerMember               Int
+  maxPerGuideline            Int
+  awardGuideLineCollection   AwardGuideLineCollection @relation(fields: [awardGuideLineCollectionId], references: [id])
+  awardGuideLineCollectionId String
+
+  Scoreboard        Scoreboard[]
+  Group             Group?              @relation(fields: [groupId], references: [id])
+  groupId           String?
+  PointAwardRequest PointAwardRequest[]
+}
+
+/// * @memberof {AwardGuideline}
+enum PostCategory {
+  WORK
+  RESPONSIBILITY
+}
+
+enum EvaluationStatus {
+  NOT_SUBMITTED
+  NOT_YET_REVIEWED
+  ACCEPTED
+  REJECTED
+}
+
+model Scoreboard {
+  id                         String                   @id @default(cuid())
+  entryRequestsStatus        EvaluationStatus         @default(NOT_SUBMITTED)
+  pointRequestsStatus        EvaluationStatus         @default(NOT_SUBMITTED)
+  createdAt                  DateTime?                @default(now())
+  scoringSeasonId            String
+  justification              String // koros beszamolo
+  lastEvaulation             DateTime?                @map("last_evaulation") @db.Timestamp(6) // 50% is NULL
+  lastModification           DateTime?                @map("last_modification") @db.Timestamp(6)
+  reviewerUserId             String?
+  groupId                    String
+  group                      Group                    @relation(fields: [groupId], references: [id])
+  nextScoreboardId           String?
+  nextScoreboard             Scoreboard?              @relation("evaluationsToevaluations", fields: [nextScoreboardId], references: [id])
+  thePrevVersion             Scoreboard[]             @relation("evaluationsToevaluations")
+  /// When RVT members change the status of the report, they can leave a message here.
+  /// The message is also added as {EvaluationMessage}
+  reportEvaluationMessage    String?                  @map("explanation") // 70% is NULL
+  isConsidered               Boolean                  @default(false) @map("is_considered")
+  reviewer                   User?                    @relation(fields: [reviewerUserId], references: [id])
+  principles                 AwardGuideline[]
+  awardGuideLineCollection   AwardGuideLineCollection @relation(fields: [awardGuideLineCollectionId], references: [id])
+  awardGuideLineCollectionId String
+
+  pointAwardRequests PointAwardRequest[]
+  entryAwardRequests EntryAwardRequest[]
+  PointAwardHistory  PointAwardHistory[]
+}
+
+model EntryAwardRequest {
+  id            String         @id @default(cuid())
+  award         EntryAwardType @default(KULSOS_DO) @map("entry_type")
+  justification String // 185 NULL and 100000 empty string, group leader can explain the work of the awardee
+  scoreboardId  String         @map("evaluation_id")
+  awardeeId     String         @map("user_id")
+  //could be Membership
+  awardee       User           @relation(fields: [awardeeId], references: [id])
+  scoreboard    Scoreboard     @relation(fields: [scoreboardId], references: [id])
+
+  @@unique([awardeeId, scoreboardId])
+}
+
+/// * https://vik.wiki/GYIK_-_Sch%C3%B6nherz#K.C3.B6z.C3.A9let
+enum EntryAwardType {
+  KULSOS_DO         @map("KDO")
+  KOLLEGIUMI_BELEPO @map("KB")
+  ALLANDO_BELEPO    @map("AB")
+}
+
+model PointAwardRequest {
+  id           String         @id @default(cuid())
+  point        Int
+  scoreboardId String         @map("evaluation_id")
+  awardeeId    String         @map("user_id")
+  guidelineId  String
+  guideline    AwardGuideline @relation(fields: [guidelineId], references: [id])
+  explanations Json
+  scoreboard   Scoreboard     @relation(fields: [scoreboardId], references: [id])
+  awardee      User           @relation(fields: [awardeeId], references: [id])
+
+  @@unique([scoreboardId, awardeeId])
+}
+
+model PointAwardHistory {
+  id           String     @id @default(cuid())
+  awardeeId    String
+  point        Int
+  awarded      User       @relation(fields: [awardeeId], references: [id])
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  scoreboardId String
+  // TODO: calculate point automatically
+
+  @@unique([awardeeId, scoreboardId])
+  @@map("point_histories")
+}
+
+model Permission {
+  id         String           @id @default(cuid())
+  action     PermissionAction
+  resourceId String
+  policy     Policy           @relation(fields: [policyId], references: [id])
+  policyId   String
+}
+
+enum PermissionAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+}
+
+model Policy {
+  id          String         @id @default(cuid())
+  groupId     String
+  group       Group          @relation(fields: [groupId], references: [id])
+  name        String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  permissions Permission[]
+  roles       RoleOnPolicy[]
+}
+
+model Role {
+  id          String         @id @default(cuid())
+  name        String
+  description String
+  group       Group          @relation(fields: [groupId], references: [id])
+  groupId     String
+  policies    RoleOnPolicy[]
+  users       RoleOnUser[]
+}
+
+model RoleOnPolicy {
+  role     Role   @relation(fields: [roleId], references: [id])
+  roleId   String
+  policy   Policy @relation(fields: [policyId], references: [id])
+  policyId String
+
+  @@id([roleId, policyId])
+}
+
+model RoleOnUser {
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@id([userId, roleId])
+}
