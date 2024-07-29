@@ -1,0 +1,174 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Group {
+  id                      String           @id @default(cuid())
+  name                    String
+  description             String
+  parent                  Group?           @relation("ParentGroup", fields: [parentId], references: [id])
+  parentId                String?
+  children                Group[]          @relation("ParentGroup")
+  isCommunity             Boolean // kor-e
+  isResort                Boolean // reszort-e
+  isTaskForce             Boolean // task force-e
+  hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
+  isArchived              Boolean
+  memberships             Membership[]
+  awardGuideLines         AwardGuideline[]
+  // derived avaiableFlares String[]
+  policies                Policy[]
+}
+
+model Membership {
+  id               String             @id @default(cuid())
+  user             User               @relation(fields: [userId], references: [id])
+  userId           String
+  group            Group              @relation(fields: [groupId], references: [id])
+  groupId          String
+  isArchived       Boolean
+  flairs           String[]
+  membershipStatus MembershipStatus[]
+}
+
+model MembershipStatus {
+  id           String     @id @default(cuid())
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+  status       String
+  createdAt    DateTime   @default(now())
+  endedAt      DateTime?
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  firstName   String
+  lastName    String
+  nickname    String
+  password    String
+  isArchived  Boolean
+  memberships Membership[]
+  roles       RoleOnUser[]
+}
+
+model AwardGuideline {
+  id              String       @id @default(cuid())
+  group           Group        @relation(fields: [groupId], references: [id])
+  groupId         String
+  createdAt       DateTime     @default(now())
+  name            String // 0 times NULL, Should frontend list these values?
+  description     String
+  postCategory    PostCategory
+  maxPerMember    Int
+  maxPerGuideline Int
+  scoreboard      Scoreboard   @relation(fields: [])
+  scoreboardId    Scoreboard
+}
+
+/// * @memberof {AwardGuideline}
+enum PostCategory {
+  WORK
+  RESPONSIBILITY
+}
+
+enum EvaluationStatus {
+  NOT_SUBMITTED
+  NOT_YET_REVIEWED
+  ACCEPTED
+  REJECTED
+}
+
+model Scoreboard {
+  id                      String           @id @default(cuid())
+  entryRequestsStatus     EvaluationStatus @default(NOT_SUBMITTED)
+  pointRequestsStatus     EvaluationStatus @default(NOT_SUBMITTED)
+  createdAt               DateTime?        @default(now())
+  scoringSeasonId         String
+  justification           String // koros beszamolo
+  lastEvaulation          DateTime?        @map("last_evaulation") @db.Timestamp(6) // 50% is NULL
+  lastModification        DateTime?        @map("last_modification") @db.Timestamp(6)
+  reviewerUserId          String?
+  groupId                 String
+  group                   Group            @relation(fields: [groupId], references: [id])
+  nextScoreboardId        String?
+  nextScoreboard          Scoreboard?      @relation(fields: [nextScoreboardId], references: [id])
+  /// When RVT members change the status of the report, they can leave a message here.
+  /// The message is also added as {EvaluationMessage}
+  reportEvaluationMessage String?          @map("explanation") // 70% is NULL
+  isConsidered            Boolean          @default(false) @map("is_considered")
+  reviewer                User?            @relation("evaluations_reviewer_user_idTousers", fields: [reviewerUserId], references: [internalId], onDelete: NoAction, onUpdate: NoAction, map: "fk807db188b31cf015")
+  principles              AwardGuideline[]
+
+  pointAwardRequests PointAwardRequest[]
+  entryAwardRequests EntryAwardRequest[]
+  nextVersion        GroupReport?        @relation("evaluationsToevaluations", fields: [nextVersionId], references: [id], onUpdate: NoAction, map: "fk_next_version")
+  thePrevVersion     GroupReport[]       @relation("evaluationsToevaluations")
+
+  // GETTER: accepted: self.pointRequest.accepted && !nextVersion
+  // GETTER: discussion: EvaluationMessage[] { groupId: self.id, semester: self.semester }
+  // SETTER: update_last_change: self.lastModification = now()
+  @@unique([groupId, semester, nextVersionId], map: "unique_idx")
+  @@index([semester], map: "ert_semester_idx")
+  @@index([nextVersionId], map: "next_version_idx")
+  @@map("evaluations")
+}
+
+model Permission {
+  id         String           @id @default(cuid())
+  action     PermissionAction
+  resourceId String
+  policy     Policy           @relation(fields: [policyId], references: [id])
+  policyId   String
+}
+
+enum PermissionAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+}
+
+model Policy {
+  id          String         @id @default(cuid())
+  groupId     String
+  group       Group          @relation(fields: [groupId], references: [id])
+  name        String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  permissions Permission[]
+  roles       RoleOnPolicy[]
+}
+
+model Role {
+  id          String         @id @default(cuid())
+  name        String
+  description String
+  group       Group          @relation(fields: [groupId], references: [id])
+  groupId     String
+  policies    RoleOnPolicy[]
+  users       RoleOnUser[]
+}
+
+model RoleOnPolicy {
+  role     Role   @relation(fields: [roleId], references: [id])
+  roleId   String
+  policy   Policy @relation(fields: [policyId], references: [id])
+  policyId String
+
+  @@id([roleId, policyId])
+}
+
+model RoleOnUser {
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@id([userId, roleId])
+}
