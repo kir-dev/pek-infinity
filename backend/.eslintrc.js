@@ -1,9 +1,7 @@
-/** 
-@type
- {import('eslint').Linter.Config}
- */
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   root: true,
+  ignorePatterns: ['**/dist/*', '**/node_modules/*', '.eslintrc.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
@@ -20,7 +18,9 @@ module.exports = {
     node: true,
     jest: true,
   },
-  rules: {},
+  rules: {
+    'no-console': 'warn',
+  },
   overrides: [
     {
       rules: { '@typescript-eslint/no-extraneous-class': 'off' },
@@ -31,6 +31,7 @@ module.exports = {
         '@typescript-eslint/no-unsafe-return': 'off',
         '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
       },
       files: './test/*.e2e-{spec,test}.{t,j}s',
     },

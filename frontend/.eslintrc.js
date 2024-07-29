@@ -17,7 +17,11 @@ module.exports = {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
   },
-  rules: {},
+  rules: {
+    // If running eslint from project root, this rule would search for pages in the root directory
+    // https://github.com/vercel/next.js/discussions/24254#discussioncomment-947024
+    '@next/next/no-html-link-for-pages': [2, `${__dirname}/pages`],
+  },
   overrides: [
     {
       rules: {
