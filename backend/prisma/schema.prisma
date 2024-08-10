@@ -7,6 +7,91 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
+  // -- unique identifiers --
+  internalId String @id @default(cuid())
+  humanId    String @unique //TODO: add history so later someone else cannot use the same humanId
+  email      String @unique
+  authSchId  String @unique
+
+  // -- non-unique identifiers --
+  firstName              String
+  lastName               String
+  nickname               String
+  isArchived             Boolean
+  cellPhone              String
+  homeAddress            String
+  dateOfBirth            DateTime               @db.Date()
+  room                   String
+  dormitory              Dormitory              @default(UNKNOWN)
+  gender                 Gender                 @default(UNKNOWN)
+  studentStatus          StudentStatus          @default(UNKNOWN)
+  createdAt              DateTime?              @default(now())
+  lastLogin              DateTime?
+  memberships            Membership[]
+  roles                  RoleOnUser[]
+  reviewedScoreboards    Scoreboard[]
+  entryAwardRequests     EntryAwardRequest[]
+  pointAwardRequests     PointAwardRequest[]
+  pointAwardHistories    PointAwardHistory[]
+  externalAccounts       ExternalAccountLink[]
+  sensitiveInfoPrivacies SensitiveInfoPrivacy[]
+}
+
+enum Dormitory {
+  KARMAN
+  TETENY
+  SCH
+  BAROSS
+  BERCSENYI
+  VASARHELYI
+  EXTERNAL
+  UNKNOWN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum StudentStatus {
+  ACTIVE
+  GRADUATED
+  OTHER
+  UNKNOWN
+}
+
+model ExternalAccountLink {
+  id          String @id @default(cuid())
+  protocol    String
+  accountName String
+  ownerId     String
+  owner       User   @relation(fields: [ownerId], references: [internalId])
+}
+
+/// * User can control which profile attrs are sensitive for public display
+model SensitiveInfoPrivacy {
+  id            String                 @id @default(cuid())
+  attributeName SensitiveInfoAttribute
+  visible       Boolean                @default(false)
+  ownerId       String
+  owner         User                   @relation(fields: [ownerId], references: [internalId])
+}
+
+/// * List of attributes that can be hidden from public view
+/// * @memberof {SensitiveInfoPrivacy}
+enum SensitiveInfoAttribute {
+  CELL_PHONE
+  EMAIL
+  WEBPAGE
+  ROOM_NUMBER
+  GENDER
+  HOME_ADDRESS
+  DATE_OF_BIRTH
+}
+
 model Group {
   id                      String           @id @default(cuid())
   name                    String
@@ -19,6 +104,7 @@ model Group {
   isTaskForce             Boolean // task force-e
   hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
   isArchived              Boolean
+  purpose                 GroupPurpose
   memberships             Membership[]
   awardGuideLines         AwardGuideline[]
   // derived avaiableFlares String[]
@@ -29,9 +115,30 @@ model Group {
   Role                     Role[]
 }
 
+/// * @memberof {Group}
+enum GroupPurpose {
+  UNKNOWN
+  OLD // @map("old")
+  COMMITTEE // @map("bizottság")
+  PARTY // @map("bulis")
+  CIRCLE // @map("csoport")
+  D // @map("D")
+  ELLIPSE // @map("ellipszis")
+  A_CLASS // @map("évfolyam")
+  GROUP // @map("Kor")
+  CULTURE // @map("kultur")
+  PROJECT // @map("projekt")
+  EVENT // @map("rendezveny")
+  RESORT // @map("reszort")
+  SPORT1 // @map("sport")
+  PROFESSIONAL // @map("szakmai kör")
+  FLOOR // @map("szint")
+  SERVICE // @map("szolgáltató kör")
+}
+
 model Membership {
   id               String             @id @default(cuid())
-  user             User               @relation(fields: [userId], references: [id])
+  user             User               @relation(fields: [userId], references: [internalId])
   userId           String
   group            Group              @relation(fields: [groupId], references: [id])
   groupId          String
@@ -47,24 +154,6 @@ model MembershipStatus {
   status       String
   createdAt    DateTime   @default(now())
   endedAt      DateTime?
-}
-
-model User {
-  id          String       @id @default(cuid())
-  //humanId     String//TODO: add history so later someone else cannot use the same humanId
-  email       String       @unique
-  firstName   String
-  lastName    String
-  nickname    String
-  password    String
-  isArchived  Boolean
-  memberships Membership[]
-  roles       RoleOnUser[]
-
-  Scoreboard        Scoreboard[]        @relation(map: "fk807db188b31cf015")
-  EntryAwardRequest EntryAwardRequest[]
-  PointAwardRequest PointAwardRequest[]
-  PointAwardHistory PointAwardHistory[]
 }
 
 model AwardGuideLineCollection {
@@ -125,7 +214,7 @@ model Scoreboard {
   /// The message is also added as {EvaluationMessage}
   reportEvaluationMessage    String?                  @map("explanation") // 70% is NULL
   isConsidered               Boolean                  @default(false) @map("is_considered")
-  reviewer                   User?                    @relation(fields: [reviewerUserId], references: [id])
+  reviewer                   User?                    @relation(fields: [reviewerUserId], references: [internalId])
   principles                 AwardGuideline[]
   awardGuideLineCollection   AwardGuideLineCollection @relation(fields: [awardGuideLineCollectionId], references: [id])
   awardGuideLineCollectionId String
@@ -142,7 +231,7 @@ model EntryAwardRequest {
   scoreboardId  String         @map("evaluation_id")
   awardeeId     String         @map("user_id")
   //could be Membership
-  awardee       User           @relation(fields: [awardeeId], references: [id])
+  awardee       User           @relation(fields: [awardeeId], references: [internalId])
   scoreboard    Scoreboard     @relation(fields: [scoreboardId], references: [id])
 
   @@unique([awardeeId, scoreboardId])
@@ -164,7 +253,7 @@ model PointAwardRequest {
   guideline    AwardGuideline @relation(fields: [guidelineId], references: [id])
   explanations Json
   scoreboard   Scoreboard     @relation(fields: [scoreboardId], references: [id])
-  awardee      User           @relation(fields: [awardeeId], references: [id])
+  awardee      User           @relation(fields: [awardeeId], references: [internalId])
 
   @@unique([scoreboardId, awardeeId])
 }
@@ -173,7 +262,7 @@ model PointAwardHistory {
   id           String     @id @default(cuid())
   awardeeId    String
   point        Int
-  awarded      User       @relation(fields: [awardeeId], references: [id])
+  awarded      User       @relation(fields: [awardeeId], references: [internalId])
   scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
   scoreboardId String
   // TODO: calculate point automatically
@@ -230,7 +319,7 @@ model RoleOnPolicy {
 model RoleOnUser {
   role   Role   @relation(fields: [roleId], references: [id])
   roleId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [internalId])
   userId String
 
   @@id([userId, roleId])
