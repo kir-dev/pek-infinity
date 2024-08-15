@@ -15,7 +15,7 @@ jobs:
         component: [backend, frontend]
 
     name: ESLint Check for ${{ matrix.component }}
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
