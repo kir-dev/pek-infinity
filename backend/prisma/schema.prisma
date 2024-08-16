@@ -129,8 +129,7 @@ model Group {
   memberships             Membership[]
   guidelines              GuidelineCollection[]
   scoreboards             Scoreboard[]
-  // calculated avaiableFlares String[]
-  //   terms       GroupTerm[]          
+  // calculated avaiableFlares String[]       
 }
 
 enum GroupPurpose {
@@ -153,16 +152,6 @@ enum GroupPurpose {
   SERVICE // @map("szolgáltató kör")
 }
 
-// model GroupTerm {
-//   groupId    Int
-//   group      Group                 @relation(fields: [groupId], references: [id])
-//   termId     String
-//   termObj    Semester              @relation(fields: [termId], references: [name])
-//   guidelines GuidelineCollection[]
-
-//   @@id([groupId, termId])
-// }
-
 model Membership {
   id          String              @id @default(cuid())
   userId      String
@@ -184,7 +173,6 @@ model GuidelineCollection {
   termId      String
   semesterId  String
   semester    Semester     @relation(fields: [semesterId], references: [name])
-  //   groupTerm   GroupTerm    @relation(fields: [groupId, termId], references: [groupId, termId])
   guidelines  Guideline[]
   scoreboards Scoreboard[]
 }
@@ -339,7 +327,6 @@ model Role {
 
 model Semester {
   name              String                @id
-  //   groupTerm         GroupTerm[]
   guidelines        GuidelineCollection[]
   scoreboards       Scoreboard[]
   EntryAwardRequest EntryAwardRequest[]
