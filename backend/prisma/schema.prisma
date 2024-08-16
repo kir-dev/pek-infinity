@@ -345,6 +345,19 @@ model Semester {
   EntryAwardRequest EntryAwardRequest[]
 }
 
+model SystemAttributes {
+  name  SystemAttributeKey @id
+  value String             @db.VarChar(255)
+}
+
+enum SystemAttributeKey {
+  SEMESTER
+  NEWBIE_PERIOD
+  LAST_LOG_SENT
+  MAX_POINT_FOR_SEMESTER
+  EVALUATION_PERIOD
+}
+
 model Notification {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
