@@ -9,12 +9,10 @@ generator client {
 
 model User {
   // -- unique identifiers --
-  internalId String @id @default(cuid())
-  humanId    String @unique //TODO: add history so later someone else cannot use the same humanId
-  email      String @unique
-  authSchId  String @unique
-
-  // -- non-unique identifiers --
+  id                     String                 @id @default(cuid())
+  authSchId              String                 @unique
+  usernames              Username[]
+  // -- personal data --
   firstName              String
   lastName               String
   nickname               String
@@ -29,16 +27,23 @@ model User {
   createdAt              DateTime?              @default(now())
   lastLogin              DateTime?
   memberships            Membership[]
-  roles                  RoleOnUser[]
-  reviewedScoreboards    Scoreboard[]
-  entryAwardRequests     EntryAwardRequest[]
-  pointAwardRequests     PointAwardRequest[]
-  pointAwardHistories    PointAwardHistory[]
+  roles                  Role[]
+  requestedEntryAwards   EntryAwardRequest[]    @relation("EntryAwardRequester")
+  evaluatedPointAwards   Evaluation[]
+  evaluatedEntryAwards   EntryAwardRequest[]    @relation("EntryAwardEvaluator")
   externalAccounts       ExternalAccountLink[]
   sensitiveInfoPrivacies SensitiveInfoPrivacy[]
+  recievedNotifications  Notification[]         @relation("recipient")
+  sentNotifications      Notification[]         @relation("sender")
+  entries                EntryAwardRequest[]
+  points                 PointHistory[]
+}
 
-  recievedNotifications Notification[] @relation("recipient")
-  sentNotifications     Notification[] @relation("sender")
+model Username {
+  humanId   String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
 
 enum Dormitory {
@@ -71,7 +76,7 @@ model ExternalAccountLink {
   protocol    ExternalAccountProtocol
   accountName String
   ownerId     String
-  owner       User                    @relation(fields: [ownerId], references: [internalId])
+  owner       User                    @relation(fields: [ownerId], references: [id])
 }
 
 enum ExternalAccountProtocol {
@@ -95,7 +100,7 @@ model SensitiveInfoPrivacy {
   attributeName SensitiveInfoAttribute
   visible       Boolean                @default(false)
   ownerId       String
-  owner         User                   @relation(fields: [ownerId], references: [internalId])
+  owner         User                   @relation(fields: [ownerId], references: [id])
 }
 
 /// * List of attributes that can be hidden from public view
@@ -111,130 +116,166 @@ enum SensitiveInfoAttribute {
 }
 
 model Group {
-  id                      String           @id @default(cuid())
-  name                    String
+  id                      String                @id @default(cuid())
+  name                    String                @unique
   description             String
-  parent                  Group?           @relation("ParentGroup", fields: [parentId], references: [id])
   parentId                String?
-  children                Group[]          @relation("ParentGroup")
+  purpose                 GroupPurpose
+  parent                  Group?                @relation("ParentGroup", fields: [parentId], references: [id])
+  children                Group[]               @relation("ParentGroup")
   isCommunity             Boolean // kor-e
   isResort                Boolean // reszort-e
   isTaskForce             Boolean // task force-e
   hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
   isArchived              Boolean
   memberships             Membership[]
-  awardGuideLines         AwardGuideline[]
-  // derived avaiableFlares String[]
-  policies                Policy[]
+  guidelines              GuidelineCollection[]
+  scoreboards             Scoreboard[]
+  // calculated avaiableFlares String[]       
+}
 
-  scoreboards               Scoreboard[]
-  awardGuideLineCollections AwardGuideLineCollection[]
-  roles                     Role[]
-  membershipStatusTypes     MembershipStatusType[]
+enum GroupPurpose {
+  UNKNOWN
+  OLD // @map("old")
+  COMMITTEE // @map("bizottság")
+  PARTY // @map("bulis")
+  CIRCLE // @map("csoport")
+  D // @map("D")
+  ELLIPSE // @map("ellipszis")
+  YEAR_CLASS // @map("évfolyam")
+  GROUP // @map("Kor")
+  CULTURE // @map("kultur")
+  PROJECT // @map("projekt")
+  EVENT // @map("rendezveny")
+  RESORT // @map("reszort")
+  SPORT // @map("sport")
+  PROFESSIONAL // @map("szakmai kör")
+  FLOOR // @map("szint")
+  SERVICE // @map("szolgáltató kör")
 }
 
 model Membership {
-  id               String             @id @default(cuid())
-  user             User               @relation(fields: [userId], references: [internalId])
-  userId           String
-  group            Group              @relation(fields: [groupId], references: [id])
-  groupId          String
-  isArchived       Boolean
-  flairs           String[]
-  membershipStatus MembershipStatus[]
+  id          String              @id @default(cuid())
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  groupId     String
+  group       Group               @relation(fields: [groupId], references: [id])
+  flairs      String[]
+  statuses    MembershipStatus[]
+  points      PointRequest[]
+  entryAwards EntryAwardRequest[]
+
+  @@unique([userId, groupId])
+}
+
+model GuidelineCollection {
+  id          String       @id @default(cuid())
+  groupId     String
+  group       Group        @relation(fields: [groupId], references: [id])
+  termId      String
+  semesterId  String
+  semester    Semester     @relation(fields: [semesterId], references: [name])
+  guidelines  Guideline[]
+  scoreboards Scoreboard[]
+}
+
+model Guideline {
+  id              String              @id @default(cuid())
+  name            String
+  description     String
+  postCategory    PostCategory
+  maxPerMember    Int
+  maxPerGuideline Int
+  collectionId    String
+  collection      GuidelineCollection @relation(fields: [collectionId], references: [id])
+  requests        PointRequest[]
+}
+
+enum PostCategory {
+  WORK
+  RESPONSIBILITY
+}
+
+model Scoreboard {
+  id                String              @id @default(cuid())
+  guidelinesId      String
+  guidelines        GuidelineCollection @relation(fields: [guidelinesId], references: [id])
+  groupId           String
+  group             Group               @relation(fields: [groupId], references: [id])
+  semesterId        String
+  semester          Semester            @relation(fields: [semesterId], references: [name])
+  pointRequests     PointRequest[]
+  status            RequestStatus       @default(NOT_SUBMITTED)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  submitedAt        DateTime?
+  version           Int                 @default(1)
+  discussion        Json[] // { userId?: Int, message: String, createdAt: DateTime }[]
+  previousVersionId String?             @unique
+  previousVersion   Scoreboard?         @relation("ScoreboardVersions", fields: [previousVersionId], references: [id])
+  nextVersion       Scoreboard?         @relation("ScoreboardVersions")
+  evaluation        Evaluation?
+
+  @@unique([groupId, semesterId, version])
+}
+
+model PointRequest {
+  id           String     @id @default(cuid())
+  scoreboardId String
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+  guidelineId  String
+  guideline    Guideline  @relation(fields: [guidelineId], references: [id])
+  points       Int
+  discussion   Json[]
+
+  @@unique([scoreboardId, membershipId, guidelineId])
+}
+
+model Evaluation {
+  scoreboardId String     @id
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  createdAt    DateTime   @default(now())
+  evaluatorId  String
+  evaluator    User       @relation(fields: [evaluatorId], references: [id])
 }
 
 model MembershipStatus {
-  id           String               @id @default(cuid())
   membershipId String
-  membership   Membership           @relation(fields: [membershipId], references: [id])
-  status       MembershipStatusType
-  createdAt    DateTime             @default(now())
-  endedAt      DateTime?
+  membership   Membership     @relation(fields: [membershipId], references: [id])
+  start        DateTime       @default(now())
+  until        DateTime?
+  type         MembershipKind
+
+  @@id([membershipId, start, type])
 }
 
-enum MembershipStatusType {
+enum MembershipKind {
   NEWBIE //ujonc
   ACTIVE //aktiv
   FORMER //oregtag
   ARCHIVED //archivalt
 }
 
-model AwardGuideLineCollection {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  group     Group    @relation(fields: [groupId], references: [id])
-  groupId   String
-
-  Scoreboard     Scoreboard[]
-  AwardGuideline AwardGuideline[]
-}
-
-model AwardGuideline {
-  id                         String                   @id @default(cuid())
-  name                       String // 0 times NULL, Should frontend list these values?
-  description                String
-  postCategory               PostCategory
-  maxPerMember               Int
-  maxPerGuideline            Int
-  awardGuideLineCollection   AwardGuideLineCollection @relation(fields: [awardGuideLineCollectionId], references: [id])
-  awardGuideLineCollectionId String
-
-  Scoreboard        Scoreboard[]
-  Group             Group?              @relation(fields: [groupId], references: [id])
-  groupId           String?
-  PointAwardRequest PointAwardRequest[]
-}
-
-/// * @memberof {AwardGuideline}
-enum PostCategory {
-  WORK
-  RESPONSIBILITY
-}
-
-enum EvaluationStatus {
-  NOT_SUBMITTED
-  NOT_YET_REVIEWED
-  ACCEPTED
-  REJECTED
-}
-
-model Scoreboard {
-  id                         String                   @id @default(cuid())
-  entryRequestsStatus        EvaluationStatus         @default(NOT_SUBMITTED)
-  pointRequestsStatus        EvaluationStatus         @default(NOT_SUBMITTED)
-  createdAt                  DateTime?                @default(now())
-  semester                   String
-  justification              String // koros beszamolo
-  lastEvaulation             DateTime?                @map("last_evaulation") @db.Timestamp(6) // 50% is NULL
-  lastModification           DateTime?                @map("last_modification") @db.Timestamp(6)
-  reviewerUserId             String?
-  groupId                    String
-  group                      Group                    @relation(fields: [groupId], references: [id])
-  nextScoreboardId           String?
-  nextScoreboard             Scoreboard?              @relation("scoreboardToScoreboard", fields: [nextScoreboardId], references: [id])
-  thePrevVersion             Scoreboard[]             @relation("scoreboardToScoreboard")
-  reportEvaluationDiscussion Json?
-  isConsidered               Boolean                  @default(false) @map("is_considered")
-  reviewer                   User?                    @relation(fields: [reviewerUserId], references: [internalId])
-  principles                 AwardGuideline[]
-  awardGuideLineCollection   AwardGuideLineCollection @relation(fields: [awardGuideLineCollectionId], references: [id])
-  awardGuideLineCollectionId String
-
-  pointAwardRequests PointAwardRequest[]
-  entryAwardRequests EntryAwardRequest[]
-}
-
 model EntryAwardRequest {
   id            String         @id @default(cuid())
-  award         EntryAwardType @default(KULSOS_DO) @map("entry_type")
-  justification String // 185 NULL and 100000 empty string, group leader can explain the work of the awardee
-  scoreboardId  String         @map("evaluation_id")
-  scoreboard    Scoreboard     @relation(fields: [scoreboardId], references: [id])
-  awardeeId     String         @map("user_id")
-  awardee       User           @relation(fields: [awardeeId], references: [internalId])
+  type          EntryAwardType @default(KULSOS_DO)
+  justification String
+  // We save both the membership and the user to make it easier to query and make migration from v3 easier
+  membershipId  String
+  membership    Membership     @relation(fields: [membershipId], references: [id])
+  awardeeId     String
+  awardee       User           @relation(fields: [awardeeId], references: [id])
+  semesterId    String
+  semester      Semester       @relation(fields: [semesterId], references: [name])
+  status        RequestStatus  @default(NOT_SUBMITTED)
+  requesterId   String
+  requester     User           @relation("EntryAwardRequester", fields: [requesterId], references: [id])
+  evaluatorId   String
+  evaluator     User           @relation("EntryAwardEvaluator", fields: [evaluatorId], references: [id])
 
-  @@unique([awardeeId, scoreboardId])
+  @@unique([membershipId, semesterId])
 }
 
 /// * https://vik.wiki/GYIK_-_Sch%C3%B6nherz#K.C3.B6z.C3.A9let
@@ -244,69 +285,67 @@ enum EntryAwardType {
   ALLANDO_BELEPO    @map("AB")
 }
 
-model PointAwardRequest {
-  id           String         @id @default(cuid())
-  point        Int
-  awardeeId    String         @map("user_id")
-  awardee      User           @relation(fields: [awardeeId], references: [internalId])
-  guidelineId  String
-  guideline    AwardGuideline @relation(fields: [guidelineId], references: [id])
-  scoreboardId String         @map("evaluation_id")
-  scoreboard   Scoreboard     @relation(fields: [scoreboardId], references: [id])
-  discussion   Json //cellakhoz tartozo megjegyzesek
-
-  @@unique([scoreboardId, awardeeId])
+enum RequestStatus {
+  NOT_SUBMITTED
+  NOT_YET_EVALUATED
+  ACCEPTED
+  REJECTED
 }
 
-model PointAwardHistory {
-  id        String @id @default(cuid())
-  point     Int
-  awardeeId String
-  awarded   User   @relation(fields: [awardeeId], references: [internalId])
-  semester  String
-  // TODO: calculate point automatically
+model PointHistory {
+  awardeeId  String
+  awardee    User     @relation(fields: [awardeeId], references: [id])
+  semesterId String
+  semester   Semester @relation(fields: [semesterId], references: [name])
+  score      Int
 
-  @@unique([awardeeId, semester])
-  @@map("point_histories")
+  @@id([awardeeId, semesterId])
 }
 
-model Policy {
-  id          String         @id @default(cuid())
-  groupId     String
-  group       Group          @relation(fields: [groupId], references: [id])
-  name        String
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  permissions Json
-  roles       RoleOnPolicy[]
+enum RoleCategory {
+  // a public/baseline access level
+  // ideally there should be only one role with this category, assigned to everyone
+  GLOBAL
+
+  // managing an individual user's profile
+  // typically assigned to the user themselves
+  PROFILE
+
+  // Permissions automatically assigned by the system based on special factors
+  // e.g. derived from student status
+  SYSTEM_DERIVED
+
+  // assigned based on group memberships
+  // e.g. kir-dev active member, kir-dev old member, kir-dev newbie
+  GROUP_DERIVED
+
+  // manually assigned by the admin or a statement
+  STATEMENT_AUTHORIZED
+
+  // generated by some user interactions, eg.: sharing a document
+  USER_GENERATED
+
+  // a catch-all for everything else such as experimental features
+  OTHER
 }
 
 model Role {
-  id          String         @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
-  description String
-  group       Group          @relation(fields: [groupId], references: [id])
-  groupId     String
-  policies    RoleOnPolicy[]
-  users       RoleOnUser[]
+  category    RoleCategory
+  permissions Json[] // {resource: string, create: b}
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  expiration  DateTime?
+  users       User[]
 }
 
-model RoleOnPolicy {
-  role     Role   @relation(fields: [roleId], references: [id])
-  roleId   String
-  policy   Policy @relation(fields: [policyId], references: [id])
-  policyId String
-
-  @@id([roleId, policyId])
-}
-
-model RoleOnUser {
-  role   Role   @relation(fields: [roleId], references: [id])
-  roleId String
-  user   User   @relation(fields: [userId], references: [internalId])
-  userId String
-
-  @@id([userId, roleId])
+model Semester {
+  name               String                @id
+  guidelines         GuidelineCollection[]
+  scoreboards        Scoreboard[]
+  entryAwardRequests EntryAwardRequest[]
+  pointHistories     PointHistory[]
 }
 
 model SystemAttributes {
@@ -329,7 +368,7 @@ model Notification {
   seen        Boolean  @default(false)
   link        String
   recipientId String
-  recipient   User     @relation("recipient", fields: [recipientId], references: [internalId])
+  recipient   User     @relation("recipient", fields: [recipientId], references: [id])
   senderId    String?
-  sender      User?    @relation("sender", fields: [senderId], references: [internalId])
+  sender      User?    @relation("sender", fields: [senderId], references: [id])
 }
