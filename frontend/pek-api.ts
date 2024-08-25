@@ -1,6 +1,6 @@
 import { Configuration, DefaultApi } from '../pek-client';
 
-function getBasePath(): string {
+export function getBasePath(): string {
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
   }
@@ -10,9 +10,6 @@ function getBasePath(): string {
   }
   return 'http://localhost:3000';
 }
-
-// // eslint-disable-next-line no-console -- .
-// console.log('API URL:', getBasePath());
 
 export class PekApi {
   private get api(): DefaultApi {

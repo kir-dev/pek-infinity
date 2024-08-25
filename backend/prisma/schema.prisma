@@ -1,0 +1,375 @@
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  // -- unique identifiers --
+  id                     String                 @id @default(cuid())
+  authSchId              String                 @unique
+  usernames              Username[]
+  // -- personal data --
+  firstName              String
+  lastName               String
+  nickname               String
+  isArchived             Boolean
+  cellPhone              String
+  homeAddress            String
+  dateOfBirth            DateTime               @db.Date()
+  room                   String
+  dormitory              Dormitory              @default(UNKNOWN)
+  gender                 Gender                 @default(UNKNOWN)
+  studentStatus          StudentStatus          @default(UNKNOWN)
+  createdAt              DateTime?              @default(now())
+  lastLogin              DateTime?
+  memberships            Membership[]
+  roles                  Role[]
+  requestedEntryAwards   EntryAwardRequest[]    @relation("EntryAwardRequester")
+  evaluatedPointAwards   Evaluation[]
+  evaluatedEntryAwards   EntryAwardRequest[]    @relation("EntryAwardEvaluator")
+  externalAccounts       ExternalAccountLink[]
+  sensitiveInfoPrivacies SensitiveInfoPrivacy[]
+  recievedNotifications  Notification[]         @relation("recipient")
+  sentNotifications      Notification[]         @relation("sender")
+  entries                EntryAwardRequest[]
+  points                 PointHistory[]
+}
+
+model Username {
+  humanId   String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum Dormitory {
+  KARMAN
+  TETENY
+  SCH
+  BAROSS
+  BERCSENYI
+  VASARHELYI
+  EXTERNAL
+  UNKNOWN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum StudentStatus {
+  ACTIVE
+  GRADUATED
+  OTHER
+  UNKNOWN
+}
+
+model ExternalAccountLink {
+  id          String                  @id @default(cuid())
+  protocol    ExternalAccountProtocol
+  accountName String
+  ownerId     String
+  owner       User                    @relation(fields: [ownerId], references: [id])
+}
+
+enum ExternalAccountProtocol {
+  X_FORMERLY_TWITTER     @map("twitter")
+  SKYPE                  @map("skype")
+  CALL_SIGN              @map("call_sign")
+  IRC                    @map("irc")
+  GTALK                  @map("gtalk")
+  JABBER                 @map("jabber")
+  META_FORMERLY_FACEBOOK @map("facebook")
+  TELEGRAM               @map("Telegram")
+  SCH_MAIL               @map("sch_mail")
+  HIMZO                  @map("Hímzek")
+  GMAIL                  @map("gmail")
+  EASTER_EGG             @map("🍆")
+}
+
+/// * User can control which profile attrs are sensitive for public display
+model SensitiveInfoPrivacy {
+  id            String                 @id @default(cuid())
+  attributeName SensitiveInfoAttribute
+  visible       Boolean                @default(false)
+  ownerId       String
+  owner         User                   @relation(fields: [ownerId], references: [id])
+}
+
+/// * List of attributes that can be hidden from public view
+/// * @memberof {SensitiveInfoPrivacy}
+enum SensitiveInfoAttribute {
+  CELL_PHONE
+  EMAIL
+  WEBPAGE
+  ROOM_NUMBER
+  GENDER
+  HOME_ADDRESS
+  DATE_OF_BIRTH
+}
+
+model Group {
+  id                      String                @id @default(cuid())
+  name                    String                @unique
+  description             String
+  parentId                String?
+  purpose                 GroupPurpose
+  parent                  Group?                @relation("ParentGroup", fields: [parentId], references: [id])
+  children                Group[]               @relation("ParentGroup")
+  isCommunity             Boolean // kor-e
+  isResort                Boolean // reszort-e
+  isTaskForce             Boolean // task force-e
+  hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
+  isArchived              Boolean
+  memberships             Membership[]
+  guidelines              GuidelineCollection[]
+  scoreboards             Scoreboard[]
+  // calculated avaiableFlares String[]       
+}
+
+enum GroupPurpose {
+  UNKNOWN
+  OLD // @map("old")
+  COMMITTEE // @map("bizottság")
+  PARTY // @map("bulis")
+  CIRCLE // @map("csoport")
+  D // @map("D")
+  ELLIPSE // @map("ellipszis")
+  YEAR_CLASS // @map("évfolyam")
+  GROUP // @map("Kor")
+  CULTURE // @map("kultur")
+  PROJECT // @map("projekt")
+  EVENT // @map("rendezveny")
+  RESORT // @map("reszort")
+  SPORT // @map("sport")
+  PROFESSIONAL // @map("szakmai kör")
+  FLOOR // @map("szint")
+  SERVICE // @map("szolgáltató kör")
+}
+
+model Membership {
+  id          String              @id @default(cuid())
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  groupId     String
+  group       Group               @relation(fields: [groupId], references: [id])
+  flairs      String[]
+  statuses    MembershipStatus[]
+  points      PointRequest[]
+  entryAwards EntryAwardRequest[]
+
+  @@unique([userId, groupId])
+}
+
+model GuidelineCollection {
+  id          String       @id @default(cuid())
+  groupId     String
+  group       Group        @relation(fields: [groupId], references: [id])
+  termId      String
+  semesterId  String
+  semester    Semester     @relation(fields: [semesterId], references: [name])
+  guidelines  Guideline[]
+  scoreboards Scoreboard[]
+}
+
+model Guideline {
+  id              String              @id @default(cuid())
+  name            String
+  description     String
+  postCategory    PostCategory
+  maxPerMember    Int
+  maxPerGuideline Int
+  collectionId    String
+  collection      GuidelineCollection @relation(fields: [collectionId], references: [id])
+  requests        PointRequest[]
+}
+
+enum PostCategory {
+  WORK
+  RESPONSIBILITY
+}
+
+model Scoreboard {
+  id                String              @id @default(cuid())
+  guidelinesId      String
+  guidelines        GuidelineCollection @relation(fields: [guidelinesId], references: [id])
+  groupId           String
+  group             Group               @relation(fields: [groupId], references: [id])
+  semesterId        String
+  semester          Semester            @relation(fields: [semesterId], references: [name])
+  pointRequests     PointRequest[]
+  status            RequestStatus       @default(NOT_SUBMITTED)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  submitedAt        DateTime?
+  version           Int                 @default(1)
+  discussion        Json[] // { userId?: Int, message: String, createdAt: DateTime }[]
+  previousVersionId String?             @unique
+  previousVersion   Scoreboard?         @relation("ScoreboardVersions", fields: [previousVersionId], references: [id])
+  nextVersion       Scoreboard?         @relation("ScoreboardVersions")
+  evaluation        Evaluation?
+
+  @@unique([groupId, semesterId, version])
+}
+
+model PointRequest {
+  id           String     @id @default(cuid())
+  scoreboardId String
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+  guidelineId  String
+  guideline    Guideline  @relation(fields: [guidelineId], references: [id])
+  points       Int
+  discussion   Json[]
+
+  @@unique([scoreboardId, membershipId, guidelineId])
+}
+
+model Evaluation {
+  scoreboardId String     @id
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  createdAt    DateTime   @default(now())
+  evaluatorId  String
+  evaluator    User       @relation(fields: [evaluatorId], references: [id])
+}
+
+model MembershipStatus {
+  membershipId String
+  membership   Membership     @relation(fields: [membershipId], references: [id])
+  start        DateTime       @default(now())
+  until        DateTime?
+  type         MembershipKind
+
+  @@id([membershipId, start, type])
+}
+
+enum MembershipKind {
+  NEWBIE //ujonc
+  ACTIVE //aktiv
+  FORMER //oregtag
+  ARCHIVED //archivalt
+}
+
+model EntryAwardRequest {
+  id            String         @id @default(cuid())
+  type          EntryAwardType @default(KULSOS_DO)
+  justification String
+  // We save both the membership and the user to make it easier to query and make migration from v3 easier
+  membershipId  String
+  membership    Membership     @relation(fields: [membershipId], references: [id])
+  awardeeId     String
+  awardee       User           @relation(fields: [awardeeId], references: [id])
+  semesterId    String
+  semester      Semester       @relation(fields: [semesterId], references: [name])
+  status        RequestStatus  @default(NOT_SUBMITTED)
+  requesterId   String
+  requester     User           @relation("EntryAwardRequester", fields: [requesterId], references: [id])
+  evaluatorId   String
+  evaluator     User           @relation("EntryAwardEvaluator", fields: [evaluatorId], references: [id])
+
+  @@unique([membershipId, semesterId])
+}
+
+/// * https://vik.wiki/GYIK_-_Sch%C3%B6nherz#K.C3.B6z.C3.A9let
+enum EntryAwardType {
+  KULSOS_DO         @map("KDO")
+  KOLLEGIUMI_BELEPO @map("KB")
+  ALLANDO_BELEPO    @map("AB")
+}
+
+enum RequestStatus {
+  NOT_SUBMITTED
+  NOT_YET_EVALUATED
+  ACCEPTED
+  REJECTED
+}
+
+model PointHistory {
+  awardeeId  String
+  awardee    User     @relation(fields: [awardeeId], references: [id])
+  semesterId String
+  semester   Semester @relation(fields: [semesterId], references: [name])
+  score      Int
+
+  @@id([awardeeId, semesterId])
+}
+
+enum RoleCategory {
+  // a public/baseline access level
+  // ideally there should be only one role with this category, assigned to everyone
+  GLOBAL
+
+  // managing an individual user's profile
+  // typically assigned to the user themselves
+  PROFILE
+
+  // Permissions automatically assigned by the system based on special factors
+  // e.g. derived from student status
+  SYSTEM_DERIVED
+
+  // assigned based on group memberships
+  // e.g. kir-dev active member, kir-dev old member, kir-dev newbie
+  GROUP_DERIVED
+
+  // manually assigned by the admin or a statement
+  STATEMENT_AUTHORIZED
+
+  // generated by some user interactions, eg.: sharing a document
+  USER_GENERATED
+
+  // a catch-all for everything else such as experimental features
+  OTHER
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String
+  category    RoleCategory
+  permissions Json[] // {resource: string, create: b}
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  expiration  DateTime?
+  users       User[]
+}
+
+model Semester {
+  name               String                @id
+  guidelines         GuidelineCollection[]
+  scoreboards        Scoreboard[]
+  entryAwardRequests EntryAwardRequest[]
+  pointHistories     PointHistory[]
+}
+
+model SystemAttributes {
+  name  SystemAttributeKey @id
+  value String             @db.VarChar(255)
+}
+
+enum SystemAttributeKey {
+  SEMESTER
+  NEWBIE_PERIOD
+  LAST_LOG_SENT
+  MAX_POINT_FOR_SEMESTER
+  EVALUATION_PERIOD
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  message     String
+  seen        Boolean  @default(false)
+  link        String
+  recipientId String
+  recipient   User     @relation("recipient", fields: [recipientId], references: [id])
+  senderId    String?
+  sender      User?    @relation("sender", fields: [senderId], references: [id])
+}
