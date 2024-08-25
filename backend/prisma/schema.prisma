@@ -28,13 +28,15 @@ model User {
   lastLogin              DateTime?
   memberships            Membership[]
   roles                  Role[]
-  evaluatedPointAwards   Evaluation[]
   requestedEntryAwards   EntryAwardRequest[]    @relation("EntryAwardRequester")
+  evaluatedPointAwards   Evaluation[]
   evaluatedEntryAwards   EntryAwardRequest[]    @relation("EntryAwardEvaluator")
   externalAccounts       ExternalAccountLink[]
   sensitiveInfoPrivacies SensitiveInfoPrivacy[]
   recievedNotifications  Notification[]         @relation("recipient")
   sentNotifications      Notification[]         @relation("sender")
+  entries                EntryAwardRequest[]
+  points                 PointHistory[]
 }
 
 model Username {
@@ -140,7 +142,7 @@ enum GroupPurpose {
   CIRCLE // @map("csoport")
   D // @map("D")
   ELLIPSE // @map("ellipszis")
-  A_CLASS // @map("évfolyam")
+  YEAR_CLASS // @map("évfolyam")
   GROUP // @map("Kor")
   CULTURE // @map("kultur")
   PROJECT // @map("projekt")
@@ -260,8 +262,11 @@ model EntryAwardRequest {
   id            String         @id @default(cuid())
   type          EntryAwardType @default(KULSOS_DO)
   justification String
+  // We save both the membership and the user to make it easier to query and make migration from v3 easier
   membershipId  String
   membership    Membership     @relation(fields: [membershipId], references: [id])
+  awardeeId     String
+  awardee       User           @relation(fields: [awardeeId], references: [id])
   semesterId    String
   semester      Semester       @relation(fields: [semesterId], references: [name])
   status        RequestStatus  @default(NOT_SUBMITTED)
@@ -285,6 +290,16 @@ enum RequestStatus {
   NOT_YET_EVALUATED
   ACCEPTED
   REJECTED
+}
+
+model PointHistory {
+  awardeeId  String
+  awardee    User     @relation(fields: [awardeeId], references: [id])
+  semesterId String
+  semester   Semester @relation(fields: [semesterId], references: [name])
+  score      Int
+
+  @@id([awardeeId, semesterId])
 }
 
 enum RoleCategory {
@@ -326,10 +341,11 @@ model Role {
 }
 
 model Semester {
-  name              String                @id
-  guidelines        GuidelineCollection[]
-  scoreboards       Scoreboard[]
-  EntryAwardRequest EntryAwardRequest[]
+  name               String                @id
+  guidelines         GuidelineCollection[]
+  scoreboards        Scoreboard[]
+  entryAwardRequests EntryAwardRequest[]
+  pointHistories     PointHistory[]
 }
 
 model SystemAttributes {
