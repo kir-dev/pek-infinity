@@ -1,0 +1,19 @@
+name: Production workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  docker-publish:
+    strategy:
+      matrix:
+        component: [frontend, backend]
+
+    uses: kir-dev/workflows/.github/workflows/docker-publish.yml@main
+    with:
+      docker-image: ${{ github.repository }}-${{matrix.component}}
+      docker-file: Dockerfile.${{matrix.component}}
+      docker-tag-config: type=raw,value=latest
+      environment: production

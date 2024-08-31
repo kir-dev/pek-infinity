@@ -1,0 +1,32 @@
+name: Development workflow
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  analysis:
+    strategy:
+      matrix:
+        component: [frontend, backend]
+
+    uses: kir-dev/workflows/.github/workflows/node-ci.yml@main
+    with:
+      package-manager: yarn
+      node-version: 20
+
+  docker-publish:
+    needs: [analysis]
+
+    strategy:
+      matrix:
+        component: [frontend, backend]
+
+    uses: kir-dev/workflows/.github/workflows/docker-publish.yml@main
+    with:
+      docker-image: ${{ github.repository }}-${{matrix.component}}
+      docker-file: Dockerfile.${{matrix.component}}
