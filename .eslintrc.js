@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   plugins: ['@typescript-eslint/eslint-plugin', 'simple-import-sort'],
   extends: ['plugin:prettier/recommended'],
-  ignorePatterns: ['pek-client/**/*'],
+  ignorePatterns: ['pek-client/**/*', '.yarn/**/*'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

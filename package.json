@@ -6,10 +6,10 @@
   ],
   "scripts": {
     "dev": "concurrently \"yarn workspace backend run build:watch\" \"yarn workspace frontend run dev\" \"yarn run watch:openapi\"",
-    "build": "yarn workspaces run build",
-    "lint": "yarn workspaces run lint",
-    "lint:fix": "yarn workspaces run lint:fix",
-    "format": "npx prettier -c --write .",
+    "build": "yarn workspace backend run build && yarn workspace frontend run build",
+    "lint": "yarn workspace backend run lint && yarn workspace frontend run lint",
+    "lint:fix": "yarn workspace backend run lint:fix && yarn workspace frontend run lint:fix",
+    "format:fix": "npx prettier -c --write .",
     "generate": "npx @openapitools/openapi-generator-cli generate -i ./backend/openapi.yaml -g typescript-axios -o ./pek-client",
     "watch:openapi": "nodemon --watch backend/openapi.yaml --exec \"yarn generate\""
   },
@@ -20,5 +20,6 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "nodemon": "^3.1.4"
-  }
+  },
+  "packageManager": "yarn@4.4.1"
 }

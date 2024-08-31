@@ -1,0 +1,17 @@
+**/node_modules/
+**/.git
+**/README.md
+**/LICENSE
+**/.idea
+**/.vscode
+**/npm-debug.log
+**/coverage
+**/.env
+**/.editorconfig
+**/.aws
+**/dist
+**/build
+**/out
+**/.next
+**/.yarn/**
+**/.yarnrc.yml
