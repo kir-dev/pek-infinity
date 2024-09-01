@@ -30,7 +30,7 @@ COPY .* *.* ./
 COPY ./frontend/ ./frontend/
 
 # Only used for vercel previews
-RUN rm -f ./frontend/pages/api/\[\[...slug\]\].ts
+RUN rm -f ./frontend/src/pages/api/\[\[...slug\]\].ts
 RUN yarn workspace frontend run build
 
 # ======================================================== #
