@@ -2,6 +2,7 @@
 
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import Link from 'next/link';
+import { useTheme } from 'next-themes';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 import * as React from 'react';
 
@@ -81,34 +82,42 @@ const widgetComponents: DropdownLink[] = [
 export const Navbar = forwardRef<
   ElementRef<typeof NavigationMenuPrimitive.Root>,
   ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <NavigationMenuPrimitive.Root
-    ref={ref}
-    className={cn('relative z-10 flex w-screen flex-1 items-center justify-between sm:p-4', className)}
-    {...props}
-  >
-    <NavigationMenuList>
-      <NavigationMenuItem>
-        <Link href='/' legacyBehavior passHref>
-          <NavigationMenuLink className={navigationMenuTriggerStyle()}>PÉK</NavigationMenuLink>
-        </Link>
-      </NavigationMenuItem>
-      <NavigationMenuItem>
-        <div className='flex w-full max-w-sm items-center space-x-2'>
-          <Input type='text' />
-          <Button type='submit'>Search</Button>
-        </div>
-      </NavigationMenuItem>
-    </NavigationMenuList>
+>(({ className, ...props }, ref) => {
+  const { setTheme, theme } = useTheme();
 
-    <NavigationMenuList>
-      <WidgetDropdown components={widgetComponents} />
-      <MatrixDropdown components={matrixComponents} />
-      <Link href='/' legacyBehavior passHref>
-        <NavigationMenuLink className={navigationMenuTriggerStyle()}>⚙️</NavigationMenuLink>
-      </Link>
-    </NavigationMenuList>
-    <NavigationMenuViewport className='fixed right-0'>{/* navigation dropdown content */}</NavigationMenuViewport>
-  </NavigationMenuPrimitive.Root>
-));
+  function toggleTheme() {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }
+
+  return (
+    <NavigationMenuPrimitive.Root
+      ref={ref}
+      className={cn('relative z-10 flex w-screen flex-1 items-center justify-between sm:p-4', className)}
+      {...props}
+    >
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <Link href='/' legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>PÉK</NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <div className='flex w-full max-w-sm items-center space-x-2'>
+            <Input type='text' />
+            <Button type='submit'>Search</Button>
+          </div>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+
+      <NavigationMenuList>
+        <WidgetDropdown components={widgetComponents} />
+        <MatrixDropdown components={matrixComponents} />
+        <NavigationMenuLink onClick={toggleTheme} className={navigationMenuTriggerStyle()}>
+          ⚙️
+        </NavigationMenuLink>
+      </NavigationMenuList>
+      <NavigationMenuViewport className='fixed right-0'>{/* navigation dropdown content */}</NavigationMenuViewport>
+    </NavigationMenuPrimitive.Root>
+  );
+});
 Navbar.displayName = 'Navbar';

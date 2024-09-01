@@ -1,5 +1,6 @@
 'use client';
 
+import { ThemeProvider } from 'next-themes';
 import { createContext, useEffect } from 'react';
 
 import { ClientPekApi } from '@/network/client-api';
@@ -13,5 +14,11 @@ export function Providers({ children, apiBasePath }: Readonly<{ children: React.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiBasePath]);
 
-  return <ClientApiContext.Provider value={apiInstance}>{children}</ClientApiContext.Provider>;
+  return (
+    <ClientApiContext.Provider value={apiInstance}>
+      <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
+        {children}
+      </ThemeProvider>
+    </ClientApiContext.Provider>
+  );
 }
