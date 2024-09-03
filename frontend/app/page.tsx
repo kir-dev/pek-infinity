@@ -1,5 +1,4 @@
-import Link from 'next/link';
-
+import { AuthButton } from '@/components/auth-button';
 import { ClientSideProfile } from '@/components/client-side-profile';
 import { Navbar } from '@/components/navbar';
 import { ServerSideProfile } from '@/components/server-side-profile';
@@ -45,7 +44,7 @@ export default async function Home() {
             <p className='m-0 max-w-[30ch] text-sm opacity-50'>Egy random személy profilja</p>
           </a>
         </div>
-        <Link href='/login'>Login</Link>
+        <AuthButton />
         <ServerSideProfile />
         <ClientSideProfile />
       </main>

@@ -1,3 +1,5 @@
+import { Logger } from '@nestjs/common';
+
 import { bootstrap, writeDocument } from './app';
 
 async function server(): Promise<void> {
@@ -5,8 +7,7 @@ async function server(): Promise<void> {
 
   await app.listen(process.env.PORT ?? 3300);
 
-  // eslint-disable-next-line no-console -- application start log
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  Logger.log(`Application is running on: ${await app.getUrl()}`);
 
   if (process.env.NODE_ENV !== 'production') {
     writeDocument(document);

@@ -1,9 +1,12 @@
 import { CurrentUser } from '@kir-dev/passport-authsch';
-import { Controller, Get, Redirect, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Redirect, Res, UseGuards } from '@nestjs/common';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { Response } from 'express';
 
+import { AuthSchGuard } from '@/auth/guards/authsch.guard';
+import { JwtGuard } from '@/auth/guards/jwt.guard';
 import { FRONTEND_CALLBACK } from '@/config/environment.config';
+import { getHostFromUrl } from '@/utils/auth.utils';
 
 import { AuthService } from './auth.service';
 import { UserDto } from './entities/user.entity';
@@ -12,7 +15,7 @@ import { UserDto } from './entities/user.entity';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard('authsch'))
+  @UseGuards(AuthSchGuard)
   @Get('login')
   @ApiResponse({
     status: 302,
@@ -22,22 +25,39 @@ export class AuthController {
   login() {}
 
   @Get('callback')
-  @UseGuards(AuthGuard('authsch'))
+  @UseGuards(AuthSchGuard)
   @Redirect()
   @ApiResponse({
     status: 302,
-    description: 'Redirects to the frontend with the JWT in the query string.',
+    description: 'Redirects to the frontend and sets cookie with JWT.',
   })
   @ApiQuery({ name: 'code', required: true })
-  oauthRedirect(@CurrentUser() user: UserDto) {
+  oauthRedirect(@CurrentUser() user: UserDto, @Res() res: Response): void {
     const jwt = this.authService.login(user);
-    return {
-      url: `${FRONTEND_CALLBACK}?jwt=${jwt}`,
-    };
+    res.cookie('jwt', jwt, {
+      httpOnly: true,
+      secure: true,
+      domain: getHostFromUrl(FRONTEND_CALLBACK),
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+    res.redirect(FRONTEND_CALLBACK);
+  }
+
+  @Get('logout')
+  @Redirect()
+  @ApiResponse({
+    status: 302,
+    description: 'Redirects to the frontend and clears the JWT cookie.',
+  })
+  logout(@Res() res: Response): void {
+    res.clearCookie('jwt', {
+      domain: getHostFromUrl(FRONTEND_CALLBACK),
+    });
+    res.redirect(FRONTEND_CALLBACK);
   }
 
   @Get('me')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtGuard)
   @ApiResponse({ type: UserDto })
   me(@CurrentUser() user: UserDto): UserDto {
     return user;

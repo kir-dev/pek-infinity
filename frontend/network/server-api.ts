@@ -7,10 +7,7 @@ import { AbstractPekApi } from './abstract-api';
 
 export const serverAxios = axios.create();
 serverAxios.interceptors.request.use((config) => {
-  const jwt = cookies().get('jwt');
-  if (jwt) {
-    config.headers.Authorization = `Bearer ${jwt.value}`;
-  }
+  config.headers.cookie = cookies().toString();
   return config;
 });
 

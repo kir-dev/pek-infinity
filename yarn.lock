@@ -1837,6 +1837,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.53.3":
+  version: 5.53.3
+  resolution: "@tanstack/query-core@npm:5.53.3"
+  checksum: 10c0/bf1cee5aa69bca4e3caada664d3cf699031d513e56b206e853fa34ab867482018a1cf8caddcf175bde4c4eedc03378cb628f1b0d5338b1cffcd0c0b56b2ef339
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.53.3":
+  version: 5.53.3
+  resolution: "@tanstack/react-query@npm:5.53.3"
+  dependencies:
+    "@tanstack/query-core": "npm:5.53.3"
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 10c0/c14e8e2cfe1c46437c513dcfcdfcac211368a29967d0256fa1320484861f14ca5c34dd117a7cd850732759fcc9faa7454b042d812c027fda8e128113b2616dcb
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.11
   resolution: "@tsconfig/node10@npm:1.0.11"
@@ -5501,6 +5519,7 @@ __metadata:
   dependencies:
     "@radix-ui/react-navigation-menu": "npm:^1.2.0"
     "@radix-ui/react-slot": "npm:^1.1.0"
+    "@tanstack/react-query": "npm:^5.53.3"
     "@types/js-cookie": "npm:^3.0.6"
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"

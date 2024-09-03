@@ -11,6 +11,8 @@ import {
 } from '@nestjs/swagger';
 import yaml from 'yaml';
 
+import { FRONTEND_CALLBACK } from '@/config/environment.config';
+
 import { AppModule } from './app.module';
 
 export async function bootstrap(): Promise<{
@@ -22,7 +24,10 @@ export async function bootstrap(): Promise<{
   app
     .setGlobalPrefix('api')
     .enableVersioning({ type: VersioningType.URI, defaultVersion: '4' })
-    .enableCors();
+    .enableCors({
+      origin: FRONTEND_CALLBACK,
+      credentials: true,
+    });
 
   const config = new DocumentBuilder()
     .setVersion('v4')

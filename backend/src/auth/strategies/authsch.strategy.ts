@@ -11,7 +11,7 @@ import {
   AUTHSCH_CLIENT_SECRET,
 } from '@/config/environment.config';
 
-import { UserDto } from './entities/user.entity';
+import { UserDto } from '../entities/user.entity';
 
 @Injectable()
 export class AuthSchStrategy extends PassportStrategy(Strategy) {

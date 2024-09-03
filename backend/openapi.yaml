@@ -43,7 +43,16 @@ paths:
         "200":
           description: ""
         "302":
-          description: Redirects to the frontend with the JWT in the query string.
+          description: Redirects to the frontend and sets cookie with JWT.
+  /api/v4/auth/logout:
+    get:
+      operationId: AuthController_logout
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "302":
+          description: Redirects to the frontend and clears the JWT cookie.
   /api/v4/auth/me:
     get:
       operationId: AuthController_me

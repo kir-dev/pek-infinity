@@ -21,5 +21,5 @@ export function ClientSideProfile() {
     return null;
   }
 
-  return <h1>{user.name}</h1>;
+  return <h1>Client: {user.name}</h1>;
 }
