@@ -26,7 +26,7 @@ export class AuthController {
 
   @Get('callback')
   @UseGuards(AuthSchGuard)
-  @Redirect()
+  @Redirect(FRONTEND_CALLBACK, 302)
   @ApiResponse({
     status: 302,
     description: 'Redirects to the frontend and sets cookie with JWT.',
@@ -40,11 +40,10 @@ export class AuthController {
       domain: getHostFromUrl(FRONTEND_CALLBACK),
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
-    res.redirect(FRONTEND_CALLBACK);
   }
 
   @Get('logout')
-  @Redirect()
+  @Redirect(FRONTEND_CALLBACK, 302)
   @ApiResponse({
     status: 302,
     description: 'Redirects to the frontend and clears the JWT cookie.',
@@ -53,7 +52,6 @@ export class AuthController {
     res.clearCookie('jwt', {
       domain: getHostFromUrl(FRONTEND_CALLBACK),
     });
-    res.redirect(FRONTEND_CALLBACK);
   }
 
   @Get('me')

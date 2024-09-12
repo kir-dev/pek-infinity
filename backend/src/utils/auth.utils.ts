@@ -7,7 +7,7 @@ export function getHostFromUrl(url: string): string {
 }
 
 export function extractJwtTokenFromCookie(req: Request): string {
-  const jwtCookie = this.getCookiesAsObject(req).jwt;
+  const jwtCookie = getCookiesAsObject(req).jwt;
   if (!jwtCookie) {
     throw new UnauthorizedException('JWT cookie not found');
   }
