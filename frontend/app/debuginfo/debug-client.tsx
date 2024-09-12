@@ -1,7 +1,7 @@
 'use client';
-import { useApi } from '@/hooks/use-api';
+import { ClientPekApi } from '@/network/client-api';
 
 export function PekClientDebug() {
-  const api = useApi();
+  const api = new ClientPekApi();
   return <>{JSON.stringify(api)}</>;
 }

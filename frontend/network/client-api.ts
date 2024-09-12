@@ -8,7 +8,12 @@ export const clientAxios = axios.create({
 });
 
 export class ClientPekApi extends AbstractPekApi {
-  constructor(basePath: string) {
-    super(basePath, clientAxios);
+  constructor() {
+    let apiBasePath: string;
+
+    if (typeof window === 'undefined') apiBasePath = process.env.NEXT_PUBLIC_API_URL!;
+    else apiBasePath = (window as any).config.apiBasePath;
+
+    super(apiBasePath, clientAxios);
   }
 }

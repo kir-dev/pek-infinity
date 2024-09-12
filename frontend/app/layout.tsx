@@ -20,7 +20,6 @@ export default async function RootLayoutServer({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  'use server';
   const apiBasePath = await getBackend({ preferredNetwork: 'public' });
   return (
     <html lang='hu'>
