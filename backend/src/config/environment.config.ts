@@ -5,7 +5,7 @@ dotenv.config();
 
 export const FRONTEND_CALLBACK =
   process.env.VERCEL_ENV === 'preview' || process.env.FORCE_LAMBDA_API === '1'
-    ? process.env.VERCEL_BRANCH_URL!
+    ? `https://${process.env.VERCEL_BRANCH_URL!}`
     : env.get('FRONTEND_CALLBACK').required().asString();
 
 export const JWT_SECRET = env.get('JWT_SECRET').required().asString();
