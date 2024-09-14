@@ -7,6 +7,8 @@ services:
       - '3000:3000'
     env_file:
       - .env
+    environment:
+      - NEXT_PUBLIC_PRIVATE_API_URL=http://backend:3300
 
   backend:
     build:

@@ -9,9 +9,18 @@
     "format:fix": "prettier --write \"**/*.{ts|tsx}\"",
     "format": "prettier -c \"**/*.{ts|tsx}\"",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "generate": "npx kubb generate",
+    "generate:watch": "nodemon --watch ../openapi.yaml --exec \"yarn generate\""
   },
   "dependencies": {
+    "@kubb/cli": "^2.26.3",
+    "@kubb/core": "^2.26.3",
+    "@kubb/plugin-oas": "^2.26.3",
+    "@kubb/swagger": "^2.26.3",
+    "@kubb/swagger-client": "^2.26.3",
+    "@kubb/swagger-tanstack-query": "^2.26.3",
+    "@kubb/swagger-ts": "^2.26.3",
     "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query": "^5.56.2",
@@ -36,6 +45,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.11",
     "eslint-plugin-react": "^7.36.1",
+    "nodemon": "^3.1.4",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.11",
     "typescript": "~5.6.2"

@@ -1,24 +1,24 @@
 import { CurrentUser } from '@kir-dev/passport-authsch';
-import { Controller, Get, Redirect, Res, UseGuards } from '@nestjs/common';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { Get, Redirect, Res, UseGuards } from '@nestjs/common';
+import { ApiFoundResponse, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import { AuthSchGuard } from '@/auth/guards/authsch.guard';
 import { JwtGuard } from '@/auth/guards/jwt.guard';
 import { FRONTEND_CALLBACK } from '@/config/environment.config';
 import { getHostFromUrl } from '@/utils/auth.utils';
+import { ApiController } from '@/utils/controller.decorator';
 
 import { AuthService } from './auth.service';
 import { UserDto } from './entities/user.entity';
 
-@Controller('auth')
+@ApiController('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(AuthSchGuard)
   @Get('login')
-  @ApiResponse({
-    status: 302,
+  @ApiFoundResponse({
     description: 'Redirects to the AuthSch login page.',
   })
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -27,8 +27,7 @@ export class AuthController {
   @Get('callback')
   @UseGuards(AuthSchGuard)
   @Redirect(FRONTEND_CALLBACK, 302)
-  @ApiResponse({
-    status: 302,
+  @ApiFoundResponse({
     description: 'Redirects to the frontend and sets cookie with JWT.',
   })
   @ApiQuery({ name: 'code', required: true })
@@ -44,8 +43,7 @@ export class AuthController {
 
   @Get('logout')
   @Redirect(FRONTEND_CALLBACK, 302)
-  @ApiResponse({
-    status: 302,
+  @ApiFoundResponse({
     description: 'Redirects to the frontend and clears the JWT cookie.',
   })
   logout(@Res() res: Response): void {
@@ -56,7 +54,6 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtGuard)
-  @ApiResponse({ type: UserDto })
   me(@CurrentUser() user: UserDto): UserDto {
     return user;
   }

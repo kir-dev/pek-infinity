@@ -1,0 +1,229 @@
+openapi: 3.0.0
+paths:
+  /api/v4/ping:
+    get:
+      operationId: PingSend
+      summary: ""
+      description: >-
+        # Health check endpoint<br>
+
+
+        This endpoint is a simple health check API designed to confirm that the
+        server is operational.
+
+
+        When accessed, it returns a straightforward response indicating that the
+        service is up and running.
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ping"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+      tags:
+        - ping
+  /api/v4/auth/login:
+    get:
+      operationId: AuthLogin
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "302":
+          description: Redirects to the AuthSch login page.
+        "401": &a1
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+        "403": &a2
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+        "500": &a3
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+      tags: &a4
+        - auth
+  /api/v4/auth/callback:
+    get:
+      operationId: AuthOauthRedirect
+      parameters:
+        - name: code
+          required: true
+          in: query
+          schema: {}
+      responses:
+        "200":
+          description: ""
+        "302":
+          description: Redirects to the frontend and sets cookie with JWT.
+        "401": *a1
+        "403": *a2
+        "500": *a3
+      tags: *a4
+  /api/v4/auth/logout:
+    get:
+      operationId: AuthLogout
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "302":
+          description: Redirects to the frontend and clears the JWT cookie.
+        "401": *a1
+        "403": *a2
+        "500": *a3
+      tags: *a4
+  /api/v4/auth/me:
+    get:
+      operationId: AuthMe
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+        "401": *a1
+        "403": *a2
+        "500": *a3
+      tags: *a4
+info:
+  title: PÉK API
+  description: Profiles and Groups
+  version: v4
+  contact:
+    name: kir-dev
+    url: https://kir-dev.hu
+    email: hello@kir-dev.hu
+tags: []
+servers: []
+components:
+  securitySchemes:
+    cookie:
+      type: apiKey
+      in: cookie
+      name: jwt
+  schemas:
+    UnauthorizedErrorDto:
+      type: object
+      properties:
+        message:
+          type: string
+          default: JWT cookie not found
+          enum:
+            - JWT cookie not found
+        statusCode:
+          type: number
+          default: 401
+          enum:
+            - 401
+        error:
+          type: string
+          default: Unauthorized
+          enum:
+            - Unauthorized
+          nullable: true
+      required:
+        - message
+        - statusCode
+    InternalServerErrorDto:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 500
+          enum:
+            - 500
+        message:
+          type: string
+          default: Internal Server Error
+          enum:
+            - Internal Server Error
+      required:
+        - statusCode
+        - message
+    ForbiddenErrorDto:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          default: 403
+          enum:
+            - 403
+        message:
+          type: string
+        resourceId:
+          type: string
+          example: pek:group:123:profile
+          nullable: true
+        resourceOp:
+          type: string
+          enum:
+            - CREATE
+            - READ
+            - UPDATE
+            - DELETE
+          nullable: true
+        error:
+          type: string
+          enum:
+            - Forbidden
+          nullable: true
+      required:
+        - statusCode
+        - message
+    AxiosErrorResponseDto:
+      type: object
+      properties:
+        data:
+          description: Data of type T
+          oneOf:
+            - $ref: "#/components/schemas/InternalServerErrorDto"
+            - $ref: "#/components/schemas/UnauthorizedErrorDto"
+            - $ref: "#/components/schemas/ForbiddenErrorDto"
+      required:
+        - data
+    AxiosErrorDto:
+      type: object
+      properties:
+        response:
+          $ref: "#/components/schemas/AxiosErrorResponseDto"
+        status:
+          type: number
+      required:
+        - response
+        - status
+    Ping:
+      type: object
+      properties:
+        ping:
+          type: string
+      required:
+        - ping
+    UserDto:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+externalDocs:
+  description: Source Code (GitHub)
+  url: https://github.com/kir-dev/pek-infinity

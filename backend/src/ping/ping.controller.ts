@@ -1,8 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Get } from '@nestjs/common';
+
+import { ApiController } from '@/utils/controller.decorator';
 
 import { Ping } from './entities/ping.entity';
 
-@Controller('ping')
+@ApiController('ping', { withAuth: false })
 export class PingController {
   /**
    * # Health check endpoint<br>

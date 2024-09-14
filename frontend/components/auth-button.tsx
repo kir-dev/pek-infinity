@@ -1,22 +1,21 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { ServerPekApi } from '@/network/server-api';
+import { authMe } from '@/pek-api';
 
 export async function AuthButton() {
-  const pek = await ServerPekApi.getDefault();
   try {
-    await pek.me();
-  } catch (e) {
+    await authMe();
+  } catch {
     return (
       <Button asChild>
-        <Link href={`${process.env.NEXT_PUBLIC_API_URL}/api/v4/auth/login`}>Login</Link>
+        <Link href='http://localhost:3300/api/v4/auth/login'>Login</Link>
       </Button>
     );
   }
   return (
     <Button asChild>
-      <Link href={`${process.env.NEXT_PUBLIC_API_URL}/api/v4/auth/logout`}>Logout</Link>
+      <Link href='http://localhost:3300/api/v4/auth/logout'>Logout</Link>
     </Button>
   );
 }

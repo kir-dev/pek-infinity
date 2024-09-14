@@ -25,7 +25,6 @@ RUN yarn install --immutable
 # ------------ END OF COMMON STEPS -------------- #
 
 COPY .eslint* .prettier* ./
-COPY ./pek-client/ ./pek-client/
 COPY ./frontend/ ./frontend/
 
 # Only used for vercel previews

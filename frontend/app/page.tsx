@@ -2,18 +2,17 @@ import { AuthButton } from '@/components/auth-button';
 import { ClientSideProfile } from '@/components/client-side-profile';
 import { Navbar } from '@/components/navbar';
 import { ServerSideProfile } from '@/components/server-side-profile';
-import { ServerPekApi } from '@/network/server-api';
+import { pingSend } from '@/pek-api';
 
 export default async function Home() {
-  const pek = await ServerPekApi.getDefault();
-  const ping = await pek.ping();
+  const { ping } = await pingSend();
   return (
     <>
       <Navbar />
       <main className='flex min-h-96 flex-col items-center justify-between p-24'>
         <div className='w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex'>
           <p className='left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30'>
-            Response from the API: <code className='ml-2'>{JSON.stringify(ping)}</code>
+            Response from the API: <code className='ml-2'>{ping}</code>
           </p>
         </div>
 

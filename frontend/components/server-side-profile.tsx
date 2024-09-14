@@ -1,13 +1,12 @@
-import { ServerPekApi } from '@/network/server-api';
-import { type UserDto } from '@/pek';
+import { authMe } from '@/pek-api';
 
 export async function ServerSideProfile() {
-  const pek = await ServerPekApi.getDefault();
-  let user: UserDto;
+  let name;
   try {
-    user = await pek.me();
-  } catch (e) {
-    return null;
+    const response = await authMe();
+    name = response.name;
+  } catch {
+    name = 'Anonymous';
   }
-  return <h1>{user.name}</h1>;
+  return <h1>{name}</h1>;
 }

@@ -1,25 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-import { ClientPekApi } from '@/network/client-api';
-import { type UserDto } from '@/pek';
-
-const pek = new ClientPekApi();
+import { useAuthMe } from '@/pek-api';
 
 export function ClientSideProfile() {
-  const [user, setUser] = useState<UserDto | null>(null);
+  const { data: me, status, error } = useAuthMe({ query: { retry: false } });
+  if (status === 'pending') return <h1>Loading...</h1>;
+  if (status === 'error' && error.status === 401) return <h1>Client: Anonymous</h1>;
+  if (status === 'error') return <h1>Something went wrong {error.response.data.message}</h1>;
 
-  useEffect(() => {
-    pek
-      .me()
-      .then(setUser)
-      .catch(() => {});
-  }, []);
-
-  if (!user) {
-    return null;
-  }
-
-  return <h1>Client: {user.name}</h1>;
+  return <h1>Client: {me.name}</h1>;
 }

@@ -5,21 +5,19 @@
     "frontend"
   ],
   "scripts": {
-    "dev": "concurrently --names \"backend,frontend,openapi\" -c \"bgBlue.bold,bgGreen.bold,bgYellow.bold\" \"yarn workspace backend run start:dev\" \"yarn workspace frontend run dev\" \"yarn run watch:openapi\"",
+    "dev": "npx concurrently --names \"backend,frontend,openapi\" -c \"bgBlue.bold,bgGreen.bold,bgYellow.bold\" \"yarn workspace backend run start:dev\" \"yarn workspace frontend run dev\" \"yarn workspace frontend run generate:watch\"",
     "build": "yarn workspace backend run build && yarn workspace frontend run build",
     "lint": "yarn workspace backend run lint && yarn workspace frontend run lint",
     "lint:fix": "yarn workspace backend run lint:fix && yarn workspace frontend run lint:fix",
-    "format:fix": "npx prettier -c --write .",
-    "generate": "npx @openapitools/openapi-generator-cli generate -i ./backend/openapi.yaml -g typescript-axios -o ./pek-client",
-    "watch:openapi": "nodemon --on-change-only --watch backend/openapi.yaml --exec \"yarn generate\""
+    "format:fix": "npx prettier -c --write ."
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.13.5",
-    "concurrently": "^9.0.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "nodemon": "^3.1.4"
+    "eslint-plugin-simple-import-sort": "^12.1.1"
+  },
+  "peerDependencies": {
+    "concurrently": "^9.0.1"
   },
   "packageManager": "yarn@4.4.1"
 }

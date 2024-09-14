@@ -1,7 +1,6 @@
 'use client';
-import { ClientPekApi } from '@/network/client-api';
+import { axiosInstance } from '@kubb/swagger-client/client';
 
 export function PekClientDebug() {
-  const api = new ClientPekApi();
-  return <>{JSON.stringify(api)}</>;
+  return <p>{axiosInstance.defaults.baseURL ?? ''}</p>;
 }

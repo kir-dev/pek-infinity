@@ -1,0 +1,1 @@
+{"type":"object","properties":{"statusCode":{"type":"number","default":500,"enum":[500]},"message":{"type":"string","default":"Internal Server Error","enum":["Internal Server Error"]}},"required":["statusCode","message"],"x-readme-ref-name":"InternalServerErrorDto"}

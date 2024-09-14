@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getBackend } from '@/app/actions';
+import { getBackend } from '@/lib/get-backend';
 
 import { PekClientDebug } from './debug-client';
 
