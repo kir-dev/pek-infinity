@@ -10,6 +10,7 @@ export interface MembershipProps {
   endDate?: string;
   currentRole: string;
   pastRoles: string[];
+  primary: boolean;
 }
 
 export function GroupMembershipCard({ membership }: { membership: MembershipProps }) {
