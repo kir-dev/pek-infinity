@@ -1,17 +1,15 @@
+import { GroupHeader } from '@/components/groups/group-header';
+import { GroupInfo } from '@/components/groups/group-info';
+import { GroupMembers } from '@/components/groups/group-members';
 import { Navbar } from '@/components/navbar';
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page() {
   return (
     <>
       <Navbar />
-      <main className='w-screen'>
-        <h1>Group {params.id}</h1>
-        <p>Alapítás éve: 2003</p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel laudantium eveniet neque voluptatum, saepe fugit
-          autem dolorum sed. Cupiditate aliquid repudiandae debitis dolorum suscipit aut esse eaque minus laboriosam et.
-        </p>
-      </main>
+      <GroupHeader />
+      <GroupInfo />
+      <GroupMembers />
     </>
   );
 }
