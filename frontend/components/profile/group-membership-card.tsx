@@ -1,10 +1,18 @@
 import { CalendarIcon } from 'lucide-react';
 
-import { Membership } from '@/components/profile/user.dto';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-export function GroupMembershipCard({ membership }: { membership: Membership }) {
+export interface MembershipProps {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate?: string;
+  currentRole: string;
+  pastRoles: string[];
+}
+
+export function GroupMembershipCard({ membership }: { membership: MembershipProps }) {
   return (
     <Card
       className={`h-full transition-shadow hover:shadow-md ${membership.primary ? 'border-blue-500' : ''} bg-gradient-to-br from-blue-50 to-purple-50`}

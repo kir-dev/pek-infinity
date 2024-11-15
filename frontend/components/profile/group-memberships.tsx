@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-import { GroupMembershipCard } from '@/components/profile/group-membership-card';
+import { GroupMembershipCard, MembershipProps } from '@/components/profile/group-membership-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function GroupMemberships() {
@@ -32,7 +32,7 @@ export function GroupMemberships() {
         <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
           {memberships.map((membership, index) => (
             <motion.div key={index} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-              <GroupMembershipCard membership={membership} />
+              <GroupMembershipCard membership={membership as MembershipProps} />
             </motion.div>
           ))}
         </div>
