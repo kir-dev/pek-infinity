@@ -26,6 +26,10 @@ export class ProfileService {
   }
 
   async updateProfileName(authSchId: string) {}
+
+  //first name: str
+  //second name: str
+  //img ??
   async updateBasic(authSchId: string, updateProfileDto: UpdateProfileDto) {
     return await this.prisma.user.update({
       where: { authSchId: authSchId },
@@ -35,6 +39,13 @@ export class ProfileService {
     });
   }
 
+  //description: string
+  //gender: import from prisma GENDER
+  //date-of-birth: date
+  //tel: string
+  //addr: string
+  //building: import from prisma KOLI
+  //room: string
   async updatePesonal() {}
 
   async updateExternalLinks(
