@@ -1,6 +1,6 @@
 // update-basic.dto.ts
 
 export class UpdateBasicsDto {
-  firstName?: string;
-  secondName?: string;
+  firstName: string;
+  secondName: string;
 }

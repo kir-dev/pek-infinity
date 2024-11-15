@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
+import { UpdateBasicsDto } from '@/profile/dto/update-basics.dto';
 import { UpdateExternalAccountLinksDto } from '@/profile/dto/update-external-account-links.dto';
+import { UpdatePersonalDto } from '@/profile/dto/update-personal.dto';
 
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -30,12 +32,10 @@ export class ProfileService {
   //first name: str
   //second name: str
   //img ??
-  async updateBasic(authSchId: string, updateProfileDto: UpdateProfileDto) {
+  async updateBasic(authSchId: string, updateBasicDto: UpdateBasicsDto) {
     return await this.prisma.user.update({
       where: { authSchId: authSchId },
-      data: {
-        ...updateProfileDto,
-      },
+      data: updateBasicDto,
     });
   }
 
@@ -46,21 +46,30 @@ export class ProfileService {
   //addr: string
   //building: import from prisma KOLI
   //room: string
-  async updatePesonal() {}
+  async updatePersonal(
+    authSchId: string,
+    updatePersonalDto: UpdatePersonalDto,
+  ) {
+    return await this.prisma.user.update({
+      where: { authSchId: authSchId },
+      data: updatePersonalDto,
+    });
+  }
 
   async updateExternalLinks(
     authSchId: string,
-    { links }: UpdateExternalAccountLinksDto,
+    links: UpdateExternalAccountLinksDto,
   ) {
-    await this.prisma.externalAccountLink.delete({
-      where: { owner: { authSchId: authSchId } },
+    await this.prisma.externalAccountLink.update({
+      where: { authSchId: authSchId },
+      data: UpdateExternalAccountLinksDto,
     });
-
-    //    return await this.prisma.user.update({
-    //      where: { authSchId: autSchId },
-    //      data: {
-    //        externalAccounts: [{ upsert }],
-    // },
-    //});
   }
+
+  //    return await this.prisma.user.update({
+  //      where: { authSchId: autSchId },
+  //      data: {
+  //        externalAccounts: [{ upsert }],
+  // },
+  //});
 }
