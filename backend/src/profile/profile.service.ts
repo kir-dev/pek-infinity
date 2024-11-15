@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
+import { UpdateExternalAccountLinksDto } from '@/profile/dto/update-external-account-links.dto';
+
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
@@ -35,5 +37,19 @@ export class ProfileService {
 
   async updatePesonal() {}
 
-  async updateExternalLinks() {}
+  async updateExternalLinks(
+    authSchId: string,
+    { links }: UpdateExternalAccountLinksDto,
+  ) {
+    await this.prisma.externalAccountLink.delete({
+      where: { owner: { authSchId: authSchId } },
+    });
+
+    //    return await this.prisma.user.update({
+    //      where: { authSchId: autSchId },
+    //      data: {
+    //        externalAccounts: [{ upsert }],
+    // },
+    //});
+  }
 }
