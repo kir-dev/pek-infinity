@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class ProfileService {
-  create(createProfileDto: CreateProfileDto) {
-    return 'This action adds a new profile';
+  constructor(private prisma: PrismaClient) {}
+  /*async create(createProfileDto: CreateProfileDto, authSchId: string) {
+    return await this.prisma.user.create({
+      data: { ...createProfileDto, authSchId: authSchId },
+    });
+  }*/
+
+  async findAll() {
+    return await this.prisma.user.findMany();
   }
 
-  findAll() {
-    return `This action returns all profile`;
+  async findOne(userAuthSchId: string) {
+    return await this.prisma.user.findUnique({
+      where: { authSchId: userAuthSchId },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} profile`;
+  async updateProfileName(authSchId: string) {}
+  async updateBasic(authSchId: string, updateProfileDto: UpdateProfileDto) {
+    return await this.prisma.user.update({
+      where: { authSchId: authSchId },
+      data: {
+        ...updateProfileDto,
+      },
+    });
   }
 
-  update(id: number, updateProfileDto: UpdateProfileDto) {
-    return `This action updates a #${id} profile`;
-  }
+  async updatePesonal() {}
 
-  remove(id: number) {
-    return `This action removes a #${id} profile`;
-  }
+  async updateExternalLinks() {}
 }
