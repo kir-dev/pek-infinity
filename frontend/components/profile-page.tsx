@@ -11,7 +11,7 @@ const headerProps: ProfileHeaderProps = {
   user: {
     description: "I'm a passionate student leader with a keen interest in campus politics and public speaking.",
     name: 'Jane Doe',
-    email: '',
+    email: 'janedoe@gmail.com',
     building: 'Building A',
     room: 'Room 101',
     twitterHandle: '@janedoe',
