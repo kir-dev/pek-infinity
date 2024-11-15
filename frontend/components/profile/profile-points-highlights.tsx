@@ -66,6 +66,13 @@ export function ProfilePointsHighlights() {
     { semester: 'Spring 2023', total: 150 },
     { semester: 'Fall 2023', total: 180 },
   ];
+
+  const lineChartDataWithHighlight = [
+    { semester: 'Fall 2022', total: 120, highlight: true },
+    { semester: 'Spring 2023', total: 150, highlight: true },
+    { semester: 'Fall 2023', total: 180, highlight: true },
+  ];
+  
   return (
     <Card>
       <CardHeader className='bg-gradient-to-r from-blue-500 to-purple-500 p-6'>
@@ -142,7 +149,10 @@ export function ProfilePointsHighlights() {
           <TabsContent value='graph' className='mt-0'>
             <div className='p-4 bg-white'>
               <ResponsiveContainer width='100%' height={400}>
-                <LineChart data={lineChartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <LineChart
+                  data={lineChartData}
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
                   <XAxis dataKey='semester' stroke='#888' />
                   <YAxis stroke='#888' />
                   <RechartsTooltip
@@ -164,7 +174,7 @@ export function ProfilePointsHighlights() {
                     strokeWidth={3}
                     dot={{ r: 6, fill: '#3b82f6' }}
                   />
-                  {lineChartData.map((point, index) => (
+                  {lineChartDataWithHighlight.map((point, index) => (
                     <ReferenceDot
                       key={index}
                       x={point.semester}
