@@ -1,6 +1,15 @@
 'use client';
 
-import { BuildingIcon, ChevronDownIcon, FacebookIcon, MailIcon, MapPinIcon, SendIcon, TwitterIcon } from 'lucide-react';
+import {
+  BuildingIcon,
+  ChevronDownIcon,
+  FacebookIcon,
+  Link,
+  MailIcon,
+  MapPinIcon,
+  SendIcon,
+  TwitterIcon,
+} from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -45,7 +54,9 @@ export function ProfileHeader({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant='ghost' size='icon' className='text-white hover:bg-white/20'>
-                    <TwitterIcon className='h-5 w-5' />
+                    <a href={`https://x.com/${twitterHandle}`} target='_blank' rel='noopener noreferrer'>
+                      <TwitterIcon className='h-5 w-5' />
+                    </a>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -55,9 +66,11 @@ export function ProfileHeader({
             </TooltipProvider>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger asChild>
+                <TooltipTrigger>
                   <Button variant='ghost' size='icon' className='text-white hover:bg-white/20'>
-                    <FacebookIcon className='h-5 w-5' />
+                    <a href={`https://facebook.com/${facebookHandle}`} target='_blank' rel='noopener noreferrer'>
+                      <FacebookIcon className='h-5 w-5' />
+                    </a>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -69,7 +82,9 @@ export function ProfileHeader({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant='ghost' size='icon' className='text-white hover:bg-white/20'>
-                    <SendIcon className='h-5 w-5' />
+                    <a href={`https://gmail.com/${sendHandle}`} target='_blank' rel='noopener noreferrer'>
+                      <SendIcon className='h-5 w-5' />
+                    </a>
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
