@@ -3,3 +3,8 @@ export * from "./authLogout";
 export * from "./authMe";
 export * from "./authOauthRedirect";
 export * from "./pingSend";
+export * from "./profileCreate";
+export * from "./profileFindAll";
+export * from "./profileFindOne";
+export * from "./profileRemove";
+export * from "./profileUpdate";

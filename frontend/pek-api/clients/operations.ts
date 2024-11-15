@@ -18,5 +18,25 @@ export const operations = {
     "AuthMe": {
         "path": "/api/v4/auth/me",
         "method": "get"
+    },
+    "ProfileCreate": {
+        "path": "/api/v4/profile",
+        "method": "post"
+    },
+    "ProfileFindAll": {
+        "path": "/api/v4/profile",
+        "method": "get"
+    },
+    "ProfileFindOne": {
+        "path": "/api/v4/profile/:id",
+        "method": "get"
+    },
+    "ProfileUpdate": {
+        "path": "/api/v4/profile/:id",
+        "method": "patch"
+    },
+    "ProfileRemove": {
+        "path": "/api/v4/profile/:id",
+        "method": "delete"
     }
 } as const;

@@ -104,6 +104,85 @@ paths:
         "403": *a2
         "500": *a3
       tags: *a4
+  /api/v4/profile:
+    post:
+      operationId: ProfileCreate
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProfileDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+    get:
+      operationId: ProfileFindAll
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v4/profile/{id}:
+    get:
+      operationId: ProfileFindOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+    patch:
+      operationId: ProfileUpdate
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+    delete:
+      operationId: ProfileRemove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
 info:
   title: PÉK API
   description: Profiles and Groups
@@ -224,6 +303,12 @@ components:
           type: string
       required:
         - name
+    CreateProfileDto:
+      type: object
+      properties: {}
+    UpdateProfileDto:
+      type: object
+      properties: {}
 externalDocs:
   description: Source Code (GitHub)
   url: https://github.com/kir-dev/pek-infinity
