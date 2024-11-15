@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import GroupInfoCard from '@/components/group-info-card';
 
 // This would typically come from an API or props
 const groupData = {
@@ -135,20 +136,13 @@ export default function GroupSemesterScores() {
           </CardHeader>
           <CardContent className='p-6'>
             <div className='grid gap-4 sm:grid-cols-2'>
-              <div className='flex items-center justify-between bg-blue-100 rounded-lg p-4'>
-                <div className='flex items-center space-x-2'>
-                  <UserIcon className='h-6 w-6 text-blue-600' />
-                  <span className='text-sm font-medium text-blue-800'>Total Members</span>
-                </div>
-                <span className='text-2xl font-bold text-blue-600'>{totalMembers}</span>
-              </div>
-              <div className='flex items-center justify-between bg-purple-100 rounded-lg p-4'>
-                <div className='flex items-center space-x-2'>
-                  <StarIcon className='h-6 w-6 text-purple-600' />
-                  <span className='text-sm font-medium text-purple-800'>Entry Cards</span>
-                </div>
-                <span className='text-2xl font-bold text-purple-600'>{entryCards}</span>
-              </div>
+              <GroupInfoCard
+                Title='Félévben aktív tagok'
+                Icon={UserIcon}
+                content={totalMembers.toString()}
+                color='blue'
+              />
+              <GroupInfoCard Title='Kiosztott belépők' Icon={UserIcon} content={entryCards.toString()} color='purple' />
             </div>
           </CardContent>
         </Card>
@@ -165,7 +159,7 @@ export default function GroupSemesterScores() {
               <CardHeader className='bg-gradient-to-r from-yellow-400 to-orange-500 p-6'>
                 <CardTitle className='text-2xl font-bold flex items-center text-white'>
                   <AwardIcon className='mr-2 h-8 w-8' />
-                  Group Leader's Praise
+                  Körvezetői beszámoló
                 </CardTitle>
               </CardHeader>
               <CardContent className='p-6'>
