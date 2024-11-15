@@ -1,4 +1,4 @@
-import { CalendarIcon, Link } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,7 @@ export interface MembershipProps {
 
 export function GroupMembershipCard({ membership }: { membership: MembershipProps }) {
   return (
-    <Link href='/groups/1'>
+    <a href={`/groups/${membership.id}`}>
       <Card
         className={`h-full transition-shadow hover:shadow-md ${membership.primary ? 'border-blue-500' : ''} bg-gradient-to-br from-blue-50 to-purple-50`}
       >
@@ -47,6 +47,6 @@ export function GroupMembershipCard({ membership }: { membership: MembershipProp
           )}
         </CardContent>
       </Card>
-    </Link>
+    </a>
   );
 }
