@@ -1,9 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarIcon } from 'lucide-react';
+
+import { GroupMemberships } from '@/components/profile/group-memberships';
+
 import { ProfileHeader } from './profile/profile-header';
 import { ProfilePointsHighlights } from './profile/profile-points-highlights';
 
