@@ -1,35 +1,71 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  AwardIcon,
-  BuildingIcon,
-  CalendarIcon,
-  ChevronDownIcon,
-  FacebookIcon,
-  InfoIcon,
-  MailIcon,
-  MapPinIcon,
-  SendIcon,
-  StarIcon,
-  TrendingUpIcon,
-  TwitterIcon,
-} from 'lucide-react';
+import { AwardIcon, CalendarIcon, StarIcon, TrendingUpIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-
-import { ProfileHeader } from './profile/profile-header';
 
 export function ProfilePointsHighlights() {
   const [hoveredPoint, setHoveredPoint] = useState<{ semester: string; total: number; highlight: boolean } | null>(
     null
   );
 
+  const data = [
+    {
+      semester: 'Fall 2023',
+      total: 180,
+      activities: [
+        {
+          group: 'Student Council',
+          points: 100,
+          highlight: true,
+          praise: 'Outstanding leadership in organizing the fall festival',
+        },
+        { group: 'Debate Club', points: 50 },
+        {
+          group: 'Chess Club',
+          points: 30,
+          highlight: true,
+          praise: 'Excellent organization of the inter-college chess tournament',
+        },
+      ],
+    },
+    {
+      semester: 'Spring 2023',
+      total: 150,
+      activities: [
+        {
+          group: 'Student Council',
+          points: 80,
+          highlight: true,
+          praise: 'Successful implementation of the new student feedback system',
+        },
+        { group: 'Debate Club', points: 40 },
+        { group: 'Environmental Society', points: 30 },
+      ],
+    },
+    {
+      semester: 'Fall 2022',
+      total: 120,
+      activities: [
+        { group: 'Student Council', points: 70 },
+        {
+          group: 'Debate Club',
+          points: 50,
+          highlight: true,
+          praise: 'Won the regional debate championship',
+        },
+      ],
+    },
+  ];
+
+  const lineChartData = [
+    { semester: 'Fall 2022', total: 120 },
+    { semester: 'Spring 2023', total: 150 },
+    { semester: 'Fall 2023', total: 180 },
+  ];
   return (
     <Card>
       <CardHeader className='bg-gradient-to-r from-blue-500 to-purple-500 p-6'>
@@ -50,54 +86,7 @@ export function ProfilePointsHighlights() {
           </TabsList>
           <TabsContent value='list' className='mt-0'>
             <div className='space-y-4 p-4'>
-              {[
-                {
-                  semester: 'Fall 2023',
-                  total: 180,
-                  activities: [
-                    {
-                      group: 'Student Council',
-                      points: 100,
-                      highlight: true,
-                      praise: 'Outstanding leadership in organizing the fall festival',
-                    },
-                    { group: 'Debate Club', points: 50 },
-                    {
-                      group: 'Chess Club',
-                      points: 30,
-                      highlight: true,
-                      praise: 'Excellent organization of the inter-college chess tournament',
-                    },
-                  ],
-                },
-                {
-                  semester: 'Spring 2023',
-                  total: 150,
-                  activities: [
-                    {
-                      group: 'Student Council',
-                      points: 80,
-                      highlight: true,
-                      praise: 'Successful implementation of the new student feedback system',
-                    },
-                    { group: 'Debate Club', points: 40 },
-                    { group: 'Environmental Society', points: 30 },
-                  ],
-                },
-                {
-                  semester: 'Fall 2022',
-                  total: 120,
-                  activities: [
-                    { group: 'Student Council', points: 70 },
-                    {
-                      group: 'Debate Club',
-                      points: 50,
-                      highlight: true,
-                      praise: 'Won the regional debate championship',
-                    },
-                  ],
-                },
-              ].map((semester, index) => (
+              {data.map((semester, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
@@ -153,14 +142,7 @@ export function ProfilePointsHighlights() {
           <TabsContent value='graph' className='mt-0'>
             <div className='p-4 bg-white'>
               <ResponsiveContainer width='100%' height={400}>
-                <LineChart
-                  data={[
-                    { semester: 'Fall 2022', total: 120 },
-                    { semester: 'Spring 2023', total: 150 },
-                    { semester: 'Fall 2023', total: 180 },
-                  ]}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                >
+                <LineChart data={lineChartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                   <XAxis dataKey='semester' stroke='#888' />
                   <YAxis stroke='#888' />
                   <RechartsTooltip
@@ -182,11 +164,7 @@ export function ProfilePointsHighlights() {
                     strokeWidth={3}
                     dot={{ r: 6, fill: '#3b82f6' }}
                   />
-                  {[
-                    { semester: 'Fall 2022', total: 120, highlight: true },
-                    { semester: 'Spring 2023', total: 150, highlight: true },
-                    { semester: 'Fall 2023', total: 180, highlight: true },
-                  ].map((point, index) => (
+                  {lineChartData.map((point, index) => (
                     <ReferenceDot
                       key={index}
                       x={point.semester}
