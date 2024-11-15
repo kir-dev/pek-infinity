@@ -23,6 +23,7 @@ import {
   ChevronDownIcon,
   InfoIcon,
 } from 'lucide-react';
+import { ProfileHeader } from './profile/profile-header';
 
 export function ProfilePageComponent() {
   const [hoveredPoint, setHoveredPoint] = useState<{ semester: string; total: number; highlight: boolean } | null>(
@@ -37,82 +38,7 @@ export function ProfilePageComponent() {
         transition={{ duration: 0.5 }}
         className='max-w-5xl mx-auto space-y-8'
       >
-        {/* Header Section */}
-        <Card className='mb-8 shadow-lg bg-white rounded-lg overflow-hidden'>
-          <CardHeader className='p-6 sm:p-8 bg-gradient-to-r from-blue-500 to-purple-500 text-white'>
-            <div className='flex flex-col sm:flex-row items-center sm:items-start gap-6'>
-              <Avatar className='h-32 w-32 border-4 border-white shadow-lg'>
-                <AvatarImage src='/placeholder.svg?height=128&width=128' alt='Jane Doe' />
-                <AvatarFallback className='text-4xl bg-white text-blue-500'>JD</AvatarFallback>
-              </Avatar>
-              <div className='text-center sm:text-left'>
-                <CardTitle className='text-3xl sm:text-4xl font-bold text-white mb-2'>Jane Doe</CardTitle>
-                <CardDescription className='text-lg text-blue-100'>
-                  <Button variant='link' className='p-0 text-blue-100 hover:text-white transition-colors'>
-                    @janedoe <ChevronDownIcon className='ml-1 h-4 w-4' />
-                  </Button>
-                </CardDescription>
-              </div>
-              <div className='sm:ml-auto flex gap-2'>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant='ghost' size='icon' className='text-white hover:bg-white/20'>
-                        <TwitterIcon className='h-5 w-5' />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>@janedoe</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant='ghost' size='icon' className='text-white hover:bg-white/20'>
-                        <FacebookIcon className='h-5 w-5' />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>jane.doe</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant='ghost' size='icon' className='text-white hover:bg-white/20'>
-                        <SendIcon className='h-5 w-5' />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>@jane_doe</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className='p-6 sm:p-8'>
-            <div className='grid gap-4 sm:grid-cols-3'>
-              <div className='flex items-center gap-2'>
-                <MailIcon className='h-5 w-5 text-gray-400' />
-                <span className='text-sm text-gray-600'>jane.doe@example.com</span>
-              </div>
-              <div className='flex items-center gap-2'>
-                <BuildingIcon className='h-5 w-5 text-gray-400' />
-                <span className='text-sm text-gray-600'>Building A</span>
-              </div>
-              <div className='flex items-center gap-2'>
-                <MapPinIcon className='h-5 w-5 text-gray-400' />
-                <span className='text-sm text-gray-600'>Room 101</span>
-              </div>
-            </div>
-            <p className='mt-4 text-gray-700'>
-              I'm a passionate student leader with a keen interest in campus politics and public speaking.
-            </p>
-          </CardContent>
-        </Card>
+        <ProfileHeader />
 
         {/* Groups Section */}
         <Card>
