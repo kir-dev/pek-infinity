@@ -1,37 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ReferenceDot } from 'recharts';
-import {
-  CalendarIcon,
-  StarIcon,
-  TrendingUpIcon,
-  AwardIcon,
-  TwitterIcon,
-  FacebookIcon,
-  SendIcon,
-  MapPinIcon,
-  BuildingIcon,
-  MailIcon,
-  ChevronDownIcon,
-  InfoIcon,
-} from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { ProfileHeader } from './profile/profile-header';
 import { ProfilePointsHighlights } from './profile/profile-points-highlights';
 
-
 export function ProfilePageComponent() {
-  const [hoveredPoint, setHoveredPoint] = useState<{ semester: string; total: number; highlight: boolean } | null>(
-    null
-  );
-
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 text-gray-900 p-4 sm:p-8'>
       <motion.div
@@ -106,7 +82,6 @@ export function ProfilePageComponent() {
           </CardContent>
         </Card>
 
-        {/* Points and Highlights Section */}
         <ProfilePointsHighlights />
       </motion.div>
     </div>
