@@ -1,9 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarIcon } from 'lucide-react';
+
+import { GroupMemberships } from '@/components/profile/group-memberships';
+
 import { ProfileHeader } from './profile/profile-header';
 import { ProfilePointsHighlights } from './profile/profile-points-highlights';
 
@@ -19,68 +19,7 @@ export function ProfilePageComponent() {
         <ProfileHeader />
 
         {/* Groups Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className='text-2xl font-semibold text-gray-800'>Group Memberships</CardTitle>
-          </CardHeader>
-          <CardContent className='p-6'>
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              {[
-                {
-                  name: 'Student Council',
-                  startDate: '2022-09-01',
-                  currentRole: 'President',
-                  pastRoles: ['Secretary'],
-                  primary: true,
-                },
-                {
-                  name: 'Debate Club',
-                  startDate: '2021-09-01',
-                  currentRole: 'Member',
-                  pastRoles: ['Vice President'],
-                  endDate: '2023-05-31',
-                },
-                { name: 'Chess Club', startDate: '2022-01-15', currentRole: 'Treasurer', pastRoles: [] },
-                { name: 'Environmental Society', startDate: '2023-03-01', currentRole: 'Member', pastRoles: [] },
-              ].map((membership, index) => (
-                <motion.div key={index} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                  <Card
-                    key={index}
-                    className={`h-full transition-shadow hover:shadow-md ${membership.primary ? 'border-blue-500' : ''} bg-gradient-to-br from-blue-50 to-purple-50`}
-                  >
-                    <CardHeader className='p-4'>
-                      <CardTitle className='text-lg flex items-center justify-between text-gray-800'>
-                        {membership.name}
-                        {membership.primary && (
-                          <Badge variant='secondary' className='bg-blue-100 text-blue-800'>
-                            Primary
-                          </Badge>
-                        )}
-                      </CardTitle>
-                      <CardDescription className='text-xs text-gray-500'>
-                        <div className='flex items-center'>
-                          <CalendarIcon className='mr-1 h-3 w-3' />
-                          Started: {membership.startDate}
-                          {membership.endDate && ` | Ended: ${membership.endDate}`}
-                        </div>
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className='p-4 pt-0'>
-                      <p className='text-sm text-gray-600'>
-                        <strong>Role:</strong> {membership.currentRole}
-                      </p>
-                      {membership.pastRoles.length > 0 && (
-                        <p className='text-sm text-gray-600 mt-1'>
-                          <strong>Past:</strong> {membership.pastRoles.join(', ')}
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <GroupMemberships />
 
         <ProfilePointsHighlights />
       </motion.div>
