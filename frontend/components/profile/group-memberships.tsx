@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 export function GroupMemberships() {
   const memberships = [
     {
+      id: '1',
       name: 'Student Council',
       startDate: '2022-09-01',
       currentRole: 'President',
@@ -13,14 +14,15 @@ export function GroupMemberships() {
       primary: true,
     },
     {
+      id: '2',
       name: 'Debate Club',
       startDate: '2021-09-01',
       currentRole: 'Member',
       pastRoles: ['Vice President'],
       endDate: '2023-05-31',
     },
-    { name: 'Chess Club', startDate: '2022-01-15', currentRole: 'Treasurer', pastRoles: [] },
-    { name: 'Environmental Society', startDate: '2023-03-01', currentRole: 'Member', pastRoles: [] },
+    { id: '3', name: 'Chess Club', startDate: '2022-01-15', currentRole: 'Treasurer', pastRoles: [] },
+    { id: '4', name: 'Environmental Society', startDate: '2023-03-01', currentRole: 'Member', pastRoles: [] },
   ];
 
   return (
