@@ -1,11 +1,28 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { CalendarIcon } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarIcon } from 'lucide-react';
-import { ProfileHeader } from './profile/profile-header';
+
+import { ProfileHeader, ProfileHeaderProps } from './profile/profile-header';
 import { ProfilePointsHighlights } from './profile/profile-points-highlights';
+
+const headerProps: ProfileHeaderProps = {
+  user: {
+    description: "I'm a passionate student leader with a keen interest in campus politics and public speaking.",
+    name: 'Jane Doe',
+    email: '',
+    building: 'Building A',
+    room: 'Room 101',
+    twitterHandle: '@janedoe',
+    facebookHandle: 'jane.doe',
+    sendHandle: '@jane_doe',
+    userTag: '@janedoe',
+    shortName: 'JD',
+  },
+};
 
 export function ProfilePageComponent() {
   return (
@@ -16,7 +33,7 @@ export function ProfilePageComponent() {
         transition={{ duration: 0.5 }}
         className='max-w-5xl mx-auto space-y-8'
       >
-        <ProfileHeader />
+        <ProfileHeader user={headerProps.user} />
 
         {/* Groups Section */}
         <Card>
