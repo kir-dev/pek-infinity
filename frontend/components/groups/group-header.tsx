@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import { Badge } from '@/components/ui/badge';
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const group = {
@@ -105,12 +105,12 @@ export function GroupHeader() {
             </CardTitle>
             <p className='text-lg text-primary-foreground pb-7 text-justify'>{group.description}</p>
             <CardDescription className='text-lg text-blue-100 flex flex-col sm:flex-row sm:items-center gap-6'>
-              <Link href={historyUrl} className={buttonVariants({ variant: 'secondary' })}>
-                Jelentkezés
-              </Link>
-              <Link href={historyUrl} className={buttonVariants({ variant: 'secondary' })}>
-                Történet
-              </Link>
+              <Button asChild variant='secondary'>
+                <Link href={historyUrl}>Jelentkezés</Link>
+              </Button>
+              <Button asChild variant='secondary'>
+                <Link href={historyUrl}>Történet</Link>
+              </Button>
             </CardDescription>
           </div>
         </div>
