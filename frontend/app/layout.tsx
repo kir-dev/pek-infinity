@@ -1,5 +1,5 @@
 // import './patch-server-axios';
-import { axiosInstance } from '@kubb/swagger-client/client';
+import { axiosInstance } from '@kubb/plugin-client/client';
 import { cookies } from 'next/headers';
 
 axiosInstance.interceptors.request.use((config) => {

@@ -1,11 +1,11 @@
-import client from "@kubb/swagger-client/client";
-import type { ResponseConfig } from "@kubb/swagger-client/client";
-import type { GroupCreateMutationRequest, GroupCreateMutationResponse } from "../types/GroupCreate";
+import client from "@kubb/plugin-client/client";
+import type { GroupCreateMutationRequest, GroupCreateMutationResponse, GroupCreate401, GroupCreate403, GroupCreate500 } from "../types/GroupCreate.ts";
+import type { RequestConfig } from "@kubb/plugin-client/client";
 
  /**
- * @link /api/v4/group
+ * {@link /api/v4/group}
  */
-export async function groupCreate(data: GroupCreateMutationRequest, options: Partial<Parameters<typeof client>[0]> = {}): Promise<ResponseConfig<GroupCreateMutationResponse>["data"]> {
-    const res = await client<GroupCreateMutationResponse, GroupCreateMutationRequest>({ method: "post", url: `/api/v4/group`, data, ...options });
+export async function groupCreate(data: GroupCreateMutationRequest, config: Partial<RequestConfig<GroupCreateMutationRequest>> = {}) {
+    const res = await client<GroupCreateMutationResponse, GroupCreate401 | GroupCreate403 | GroupCreate500, GroupCreateMutationRequest>({ method: "POST", url: `/api/v4/group`, data, ...config });
     return res.data;
 }

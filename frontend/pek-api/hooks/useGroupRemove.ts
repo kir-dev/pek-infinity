@@ -1,39 +1,39 @@
-import client from "@kubb/swagger-client/client";
-import { useMutation } from "@tanstack/react-query";
-import type { GroupRemoveMutationResponse, GroupRemovePathParams, GroupRemove401, GroupRemove403, GroupRemove500 } from "../types/GroupRemove";
+import client from "@kubb/plugin-client/client";
+import type { GroupRemoveMutationResponse, GroupRemovePathParams, GroupRemove401, GroupRemove403, GroupRemove500 } from "../types/GroupRemove.ts";
+import type { RequestConfig } from "@kubb/plugin-client/client";
 import type { UseMutationOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
- type GroupRemoveClient = typeof client<GroupRemoveMutationResponse, GroupRemove401 | GroupRemove403 | GroupRemove500, never>;
-type GroupRemove = {
-    data: GroupRemoveMutationResponse;
-    error: GroupRemove401 | GroupRemove403 | GroupRemove500;
-    request: never;
-    pathParams: GroupRemovePathParams;
-    queryParams: never;
-    headerParams: never;
-    response: GroupRemoveMutationResponse;
-    client: {
-        parameters: Partial<Parameters<GroupRemoveClient>[0]>;
-        return: Awaited<ReturnType<GroupRemoveClient>>;
-    };
-};
-/**
- * @link /api/v4/group/:id
+ export const groupRemoveMutationKey = () => [{ "url": "/api/v4/group/{id}" }] as const;
+
+ export type GroupRemoveMutationKey = ReturnType<typeof groupRemoveMutationKey>;
+
+ /**
+ * {@link /api/v4/group/:id}
  */
-export function useGroupRemove(id: GroupRemovePathParams["id"], options: {
-    mutation?: UseMutationOptions<GroupRemove["response"], GroupRemove["error"], GroupRemove["request"]>;
-    client?: GroupRemove["client"]["parameters"];
+async function groupRemove(id: GroupRemovePathParams["id"], config: Partial<RequestConfig> = {}) {
+    const res = await client<GroupRemoveMutationResponse, GroupRemove401 | GroupRemove403 | GroupRemove500, unknown>({ method: "DELETE", url: `/api/v4/group/${id}`, ...config });
+    return res.data;
+}
+
+ /**
+ * {@link /api/v4/group/:id}
+ */
+export function useGroupRemove(options: {
+    mutation?: UseMutationOptions<GroupRemoveMutationResponse, GroupRemove401 | GroupRemove403 | GroupRemove500, {
+        id: GroupRemovePathParams["id"];
+    }>;
+    client?: Partial<RequestConfig>;
 } = {}) {
-    const { mutation: mutationOptions, client: clientOptions = {} } = options ?? {};
-    return useMutation({
-        mutationFn: async () => {
-            const res = await client<GroupRemove["data"], GroupRemove["error"], GroupRemove["request"]>({
-                method: "delete",
-                url: `/api/v4/group/${id}`,
-                ...clientOptions
-            });
-            return res.data;
+    const { mutation: mutationOptions, client: config = {} } = options ?? {};
+    const mutationKey = mutationOptions?.mutationKey ?? groupRemoveMutationKey();
+    return useMutation<GroupRemoveMutationResponse, GroupRemove401 | GroupRemove403 | GroupRemove500, {
+        id: GroupRemovePathParams["id"];
+    }>({
+        mutationFn: async ({ id }) => {
+            return groupRemove(id, config);
         },
+        mutationKey,
         ...mutationOptions
     });
 }

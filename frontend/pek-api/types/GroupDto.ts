@@ -1,7 +1,7 @@
-import type { GroupListItemDto } from "./GroupListItemDto";
-import type { MemberListItemDto } from "./MemberListItemDto";
+import type { GroupListItemDto } from "./GroupListItemDto.ts";
+import type { MemberListItemDto } from "./MemberListItemDto.ts";
 
- export const groupDtoPurpose = {
+ export const groupDtoPurposeEnum = {
     "UNKNOWN": "UNKNOWN",
     "OLD": "OLD",
     "COMMITTEE": "COMMITTEE",
@@ -20,8 +20,10 @@ import type { MemberListItemDto } from "./MemberListItemDto";
     "FLOOR": "FLOOR",
     "SERVICE": "SERVICE"
 } as const;
-export type GroupDtoPurpose = (typeof groupDtoPurpose)[keyof typeof groupDtoPurpose];
-export type GroupDto = {
+
+ export type GroupDtoPurposeEnum = (typeof groupDtoPurposeEnum)[keyof typeof groupDtoPurposeEnum];
+
+ export type GroupDto = {
     /**
      * @description Unique identifier of the group
      * @type string
@@ -41,7 +43,7 @@ export type GroupDto = {
      * @description The primary purpose/type of the group
      * @type string
     */
-    purpose: GroupDtoPurpose;
+    purpose: GroupDtoPurposeEnum;
     /**
      * @description Whether this group is a community
      * @type boolean

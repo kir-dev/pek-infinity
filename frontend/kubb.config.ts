@@ -1,14 +1,12 @@
 import { defineConfig } from '@kubb/core';
+import { pluginClient } from '@kubb/plugin-client';
 import { pluginOas } from '@kubb/plugin-oas';
-import { pluginClient } from '@kubb/swagger-client';
-import { pluginTanstackQuery } from '@kubb/swagger-tanstack-query';
-import { pluginTs } from '@kubb/swagger-ts';
-import { AxiosError } from 'axios';
+import { pluginReactQuery } from '@kubb/plugin-react-query';
+import { pluginTs } from '@kubb/plugin-ts';
 
 export default defineConfig(() => {
   return {
     root: '.',
-
     input: {
       path: '../openapi.yaml',
     },
@@ -16,19 +14,6 @@ export default defineConfig(() => {
       clean: true,
       path: './pek-api',
     },
-    plugins: [
-      pluginOas(),
-      pluginTs(),
-      pluginClient(),
-      pluginTanstackQuery({
-        framework: 'react',
-        queryOptions: {
-          retry: (count: number, error: Error) => {
-            if (error instanceof AxiosError && error.response?.status === 401) return false;
-            return count <= 2;
-          },
-        },
-      }),
-    ],
+    plugins: [pluginOas(), pluginTs(), pluginClient(), pluginReactQuery()],
   };
 });

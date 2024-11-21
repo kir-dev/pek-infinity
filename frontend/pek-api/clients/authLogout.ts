@@ -1,11 +1,11 @@
-import client from "@kubb/swagger-client/client";
-import type { ResponseConfig } from "@kubb/swagger-client/client";
-import type { AuthLogoutQueryResponse } from "../types/AuthLogout";
+import client from "@kubb/plugin-client/client";
+import type { AuthLogoutQueryResponse, AuthLogout401, AuthLogout403, AuthLogout500 } from "../types/AuthLogout.ts";
+import type { RequestConfig } from "@kubb/plugin-client/client";
 
  /**
- * @link /api/v4/auth/logout
+ * {@link /api/v4/auth/logout}
  */
-export async function authLogout(options: Partial<Parameters<typeof client>[0]> = {}): Promise<ResponseConfig<AuthLogoutQueryResponse>["data"]> {
-    const res = await client<AuthLogoutQueryResponse>({ method: "get", url: `/api/v4/auth/logout`, ...options });
+export async function authLogout(config: Partial<RequestConfig> = {}) {
+    const res = await client<AuthLogoutQueryResponse, AuthLogout401 | AuthLogout403 | AuthLogout500, unknown>({ method: "GET", url: `/api/v4/auth/logout`, ...config });
     return res.data;
 }
