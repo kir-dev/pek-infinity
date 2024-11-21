@@ -11,16 +11,15 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "lint": "eslint --ext .ts,.tsx .",
     "generate": "npx kubb generate",
-    "generate:watch": "nodemon --watch ../openapi.yaml --exec \"yarn generate\""
+    "generate:watch": "npx kubb generate --watch"
   },
   "dependencies": {
-    "@kubb/cli": "^2.26.3",
-    "@kubb/core": "^2.26.3",
-    "@kubb/plugin-oas": "^2.26.3",
-    "@kubb/swagger": "^2.26.3",
-    "@kubb/swagger-client": "^2.26.3",
-    "@kubb/swagger-tanstack-query": "^2.26.3",
-    "@kubb/swagger-ts": "^2.26.3",
+    "@kubb/cli": "^3.0.11",
+    "@kubb/core": "^3.0.11",
+    "@kubb/plugin-client": "^3.0.11",
+    "@kubb/plugin-oas": "^3.0.11",
+    "@kubb/plugin-react-query": "^3.0.11",
+    "@kubb/plugin-ts": "^3.0.11",
     "@radix-ui/react-navigation-menu": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-query": "^5.56.2",

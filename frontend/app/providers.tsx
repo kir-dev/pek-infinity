@@ -1,6 +1,6 @@
 'use client';
 
-import { axiosInstance } from '@kubb/swagger-client/client';
+import { axiosInstance } from '@kubb/plugin-client/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();

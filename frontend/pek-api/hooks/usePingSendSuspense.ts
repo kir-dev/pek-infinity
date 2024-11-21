@@ -1,12 +1,12 @@
 import client from "@kubb/plugin-client/client";
 import type { PingSendQueryResponse, PingSend500 } from "../types/PingSend.ts";
 import type { RequestConfig } from "@kubb/plugin-client/client";
-import type { QueryKey, QueryObserverOptions, UseQueryResult } from "@tanstack/react-query";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import type { QueryKey, UseSuspenseQueryOptions, UseSuspenseQueryResult } from "@tanstack/react-query";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 
- export const pingSendQueryKey = () => [{ url: "/api/v4/ping" }] as const;
+ export const pingSendSuspenseQueryKey = () => [{ url: "/api/v4/ping" }] as const;
 
- export type PingSendQueryKey = ReturnType<typeof pingSendQueryKey>;
+ export type PingSendSuspenseQueryKey = ReturnType<typeof pingSendSuspenseQueryKey>;
 
  /**
  * @description # Health check endpoint<br>This endpoint is a simple health check API designed to confirm that the server is operational.When accessed, it returns a straightforward response indicating that the service is up and running.
@@ -17,8 +17,8 @@ async function pingSend(config: Partial<RequestConfig> = {}) {
     return res.data;
 }
 
- export function pingSendQueryOptions(config: Partial<RequestConfig> = {}) {
-    const queryKey = pingSendQueryKey();
+ export function pingSendSuspenseQueryOptions(config: Partial<RequestConfig> = {}) {
+    const queryKey = pingSendSuspenseQueryKey();
     return queryOptions({
         queryKey,
         queryFn: async ({ signal }) => {
@@ -32,17 +32,17 @@ async function pingSend(config: Partial<RequestConfig> = {}) {
  * @description # Health check endpoint<br>This endpoint is a simple health check API designed to confirm that the server is operational.When accessed, it returns a straightforward response indicating that the service is up and running.
  * {@link /api/v4/ping}
  */
-export function usePingSend<TData = PingSendQueryResponse, TQueryData = PingSendQueryResponse, TQueryKey extends QueryKey = PingSendQueryKey>(options: {
-    query?: Partial<QueryObserverOptions<PingSendQueryResponse, PingSend500, TData, TQueryData, TQueryKey>>;
+export function usePingSendSuspense<TData = PingSendQueryResponse, TQueryData = PingSendQueryResponse, TQueryKey extends QueryKey = PingSendSuspenseQueryKey>(options: {
+    query?: Partial<UseSuspenseQueryOptions<PingSendQueryResponse, PingSend500, TData, TQueryKey>>;
     client?: Partial<RequestConfig>;
 } = {}) {
     const { query: queryOptions, client: config = {} } = options ?? {};
-    const queryKey = queryOptions?.queryKey ?? pingSendQueryKey();
-    const query = useQuery({
-        ...pingSendQueryOptions(config) as unknown as QueryObserverOptions,
+    const queryKey = queryOptions?.queryKey ?? pingSendSuspenseQueryKey();
+    const query = useSuspenseQuery({
+        ...pingSendSuspenseQueryOptions(config) as unknown as UseSuspenseQueryOptions,
         queryKey,
-        ...queryOptions as unknown as Omit<QueryObserverOptions, "queryKey">
-    }) as UseQueryResult<TData, PingSend500> & {
+        ...queryOptions as unknown as Omit<UseSuspenseQueryOptions, "queryKey">
+    }) as UseSuspenseQueryResult<TData, PingSend500> & {
         queryKey: TQueryKey;
     };
     query.queryKey = queryKey as TQueryKey;

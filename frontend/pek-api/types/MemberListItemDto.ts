@@ -1,4 +1,4 @@
-import type { MemberUserDto } from "./MemberUserDto";
+import type { MemberUserDto } from "./MemberUserDto.ts";
 
  export type MemberListItemDto = {
     /**

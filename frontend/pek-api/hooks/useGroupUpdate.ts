@@ -1,40 +1,41 @@
-import client from "@kubb/swagger-client/client";
-import { useMutation } from "@tanstack/react-query";
-import type { GroupUpdateMutationRequest, GroupUpdateMutationResponse, GroupUpdatePathParams, GroupUpdate401, GroupUpdate403, GroupUpdate500 } from "../types/GroupUpdate";
+import client from "@kubb/plugin-client/client";
+import type { GroupUpdateMutationRequest, GroupUpdateMutationResponse, GroupUpdatePathParams, GroupUpdate401, GroupUpdate403, GroupUpdate500 } from "../types/GroupUpdate.ts";
+import type { RequestConfig } from "@kubb/plugin-client/client";
 import type { UseMutationOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
- type GroupUpdateClient = typeof client<GroupUpdateMutationResponse, GroupUpdate401 | GroupUpdate403 | GroupUpdate500, GroupUpdateMutationRequest>;
-type GroupUpdate = {
-    data: GroupUpdateMutationResponse;
-    error: GroupUpdate401 | GroupUpdate403 | GroupUpdate500;
-    request: GroupUpdateMutationRequest;
-    pathParams: GroupUpdatePathParams;
-    queryParams: never;
-    headerParams: never;
-    response: GroupUpdateMutationResponse;
-    client: {
-        parameters: Partial<Parameters<GroupUpdateClient>[0]>;
-        return: Awaited<ReturnType<GroupUpdateClient>>;
-    };
-};
-/**
- * @link /api/v4/group/:id
+ export const groupUpdateMutationKey = () => [{ "url": "/api/v4/group/{id}" }] as const;
+
+ export type GroupUpdateMutationKey = ReturnType<typeof groupUpdateMutationKey>;
+
+ /**
+ * {@link /api/v4/group/:id}
  */
-export function useGroupUpdate(id: GroupUpdatePathParams["id"], options: {
-    mutation?: UseMutationOptions<GroupUpdate["response"], GroupUpdate["error"], GroupUpdate["request"]>;
-    client?: GroupUpdate["client"]["parameters"];
+async function groupUpdate(id: GroupUpdatePathParams["id"], data?: GroupUpdateMutationRequest, config: Partial<RequestConfig<GroupUpdateMutationRequest>> = {}) {
+    const res = await client<GroupUpdateMutationResponse, GroupUpdate401 | GroupUpdate403 | GroupUpdate500, GroupUpdateMutationRequest>({ method: "PUT", url: `/api/v4/group/${id}`, data, ...config });
+    return res.data;
+}
+
+ /**
+ * {@link /api/v4/group/:id}
+ */
+export function useGroupUpdate(options: {
+    mutation?: UseMutationOptions<GroupUpdateMutationResponse, GroupUpdate401 | GroupUpdate403 | GroupUpdate500, {
+        id: GroupUpdatePathParams["id"];
+        data?: GroupUpdateMutationRequest;
+    }>;
+    client?: Partial<RequestConfig<GroupUpdateMutationRequest>>;
 } = {}) {
-    const { mutation: mutationOptions, client: clientOptions = {} } = options ?? {};
-    return useMutation({
-        mutationFn: async (data) => {
-            const res = await client<GroupUpdate["data"], GroupUpdate["error"], GroupUpdate["request"]>({
-                method: "put",
-                url: `/api/v4/group/${id}`,
-                data,
-                ...clientOptions
-            });
-            return res.data;
+    const { mutation: mutationOptions, client: config = {} } = options ?? {};
+    const mutationKey = mutationOptions?.mutationKey ?? groupUpdateMutationKey();
+    return useMutation<GroupUpdateMutationResponse, GroupUpdate401 | GroupUpdate403 | GroupUpdate500, {
+        id: GroupUpdatePathParams["id"];
+        data?: GroupUpdateMutationRequest;
+    }>({
+        mutationFn: async ({ id, data }) => {
+            return groupUpdate(id, data, config);
         },
+        mutationKey,
         ...mutationOptions
     });
 }

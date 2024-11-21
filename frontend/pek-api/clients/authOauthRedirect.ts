@@ -1,11 +1,11 @@
-import client from "@kubb/swagger-client/client";
-import type { ResponseConfig } from "@kubb/swagger-client/client";
-import type { AuthOauthRedirectQueryResponse, AuthOauthRedirectQueryParams } from "../types/AuthOauthRedirect";
+import client from "@kubb/plugin-client/client";
+import type { AuthOauthRedirectQueryResponse, AuthOauthRedirectQueryParams, AuthOauthRedirect401, AuthOauthRedirect403, AuthOauthRedirect500 } from "../types/AuthOauthRedirect.ts";
+import type { RequestConfig } from "@kubb/plugin-client/client";
 
  /**
- * @link /api/v4/auth/callback
+ * {@link /api/v4/auth/callback}
  */
-export async function authOauthRedirect(params: AuthOauthRedirectQueryParams, options: Partial<Parameters<typeof client>[0]> = {}): Promise<ResponseConfig<AuthOauthRedirectQueryResponse>["data"]> {
-    const res = await client<AuthOauthRedirectQueryResponse>({ method: "get", url: `/api/v4/auth/callback`, params, ...options });
+export async function authOauthRedirect(params: AuthOauthRedirectQueryParams, config: Partial<RequestConfig> = {}) {
+    const res = await client<AuthOauthRedirectQueryResponse, AuthOauthRedirect401 | AuthOauthRedirect403 | AuthOauthRedirect500, unknown>({ method: "GET", url: `/api/v4/auth/callback`, params, ...config });
     return res.data;
 }

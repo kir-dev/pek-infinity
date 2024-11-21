@@ -1,20 +1,24 @@
-export const internalServerErrorDtoStatusCode = {
+export const internalServerErrorDtoStatusCodeEnum = {
     "500": 500
 } as const;
-export type InternalServerErrorDtoStatusCode = (typeof internalServerErrorDtoStatusCode)[keyof typeof internalServerErrorDtoStatusCode];
-export const internalServerErrorDtoMessage = {
+
+ export type InternalServerErrorDtoStatusCodeEnum = (typeof internalServerErrorDtoStatusCodeEnum)[keyof typeof internalServerErrorDtoStatusCodeEnum];
+
+ export const internalServerErrorDtoMessageEnum = {
     "Internal Server Error": "Internal Server Error"
 } as const;
-export type InternalServerErrorDtoMessage = (typeof internalServerErrorDtoMessage)[keyof typeof internalServerErrorDtoMessage];
-export type InternalServerErrorDto = {
+
+ export type InternalServerErrorDtoMessageEnum = (typeof internalServerErrorDtoMessageEnum)[keyof typeof internalServerErrorDtoMessageEnum];
+
+ export type InternalServerErrorDto = {
     /**
      * @default 500
      * @type number
     */
-    statusCode: InternalServerErrorDtoStatusCode;
+    statusCode: InternalServerErrorDtoStatusCodeEnum;
     /**
      * @default "Internal Server Error"
      * @type string
     */
-    message: InternalServerErrorDtoMessage;
+    message: InternalServerErrorDtoMessageEnum;
 };

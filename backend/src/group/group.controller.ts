@@ -11,7 +11,7 @@ import {
   UpdateGroupDto,
 } from './dto/group.dto';
 
-@ApiController('group')
+@ApiController('group', { authStrategy: 'ENFORCED' })
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 

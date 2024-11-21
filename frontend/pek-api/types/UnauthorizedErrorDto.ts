@@ -1,29 +1,35 @@
-export const unauthorizedErrorDtoMessage = {
+export const unauthorizedErrorDtoMessageEnum = {
     "JWT cookie not found": "JWT cookie not found"
 } as const;
-export type UnauthorizedErrorDtoMessage = (typeof unauthorizedErrorDtoMessage)[keyof typeof unauthorizedErrorDtoMessage];
-export const unauthorizedErrorDtoStatusCode = {
+
+ export type UnauthorizedErrorDtoMessageEnum = (typeof unauthorizedErrorDtoMessageEnum)[keyof typeof unauthorizedErrorDtoMessageEnum];
+
+ export const unauthorizedErrorDtoStatusCodeEnum = {
     "401": 401
 } as const;
-export type UnauthorizedErrorDtoStatusCode = (typeof unauthorizedErrorDtoStatusCode)[keyof typeof unauthorizedErrorDtoStatusCode];
-export const unauthorizedErrorDtoError = {
+
+ export type UnauthorizedErrorDtoStatusCodeEnum = (typeof unauthorizedErrorDtoStatusCodeEnum)[keyof typeof unauthorizedErrorDtoStatusCodeEnum];
+
+ export const unauthorizedErrorDtoErrorEnum = {
     "Unauthorized": "Unauthorized"
 } as const;
-export type UnauthorizedErrorDtoError = (typeof unauthorizedErrorDtoError)[keyof typeof unauthorizedErrorDtoError];
-export type UnauthorizedErrorDto = {
+
+ export type UnauthorizedErrorDtoErrorEnum = (typeof unauthorizedErrorDtoErrorEnum)[keyof typeof unauthorizedErrorDtoErrorEnum];
+
+ export type UnauthorizedErrorDto = {
     /**
      * @default "JWT cookie not found"
      * @type string
     */
-    message: UnauthorizedErrorDtoMessage;
+    message: UnauthorizedErrorDtoMessageEnum;
     /**
      * @default 401
      * @type number
     */
-    statusCode: UnauthorizedErrorDtoStatusCode;
+    statusCode: UnauthorizedErrorDtoStatusCodeEnum;
     /**
      * @default "Unauthorized"
      * @type string
     */
-    error?: UnauthorizedErrorDtoError | null;
+    error?: UnauthorizedErrorDtoErrorEnum | null;
 };

@@ -12,7 +12,7 @@ import { ApiController } from '@/utils/controller.decorator';
 import { AuthService } from './auth.service';
 import { UserDto } from './entities/user.entity';
 
-@ApiController('auth')
+@ApiController('auth', { authStrategy: 'NOT_ENFORCED' })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

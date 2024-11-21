@@ -1,40 +1,39 @@
-import client from "@kubb/swagger-client/client";
-import { useMutation } from "@tanstack/react-query";
-import type { GroupCreateMutationRequest, GroupCreateMutationResponse, GroupCreate401, GroupCreate403, GroupCreate500 } from "../types/GroupCreate";
+import client from "@kubb/plugin-client/client";
+import type { GroupCreateMutationRequest, GroupCreateMutationResponse, GroupCreate401, GroupCreate403, GroupCreate500 } from "../types/GroupCreate.ts";
+import type { RequestConfig } from "@kubb/plugin-client/client";
 import type { UseMutationOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
- type GroupCreateClient = typeof client<GroupCreateMutationResponse, GroupCreate401 | GroupCreate403 | GroupCreate500, GroupCreateMutationRequest>;
-type GroupCreate = {
-    data: GroupCreateMutationResponse;
-    error: GroupCreate401 | GroupCreate403 | GroupCreate500;
-    request: GroupCreateMutationRequest;
-    pathParams: never;
-    queryParams: never;
-    headerParams: never;
-    response: GroupCreateMutationResponse;
-    client: {
-        parameters: Partial<Parameters<GroupCreateClient>[0]>;
-        return: Awaited<ReturnType<GroupCreateClient>>;
-    };
-};
-/**
- * @link /api/v4/group
+ export const groupCreateMutationKey = () => [{ "url": "/api/v4/group" }] as const;
+
+ export type GroupCreateMutationKey = ReturnType<typeof groupCreateMutationKey>;
+
+ /**
+ * {@link /api/v4/group}
+ */
+async function groupCreate(data: GroupCreateMutationRequest, config: Partial<RequestConfig<GroupCreateMutationRequest>> = {}) {
+    const res = await client<GroupCreateMutationResponse, GroupCreate401 | GroupCreate403 | GroupCreate500, GroupCreateMutationRequest>({ method: "POST", url: `/api/v4/group`, data, ...config });
+    return res.data;
+}
+
+ /**
+ * {@link /api/v4/group}
  */
 export function useGroupCreate(options: {
-    mutation?: UseMutationOptions<GroupCreate["response"], GroupCreate["error"], GroupCreate["request"]>;
-    client?: GroupCreate["client"]["parameters"];
+    mutation?: UseMutationOptions<GroupCreateMutationResponse, GroupCreate401 | GroupCreate403 | GroupCreate500, {
+        data: GroupCreateMutationRequest;
+    }>;
+    client?: Partial<RequestConfig<GroupCreateMutationRequest>>;
 } = {}) {
-    const { mutation: mutationOptions, client: clientOptions = {} } = options ?? {};
-    return useMutation({
-        mutationFn: async (data) => {
-            const res = await client<GroupCreate["data"], GroupCreate["error"], GroupCreate["request"]>({
-                method: "post",
-                url: `/api/v4/group`,
-                data,
-                ...clientOptions
-            });
-            return res.data;
+    const { mutation: mutationOptions, client: config = {} } = options ?? {};
+    const mutationKey = mutationOptions?.mutationKey ?? groupCreateMutationKey();
+    return useMutation<GroupCreateMutationResponse, GroupCreate401 | GroupCreate403 | GroupCreate500, {
+        data: GroupCreateMutationRequest;
+    }>({
+        mutationFn: async ({ data }) => {
+            return groupCreate(data, config);
         },
+        mutationKey,
         ...mutationOptions
     });
 }

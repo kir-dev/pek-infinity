@@ -4,7 +4,7 @@ import { ApiController } from '@/utils/controller.decorator';
 
 import { Ping } from './entities/ping.entity';
 
-@ApiController('ping', { withAuth: false })
+@ApiController('ping', { authStrategy: 'UNRESTRICTED' })
 export class PingController {
   /**
    * # Health check endpoint<br>

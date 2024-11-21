@@ -1,24 +1,30 @@
-export const forbiddenErrorDtoStatusCode = {
+export const forbiddenErrorDtoStatusCodeEnum = {
     "403": 403
 } as const;
-export type ForbiddenErrorDtoStatusCode = (typeof forbiddenErrorDtoStatusCode)[keyof typeof forbiddenErrorDtoStatusCode];
-export const forbiddenErrorDtoResourceOp = {
+
+ export type ForbiddenErrorDtoStatusCodeEnum = (typeof forbiddenErrorDtoStatusCodeEnum)[keyof typeof forbiddenErrorDtoStatusCodeEnum];
+
+ export const forbiddenErrorDtoResourceOpEnum = {
     "CREATE": "CREATE",
     "READ": "READ",
     "UPDATE": "UPDATE",
     "DELETE": "DELETE"
 } as const;
-export type ForbiddenErrorDtoResourceOp = (typeof forbiddenErrorDtoResourceOp)[keyof typeof forbiddenErrorDtoResourceOp];
-export const forbiddenErrorDtoError = {
+
+ export type ForbiddenErrorDtoResourceOpEnum = (typeof forbiddenErrorDtoResourceOpEnum)[keyof typeof forbiddenErrorDtoResourceOpEnum];
+
+ export const forbiddenErrorDtoErrorEnum = {
     "Forbidden": "Forbidden"
 } as const;
-export type ForbiddenErrorDtoError = (typeof forbiddenErrorDtoError)[keyof typeof forbiddenErrorDtoError];
-export type ForbiddenErrorDto = {
+
+ export type ForbiddenErrorDtoErrorEnum = (typeof forbiddenErrorDtoErrorEnum)[keyof typeof forbiddenErrorDtoErrorEnum];
+
+ export type ForbiddenErrorDto = {
     /**
      * @default 403
      * @type number
     */
-    statusCode: ForbiddenErrorDtoStatusCode;
+    statusCode: ForbiddenErrorDtoStatusCodeEnum;
     /**
      * @type string
     */
@@ -30,9 +36,9 @@ export type ForbiddenErrorDto = {
     /**
      * @type string
     */
-    resourceOp?: ForbiddenErrorDtoResourceOp | null;
+    resourceOp?: ForbiddenErrorDtoResourceOpEnum | null;
     /**
      * @type string
     */
-    error?: ForbiddenErrorDtoError | null;
+    error?: ForbiddenErrorDtoErrorEnum | null;
 };

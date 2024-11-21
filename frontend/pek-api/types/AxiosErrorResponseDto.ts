@@ -1,6 +1,6 @@
-import type { InternalServerErrorDto } from "./InternalServerErrorDto";
-import type { UnauthorizedErrorDto } from "./UnauthorizedErrorDto";
-import type { ForbiddenErrorDto } from "./ForbiddenErrorDto";
+import type { ForbiddenErrorDto } from "./ForbiddenErrorDto.ts";
+import type { InternalServerErrorDto } from "./InternalServerErrorDto.ts";
+import type { UnauthorizedErrorDto } from "./UnauthorizedErrorDto.ts";
 
  export type AxiosErrorResponseDto = {
     /**
