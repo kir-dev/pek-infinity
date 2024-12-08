@@ -41,16 +41,16 @@ export function ApiController(
       type: AxiosErrorDto<InternalServerErrorDto>,
       description: 'Internal Server Error',
       status: 500,
-      // example: {
-      //   response: {
-      //     data: {
-      //       statusCode: 500,
-      //       error: 'Internal Server Error',
-      //       message: 'Human readable error',
-      //     },
-      //   },
-      //   status: 500,
-      // },
+      example: {
+        response: {
+          data: {
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: 'Human readable error',
+          },
+        },
+        status: 500,
+      },
     }),
   );
   if (authStrategy !== 'UNRESTRICTED') {
@@ -61,31 +61,31 @@ export function ApiController(
         type: AxiosErrorDto<UnauthorizedErrorDto>,
         description: 'Unauthorized',
         status: 401,
-        // example: {
-        //   response: {
-        //     data: {
-        //       statusCode: 401,
-        //       error: 'Unauthorized',
-        //       message: 'Human readable error',
-        //     },
-        //   },
-        //   status: 401,
-        // },
+        example: {
+          response: {
+            data: {
+              statusCode: 401,
+              error: 'Unauthorized',
+              message: 'Human readable error',
+            },
+          },
+          status: 401,
+        },
       }),
       ApiForbiddenResponse({
         type: AxiosErrorDto<ForbiddenErrorDto>,
         description: 'Forbidden',
         status: 403,
-        // example: {
-        //   response: {
-        //     data: {
-        //       statusCode: 403,
-        //       error: 'Forbidden',
-        //       message: 'Human readable error',
-        //     },
-        //   },
-        //   status: 403,
-        // },
+        example: {
+          response: {
+            data: {
+              statusCode: 403,
+              error: 'Forbidden',
+              message: 'Human readable error',
+            },
+          },
+          status: 403,
+        },
       }),
     );
   }
