@@ -1,3 +1,5 @@
+export * from "./appHome";
+export * from "./appPing";
 export * from "./authLogin";
 export * from "./authLogout";
 export * from "./authMe";
@@ -7,4 +9,3 @@ export * from "./groupFindAll";
 export * from "./groupFindOne";
 export * from "./groupRemove";
 export * from "./groupUpdate";
-export * from "./pingSend";

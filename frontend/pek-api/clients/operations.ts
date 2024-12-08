@@ -1,6 +1,10 @@
 export const operations = {
-    "PingSend": {
-        "path": "/api/v4/ping",
+    "AppHome": {
+        "path": "/",
+        "method": "get"
+    },
+    "AppPing": {
+        "path": "/ping",
         "method": "get"
     },
     "AuthLogin": {

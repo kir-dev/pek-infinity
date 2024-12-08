@@ -2,10 +2,10 @@ import { AuthButton } from '@/components/auth-button';
 import { ClientSideProfile } from '@/components/client-side-profile';
 import { Navbar } from '@/components/navbar';
 import { ServerSideProfile } from '@/components/server-side-profile';
-import { pingSend } from '@/pek-api';
+import { appPing } from '@/pek-api/clients';
 
 export default async function Home() {
-  const { ping } = await pingSend();
+  const ping = await appPing();
   return (
     <>
       <Navbar />

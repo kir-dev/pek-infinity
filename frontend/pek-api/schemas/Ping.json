@@ -1,1 +1,0 @@
-{"type":"object","properties":{"ping":{"type":"string"}},"required":["ping"],"x-readme-ref-name":"Ping"}
