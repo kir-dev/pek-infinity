@@ -64,6 +64,9 @@ paths:
                 $ref: "#/components/schemas/AxiosErrorDto"
       tags: &a5
         - auth
+      security: &a6
+        - bearer: []
+        - jwt: []
   /api/v4/auth/callback:
     get:
       operationId: AuthOauthRedirect
@@ -81,6 +84,7 @@ paths:
         "403": *a3
         "500": *a4
       tags: *a5
+      security: *a6
   /api/v4/auth/logout:
     get:
       operationId: AuthLogout
@@ -94,6 +98,7 @@ paths:
         "403": *a3
         "500": *a4
       tags: *a5
+      security: *a6
   /api/v4/auth/me:
     get:
       operationId: AuthMe
@@ -109,6 +114,7 @@ paths:
         "403": *a3
         "500": *a4
       tags: *a5
+      security: *a6
   /api/v4/group:
     post:
       operationId: GroupCreate
@@ -126,26 +132,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupDto"
-        "401": &a6
+        "401": &a7
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-        "403": &a7
+        "403": &a8
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-        "500": &a8
+        "500": &a9
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-      tags: &a9
+      tags: &a10
         - group
+      security: &a11
+        - bearer: []
+        - jwt: []
     get:
       operationId: GroupFindAll
       parameters:
@@ -170,10 +179,11 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/GroupListItemDto"
-        "401": *a6
-        "403": *a7
-        "500": *a8
-      tags: *a9
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      tags: *a10
+      security: *a11
   /api/v4/group/{id}:
     get:
       operationId: GroupFindOne
@@ -190,10 +200,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupDto"
-        "401": *a6
-        "403": *a7
-        "500": *a8
-      tags: *a9
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      tags: *a10
+      security: *a11
     put:
       operationId: GroupUpdate
       parameters:
@@ -215,10 +226,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupDto"
-        "401": *a6
-        "403": *a7
-        "500": *a8
-      tags: *a9
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      tags: *a10
+      security: *a11
     delete:
       operationId: GroupRemove
       parameters:
@@ -232,10 +244,11 @@ paths:
           description: ""
         "204":
           description: Delete group
-        "401": *a6
-        "403": *a7
-        "500": *a8
-      tags: *a9
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      tags: *a10
+      security: *a11
 info:
   title: PÉK API
   description: Profiles and Groups
@@ -248,6 +261,10 @@ tags: []
 servers: []
 components:
   securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
     cookie:
       type: apiKey
       in: cookie
@@ -258,9 +275,9 @@ components:
       properties:
         message:
           type: string
-          default: JWT cookie not found
+          default: JWT cookie or Bearer token not found
           enum:
-            - JWT cookie not found
+            - Authorization token not found
         statusCode:
           type: number
           default: 401

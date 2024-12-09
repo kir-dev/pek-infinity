@@ -39,6 +39,7 @@ export async function bootstrap(): Promise<{
       'Source Code (GitHub)',
       'https://github.com/kir-dev/pek-infinity',
     )
+    .addBearerAuth()
     .addCookieAuth('jwt')
     .build();
   const document = SwaggerModule.createDocument(app, config, {

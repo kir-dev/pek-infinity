@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { UserDto } from '@/auth/entities/user.entity';
@@ -12,7 +11,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (req: Request) => extractJwtTokenFromCookie(req),
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        extractJwtTokenFromCookie,
       ]),
       ignoreExpiration: false,
       secretOrKey: JWT_SECRET,

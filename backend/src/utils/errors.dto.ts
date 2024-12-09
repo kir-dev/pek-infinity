@@ -2,8 +2,8 @@ import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
 @ApiExtraModels()
 export class UnauthorizedErrorDto {
-  @ApiProperty({ enum: ['JWT cookie not found'] })
-  message = 'JWT cookie not found';
+  @ApiProperty({ enum: ['Authorization token not found'] })
+  message = 'JWT cookie or Bearer token not found';
   @ApiProperty({ enum: [401] })
   statusCode = 401;
 

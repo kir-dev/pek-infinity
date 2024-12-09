@@ -1,5 +1,7 @@
 import { applyDecorators, Controller } from '@nestjs/common';
 import {
+  ApiBearerAuth,
+  ApiCookieAuth,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiTags,
@@ -34,6 +36,8 @@ export function ApiController(
             type: AxiosErrorDto<ForbiddenErrorDto>,
             description: 'Forbidden',
           }),
+          ApiBearerAuth(),
+          ApiCookieAuth('jwt'),
         ]
       : []),
   );
