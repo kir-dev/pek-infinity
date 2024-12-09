@@ -6,10 +6,12 @@ export function getHostFromUrl(url: string): string {
   return hostWithPort.split(':')[0];
 }
 
+export const NO_AUTH_TOKEN_ERROR = 'JWT cookie or Bearer token not found';
+
 export function extractJwtTokenFromCookie(req: Request): string {
   const jwtCookie = getCookiesAsObject(req).jwt;
   if (!jwtCookie) {
-    throw new UnauthorizedException('JWT cookie not found');
+    throw new UnauthorizedException(NO_AUTH_TOKEN_ERROR);
   }
   return jwtCookie;
 }
