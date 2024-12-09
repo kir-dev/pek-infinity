@@ -5,15 +5,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(403).json({ message: 'Lambda API is disabled in this environment' });
     return;
   }
-  const { bootstrap } = await import('backend/dist/app.js');
-  const { app } = await bootstrap();
-  const server = (await app.init()).getHttpAdapter().getInstance();
+  res.status(501).json({ message: 'Not implemented' });
+  // const { bootstrap } = await import('backend/dist/app.js');
+  // const { app } = await bootstrap();
+  // const server = (await app.init()).getHttpAdapter().getInstance();
 
-  return new Promise<void>((resolve) => {
-    res.on('finish', () => {
-      resolve();
-    });
+  // return new Promise<void>((resolve) => {
+  //   res.on('finish', () => {
+  //     resolve();
+  //   });
 
-    server(req, res);
-  });
+  //   server(req, res);
+  // });
 }
