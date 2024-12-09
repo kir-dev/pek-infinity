@@ -5,7 +5,6 @@ import { axiosInstance } from '@kubb/swagger-client/client';
 import { cookies } from 'next/headers';
 
 // Reinitialize the server side axios instance with the correct values
-axiosInstance.defaults.baseURL = getBackend({ preferredNetwork: 'private' });
 axiosInstance.interceptors.request.use((config) => {
   config.headers.cookie = cookies().toString();
   if (config.url && new RegExp('^/api/v4|/ping').test(config.url)) {
