@@ -4,7 +4,7 @@
  */
 module.exports = {
   plugins: ['react'],
-  extends: ['next/core-web-vitals', 'plugin:react/recommended', '../.eslintrc.js'],
+  extends: ['next/core-web-vitals', 'plugin:react/recommended', '../.eslintrc.js', 'plugin:storybook/recommended'],
   ignorePatterns: ['node_modules/**/*', '.next/**/*', 'out/**/*', 'pek-api/**/*'],
   parserOptions: {
     tsconfigRootDir: __dirname,

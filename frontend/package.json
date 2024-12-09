@@ -11,7 +11,9 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "lint": "eslint --ext .ts,.tsx .",
     "generate": "npx kubb generate",
-    "generate:watch": "npx kubb generate --watch"
+    "generate:watch": "npx kubb generate --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@kubb/cli": "^2.26.3",
@@ -36,6 +38,14 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.2",
+    "@storybook/addon-essentials": "^8.4.7",
+    "@storybook/addon-interactions": "^8.4.7",
+    "@storybook/addon-onboarding": "^8.4.7",
+    "@storybook/blocks": "^8.4.7",
+    "@storybook/nextjs": "^8.4.7",
+    "@storybook/react": "^8.4.7",
+    "@storybook/test": "^8.4.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.16.5",
     "@types/react": "^18.3.5",
@@ -45,7 +55,9 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.11",
     "eslint-plugin-react": "^7.36.1",
+    "eslint-plugin-storybook": "^0.11.1",
     "postcss": "^8.4.45",
+    "storybook": "^8.4.7",
     "tailwindcss": "^3.4.11",
     "typescript": "~5.6.2"
   }
