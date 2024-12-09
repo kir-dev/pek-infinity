@@ -1,4 +1,4 @@
-import { axiosInstance } from '@kubb/swagger-client/client';
+import { axiosInstance } from '@kubb/plugin-client/client';
 import { cookies } from 'next/headers';
 
 import { getBackend } from '@/lib/get-backend';
