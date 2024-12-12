@@ -1,0 +1,1 @@
+{"type":"object","properties":{"id":{"description":"Unique identifier of the group","type":"string","example":"cjld2cjxh0000qzrmn831i7rn"},"name":{"description":"Unique name of the group","type":"string","example":"Developers"}},"required":["id","name"],"x-readme-ref-name":"GroupListItemDto"}

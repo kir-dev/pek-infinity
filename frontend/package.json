@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "lint": "eslint --ext .ts,.tsx .",
     "generate": "npx kubb generate",
-    "generate:watch": "nodemon --watch ../openapi.yaml --exec \"yarn generate\""
+    "generate:watch": "npx kubb generate --watch"
   },
   "dependencies": {
     "@kubb/cli": "^2.26.3",
@@ -50,7 +50,6 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.11",
     "eslint-plugin-react": "^7.36.1",
-    "nodemon": "^3.1.4",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.11",
     "typescript": "~5.6.2"

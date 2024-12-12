@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { Logger, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { type NestExpressApplication } from '@nestjs/platform-express';
 import {
@@ -21,9 +21,9 @@ export async function bootstrap(): Promise<{
   document: OpenAPIObject;
 }> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app
-    .setGlobalPrefix('api')
+    .setGlobalPrefix('api', { exclude: ['/', '/ping'] })
     .enableVersioning({ type: VersioningType.URI, defaultVersion: '4' })
     .enableCors({
       origin: FRONTEND_CALLBACK,
@@ -39,11 +39,12 @@ export async function bootstrap(): Promise<{
       'Source Code (GitHub)',
       'https://github.com/kir-dev/pek-infinity',
     )
+    .addBearerAuth()
     .addCookieAuth('jwt')
     .build();
   const document = SwaggerModule.createDocument(app, config, {
     operationIdFactory: (controller, method, version) =>
-      `${capitalize(controller.replace('Controller', ''))}${capitalize(method)}${version === 'v4' ? '' : version}`,
+      `${capitalize(controller.replace('Controller', ''))}${capitalize(method)}${!version || version === 'v4' ? '' : version}`,
   });
   SwaggerModule.setup('api', app, document);
 

@@ -1,17 +1,17 @@
-// import './patch-server-axios';
+import 'server-only';
+import './globals.css';
+
 import { axiosInstance } from '@kubb/swagger-client/client';
 import { cookies } from 'next/headers';
 
+// Reinitialize the server side axios instance with the correct values
 axiosInstance.interceptors.request.use((config) => {
   config.headers.cookie = cookies().toString();
-  if (config.url?.startsWith('/api/v')) {
-    const baseURL = getBackend({ preferredNetwork: 'private' });
-    config.url = `${baseURL}${config.url}`;
+  if (config.url && new RegExp('^/api/v4|/ping').test(config.url)) {
+    config.url = getBackend({ preferredNetwork: 'private' }) + config.url;
   }
   return config;
 });
-
-import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';

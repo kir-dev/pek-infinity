@@ -19,7 +19,7 @@ export default defineConfig(() => {
     plugins: [
       pluginOas(),
       pluginTs(),
-      pluginClient(),
+      pluginClient(), // Consider adding `{ output: { path: 'axios' } }`
       pluginTanstackQuery({
         framework: 'react',
         queryOptions: {

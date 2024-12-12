@@ -1,8 +1,19 @@
 openapi: 3.0.0
 paths:
-  /api/v4/ping:
+  /:
     get:
-      operationId: PingSend
+      operationId: AppHome
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "302":
+          description: Redirects to the API documentation.
+      tags: &a1
+        - default
+  /ping:
+    get:
+      operationId: AppPing
       summary: ""
       description: >-
         # Health check endpoint<br>
@@ -17,19 +28,13 @@ paths:
       parameters: []
       responses:
         "200":
-          description: ""
+          description: Pong
+          example: pong
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Ping"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AxiosErrorDto"
-      tags:
-        - ping
+                type: string
+      tags: *a1
   /api/v4/auth/login:
     get:
       operationId: AuthLogin
@@ -39,26 +44,53 @@ paths:
           description: ""
         "302":
           description: Redirects to the AuthSch login page.
-        "401": &a1
+        "401": &a5
           description: Unauthorized
+          example: &a2
+            response:
+              data:
+                statusCode: 401
+                error: Unauthorized
+                message: Human readable error
+            status: 401
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-        "403": &a2
+              example: *a2
+        "403": &a6
           description: Forbidden
+          example: &a3
+            response:
+              data:
+                statusCode: 403
+                error: Forbidden
+                message: Human readable error
+            status: 403
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-        "500": &a3
+              example: *a3
+        "500": &a7
           description: Internal Server Error
+          example: &a4
+            response:
+              data:
+                statusCode: 500
+                error: Internal Server Error
+                message: Human readable error
+            status: 500
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-      tags: &a4
+              example: *a4
+      tags: &a8
         - auth
+      security: &a9
+        - bearer: []
+        - jwt: []
   /api/v4/auth/callback:
     get:
       operationId: AuthOauthRedirect
@@ -72,10 +104,11 @@ paths:
           description: ""
         "302":
           description: Redirects to the frontend and sets cookie with JWT.
-        "401": *a1
-        "403": *a2
-        "500": *a3
-      tags: *a4
+        "401": *a5
+        "403": *a6
+        "500": *a7
+      tags: *a8
+      security: *a9
   /api/v4/auth/logout:
     get:
       operationId: AuthLogout
@@ -85,10 +118,11 @@ paths:
           description: ""
         "302":
           description: Redirects to the frontend and clears the JWT cookie.
-        "401": *a1
-        "403": *a2
-        "500": *a3
-      tags: *a4
+        "401": *a5
+        "403": *a6
+        "500": *a7
+      tags: *a8
+      security: *a9
   /api/v4/auth/me:
     get:
       operationId: AuthMe
@@ -100,10 +134,169 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserDto"
-        "401": *a1
-        "403": *a2
-        "500": *a3
-      tags: *a4
+        "401": *a5
+        "403": *a6
+        "500": *a7
+      tags: *a8
+      security: *a9
+  /api/v4/group:
+    post:
+      operationId: GroupCreate
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGroupDto"
+      responses:
+        "201":
+          description: Create group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupDto"
+        "401": &a13
+          description: Unauthorized
+          example: &a10
+            response:
+              data:
+                statusCode: 401
+                error: Unauthorized
+                message: Human readable error
+            status: 401
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example: *a10
+        "403": &a14
+          description: Forbidden
+          example: &a11
+            response:
+              data:
+                statusCode: 403
+                error: Forbidden
+                message: Human readable error
+            status: 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example: *a11
+        "500": &a15
+          description: Internal Server Error
+          example: &a12
+            response:
+              data:
+                statusCode: 500
+                error: Internal Server Error
+                message: Human readable error
+            status: 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example: *a12
+      tags: &a16
+        - group
+      security: &a17
+        - bearer: []
+        - jwt: []
+    get:
+      operationId: GroupFindAll
+      parameters:
+        - name: page
+          required: false
+          in: query
+          example: 1
+          schema:
+            type: number
+        - name: perPage
+          required: false
+          in: query
+          example: 10
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Get all groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GroupListItemDto"
+        "401": *a13
+        "403": *a14
+        "500": *a15
+      tags: *a16
+      security: *a17
+  /api/v4/group/{id}:
+    get:
+      operationId: GroupFindOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Get one group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupDto"
+        "401": *a13
+        "403": *a14
+        "500": *a15
+      tags: *a16
+      security: *a17
+    put:
+      operationId: GroupUpdate
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGroupDto"
+      responses:
+        "200":
+          description: Update group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupDto"
+        "401": *a13
+        "403": *a14
+        "500": *a15
+      tags: *a16
+      security: *a17
+    delete:
+      operationId: GroupRemove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+        "204":
+          description: Delete group
+        "401": *a13
+        "403": *a14
+        "500": *a15
+      tags: *a16
+      security: *a17
 info:
   title: PÉK API
   description: Profiles and Groups
@@ -116,6 +309,10 @@ tags: []
 servers: []
 components:
   securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
     cookie:
       type: apiKey
       in: cookie
@@ -126,9 +323,9 @@ components:
       properties:
         message:
           type: string
-          default: JWT cookie not found
+          default: JWT cookie or Bearer token not found
           enum:
-            - JWT cookie not found
+            - Authorization token not found
         statusCode:
           type: number
           default: 401
@@ -210,13 +407,6 @@ components:
       required:
         - response
         - status
-    Ping:
-      type: object
-      properties:
-        ping:
-          type: string
-      required:
-        - ping
     UserDto:
       type: object
       properties:
@@ -224,6 +414,184 @@ components:
           type: string
       required:
         - name
+    CreateGroupDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        parentId:
+          type: string
+        purpose:
+          type: object
+        isCommunity:
+          type: boolean
+        isResort:
+          type: boolean
+        isTaskForce:
+          type: boolean
+        hasTransitiveMembership:
+          type: boolean
+        isArchived:
+          type: boolean
+      required:
+        - name
+        - description
+        - purpose
+        - isCommunity
+        - isResort
+        - isTaskForce
+        - hasTransitiveMembership
+        - isArchived
+    GroupListItemDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the group
+          example: cjld2cjxh0000qzrmn831i7rn
+        name:
+          type: string
+          description: Unique name of the group
+          example: Developers
+      required:
+        - id
+        - name
+    MemberUserDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the user
+          example: cjld2cjxh0000qzrmn831i7rn
+        firstName:
+          type: string
+          description: First name of the member
+          example: John
+        lastName:
+          type: string
+          description: Last name of the member
+          example: Doe
+        nickname:
+          type: string
+          description: Nickname of the member
+          example: Johnny
+      required:
+        - id
+        - firstName
+        - lastName
+        - nickname
+    MemberListItemDto:
+      type: object
+      properties:
+        user:
+          description: User profile of the member
+          allOf:
+            - $ref: "#/components/schemas/MemberUserDto"
+      required:
+        - user
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the group
+          example: cjld2cjxh0000qzrmn831i7rn
+        name:
+          type: string
+          description: Unique name of the group
+          example: Developers
+        description:
+          type: string
+          description: Description of the group purpose and activities
+          example: Group for software developers
+        purpose:
+          type: string
+          description: The primary purpose/type of the group
+          enum:
+            - UNKNOWN
+            - OLD
+            - COMMITTEE
+            - PARTY
+            - CIRCLE
+            - D
+            - ELLIPSE
+            - YEAR_CLASS
+            - GROUP
+            - CULTURE
+            - PROJECT
+            - EVENT
+            - RESORT
+            - SPORT
+            - PROFESSIONAL
+            - FLOOR
+            - SERVICE
+          example: GROUP
+        isCommunity:
+          type: boolean
+          description: Whether this group is a community
+          example: true
+        isResort:
+          type: boolean
+          description: Whether this group is a resort
+          example: false
+        isTaskForce:
+          type: boolean
+          description: Whether this group is a task force
+          example: false
+        hasTransitiveMembership:
+          type: boolean
+          description: Whether this group inherits members from child groups
+          example: true
+        children:
+          description: Children groups of this group
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupListItemDto"
+        parent:
+          nullable: true
+          description: Parent group of this group
+          allOf:
+            - $ref: "#/components/schemas/GroupListItemDto"
+        memberships:
+          description: Members of this group
+          type: array
+          items:
+            $ref: "#/components/schemas/MemberListItemDto"
+      required:
+        - id
+        - name
+        - description
+        - purpose
+        - isCommunity
+        - isResort
+        - isTaskForce
+        - hasTransitiveMembership
+        - children
+        - parent
+        - memberships
+    UpdateGroupDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        parentId:
+          type: string
+        purpose:
+          type: object
+        isCommunity:
+          type: boolean
+        isResort:
+          type: boolean
+        isTaskForce:
+          type: boolean
+        hasTransitiveMembership:
+          type: boolean
+        isArchived:
+          type: boolean
 externalDocs:
   description: Source Code (GitHub)
   url: https://github.com/kir-dev/pek-infinity

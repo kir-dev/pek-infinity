@@ -18,6 +18,7 @@ jobs:
     with:
       package-manager: yarn
       node-version: 20
+      working-directory-script: ${{matrix.component}}
 
   docker-publish:
     needs: [analysis]

@@ -1,5 +1,5 @@
 export const unauthorizedErrorDtoMessage = {
-    "JWT cookie not found": "JWT cookie not found"
+    "Authorization token not found": "Authorization token not found"
 } as const;
 export type UnauthorizedErrorDtoMessage = (typeof unauthorizedErrorDtoMessage)[keyof typeof unauthorizedErrorDtoMessage];
 export const unauthorizedErrorDtoStatusCode = {
@@ -12,7 +12,7 @@ export const unauthorizedErrorDtoError = {
 export type UnauthorizedErrorDtoError = (typeof unauthorizedErrorDtoError)[keyof typeof unauthorizedErrorDtoError];
 export type UnauthorizedErrorDto = {
     /**
-     * @default "JWT cookie not found"
+     * @default "JWT cookie or Bearer token not found"
      * @type string
     */
     message: UnauthorizedErrorDtoMessage;

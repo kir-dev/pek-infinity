@@ -1,6 +1,10 @@
 export const operations = {
-    "PingSend": {
-        "path": "/api/v4/ping",
+    "AppHome": {
+        "path": "/",
+        "method": "get"
+    },
+    "AppPing": {
+        "path": "/ping",
         "method": "get"
     },
     "AuthLogin": {
@@ -18,5 +22,25 @@ export const operations = {
     "AuthMe": {
         "path": "/api/v4/auth/me",
         "method": "get"
+    },
+    "GroupCreate": {
+        "path": "/api/v4/group",
+        "method": "post"
+    },
+    "GroupFindAll": {
+        "path": "/api/v4/group",
+        "method": "get"
+    },
+    "GroupFindOne": {
+        "path": "/api/v4/group/:id",
+        "method": "get"
+    },
+    "GroupUpdate": {
+        "path": "/api/v4/group/:id",
+        "method": "put"
+    },
+    "GroupRemove": {
+        "path": "/api/v4/group/:id",
+        "method": "delete"
     }
 } as const;
