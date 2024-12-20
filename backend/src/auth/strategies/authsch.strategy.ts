@@ -11,8 +11,6 @@ import {
   AUTHSCH_CLIENT_SECRET,
 } from '@/config/environment.config';
 
-import { UserDto } from '../entities/user.entity';
-
 @Injectable()
 export class AuthSchStrategy extends PassportStrategy(Strategy) {
   constructor() {
@@ -23,9 +21,10 @@ export class AuthSchStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(userProfile: AuthSchProfile): Promise<UserDto> {
+  validate(userProfile: AuthSchProfile) {
     return Promise.resolve({
       name: userProfile.fullName,
+      id: userProfile.pek?.pekId ?? 12345,
     });
   }
 }

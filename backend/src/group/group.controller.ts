@@ -1,6 +1,16 @@
-import { Body, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
+import { AccessGuard } from '@/access/access.guard';
 import { GroupService } from '@/group/group.service';
 import { ApiController } from '@/utils/controller.decorator';
 
@@ -21,6 +31,7 @@ export class GroupController {
     type: GroupDto,
   })
   @Post()
+  @UseGuards(AccessGuard.GroupCreate())
   create(@Body() createGroupDto: CreateGroupDto): Promise<GroupDto> {
     return this.groupService.create(createGroupDto);
   }
@@ -44,6 +55,7 @@ export class GroupController {
     example: 10,
   })
   @Get()
+  @UseGuards(AccessGuard.GroupFind())
   findAll(
     @Query('page') page: number,
     @Query('perPage') perPage: number,
@@ -57,6 +69,7 @@ export class GroupController {
     type: GroupDto,
   })
   @Get(':id')
+  @UseGuards(AccessGuard.GroupViewDetails('id'))
   findOne(@Param('id') id: string): Promise<GroupDto> {
     return this.groupService.findById(id);
   }
@@ -67,6 +80,7 @@ export class GroupController {
     type: GroupDto,
   })
   @Put(':id')
+  @UseGuards(AccessGuard.GroupEditDetails('id'))
   update(
     @Param('id') id: string,
     @Body() updateGroupDto: UpdateGroupDto,
