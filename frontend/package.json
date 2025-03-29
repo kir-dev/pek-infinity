@@ -6,12 +6,12 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "format:fix": "prettier --write \"**/*.{ts|tsx}\"",
-    "format": "prettier -c \"**/*.{ts|tsx}\"",
-    "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "lint": "eslint --ext .ts,.tsx .",
-    "generate": "npx kubb generate",
-    "generate:watch": "npx kubb generate --watch"
+    "format": "biome format",
+    "format:fix": "biome format --write",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --fix",
+    "generate": "kubb generate",
+    "generate:watch": "kubb generate --watch"
   },
   "dependencies": {
     "@kubb/cli": "^2.26.3",
@@ -42,9 +42,6 @@
     "@types/react-dom": "^18.3.0",
     "@vercel/style-guide": "^6.0.0",
     "autoprefixer": "^10.4.20",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.11",
-    "eslint-plugin-react": "^7.36.1",
     "postcss": "^8.4.45",
     "tailwindcss": "^3.4.11",
     "typescript": "~5.6.2"
