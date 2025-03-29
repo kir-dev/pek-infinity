@@ -24,7 +24,9 @@ export default defineConfig(() => {
         framework: 'react',
         queryOptions: {
           retry: (count: number, error: Error) => {
-            if (error instanceof AxiosError && error.response?.status === 401) return false;
+            if (error instanceof AxiosError && error.response?.status === 401) {
+              return false;
+            }
             return count <= 2;
           },
         },

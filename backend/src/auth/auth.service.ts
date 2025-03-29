@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import type { JwtService } from '@nestjs/jwt';
 
 import { JWT_SECRET } from '@/config/environment.config';
 
-import { UserDto } from './entities/user.entity';
+import type { UserDto } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {

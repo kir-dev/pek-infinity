@@ -1,7 +1,7 @@
 import { CurrentUser } from '@kir-dev/passport-authsch';
 import { Get, Redirect, Res, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiQuery } from '@nestjs/swagger';
-import { Response } from 'express';
+import type { Response } from 'express';
 
 import { AuthSchGuard } from '@/auth/guards/authsch.guard';
 import { JwtGuard } from '@/auth/guards/jwt.guard';
@@ -9,8 +9,8 @@ import { FRONTEND_CALLBACK } from '@/config/environment.config';
 import { getHostFromUrl } from '@/utils/auth.utils';
 import { ApiController } from '@/utils/controller.decorator';
 
-import { AuthService } from './auth.service';
-import { UserDto } from './entities/user.entity';
+import type { AuthService } from './auth.service';
+import type { UserDto } from './entities/user.entity';
 
 @ApiController('auth', { authStrategy: 'NOT_ENFORCED' })
 export class AuthController {

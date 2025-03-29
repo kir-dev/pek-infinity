@@ -1,4 +1,4 @@
-import { type INestApplication } from '@nestjs/common';
+import type { INestApplication } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import type { Express } from 'express';
 import request from 'supertest';
@@ -18,9 +18,6 @@ describe('AppController (e2e)', () => {
   });
 
   it('/ping (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/ping')
-      .expect(200)
-      .expect('{"ping":"PONG"}');
+    return request(app.getHttpServer()).get('/ping').expect(200).expect('{"ping":"PONG"}');
   });
 });

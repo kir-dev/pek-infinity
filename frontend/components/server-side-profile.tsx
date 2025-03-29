@@ -1,7 +1,7 @@
 import { authMe } from '@/pek-api';
 
 export async function ServerSideProfile() {
-  let name;
+  let name: string;
   try {
     const response = await authMe();
     name = response.name;

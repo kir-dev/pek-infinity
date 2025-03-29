@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 // Reinitialize the server side axios instance with the correct values
 axiosInstance.interceptors.request.use((config) => {
   config.headers.cookie = cookies().toString();
-  if (config.url && new RegExp('^/api/v4|/ping').test(config.url)) {
+  if (config.url && /^\/api\/v4|\/ping/.test(config.url)) {
     config.url = getBackend({ preferredNetwork: 'private' }) + config.url;
   }
   return config;

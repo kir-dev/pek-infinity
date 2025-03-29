@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (process.env.FORCE_LAMBDA_API !== '1' && process.env.VERCEL_ENV !== 'preview') {
     res.status(403).json({ message: 'Lambda API is disabled in this environment' });
     return;

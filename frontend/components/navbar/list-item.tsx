@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import React, { type ComponentPropsWithoutRef, type ElementRef, forwardRef } from 'react';
 
 import { NavigationMenuLink } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';

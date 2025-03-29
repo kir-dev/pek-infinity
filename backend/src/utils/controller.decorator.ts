@@ -12,9 +12,9 @@ import { JwtGuard } from '@/auth/guards/jwt.guard';
 
 import {
   AxiosErrorDto,
-  ForbiddenErrorDto,
-  InternalServerErrorDto,
-  UnauthorizedErrorDto,
+  type ForbiddenErrorDto,
+  type InternalServerErrorDto,
+  type UnauthorizedErrorDto,
 } from './errors.dto';
 
 export interface ApiControllerOptions {
@@ -31,7 +31,7 @@ export interface ApiControllerOptions {
 
 export function ApiController(
   name: string,
-  { authStrategy = 'ENFORCED' }: ApiControllerOptions = {},
+  { authStrategy = 'ENFORCED' }: ApiControllerOptions = {}
 ): ClassDecorator {
   const decorators = [];
   decorators.push(
@@ -51,7 +51,7 @@ export function ApiController(
         },
         status: 500,
       },
-    }),
+    })
   );
   if (authStrategy !== 'UNRESTRICTED') {
     decorators.push(
@@ -86,7 +86,7 @@ export function ApiController(
           },
           status: 403,
         },
-      }),
+      })
     );
   }
   if (authStrategy === 'ENFORCED') {

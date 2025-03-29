@@ -2,7 +2,7 @@
 
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu';
 import Link from 'next/link';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { type ComponentPropsWithoutRef, type ElementRef, forwardRef } from 'react';
 import * as React from 'react';
 
 import {
@@ -29,7 +29,8 @@ const matrixComponents: DropdownLink[] = [
   {
     title: 'Alert Dialog',
     href: '/',
-    description: 'A modal dialog that interrupts the user with important content and expects a response.',
+    description:
+      'A modal dialog that interrupts the user with important content and expects a response.',
   },
   {
     title: 'Hover Card',
@@ -50,7 +51,8 @@ const matrixComponents: DropdownLink[] = [
   {
     title: 'Tabs',
     href: '/',
-    description: 'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
+    description:
+      'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
   },
   {
     title: 'Tooltip',
@@ -84,7 +86,10 @@ export const Navbar = forwardRef<
 >(({ className, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
-    className={cn('relative z-10 flex w-screen flex-1 items-center justify-between sm:p-4', className)}
+    className={cn(
+      'relative z-10 flex w-screen flex-1 items-center justify-between sm:p-4',
+      className
+    )}
     {...props}
   >
     <NavigationMenuList>
@@ -108,7 +113,9 @@ export const Navbar = forwardRef<
         <NavigationMenuLink className={navigationMenuTriggerStyle()}>⚙️</NavigationMenuLink>
       </Link>
     </NavigationMenuList>
-    <NavigationMenuViewport className='fixed right-0'>{/* navigation dropdown content */}</NavigationMenuViewport>
+    <NavigationMenuViewport className='fixed right-0'>
+      {/* navigation dropdown content */}
+    </NavigationMenuViewport>
   </NavigationMenuPrimitive.Root>
 ));
 Navbar.displayName = 'Navbar';

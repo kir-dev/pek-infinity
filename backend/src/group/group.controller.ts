@@ -1,14 +1,14 @@
 import { Body, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
-import { GroupService } from '@/group/group.service';
+import type { GroupService } from '@/group/group.service';
 import { ApiController } from '@/utils/controller.decorator';
 
 import {
-  CreateGroupDto,
+  type CreateGroupDto,
   GroupDto,
   GroupListItemDto,
-  UpdateGroupDto,
+  type UpdateGroupDto,
 } from './dto/group.dto';
 
 @ApiController('group', { authStrategy: 'ENFORCED' })
@@ -46,7 +46,7 @@ export class GroupController {
   @Get()
   findAll(
     @Query('page') page: number,
-    @Query('perPage') perPage: number,
+    @Query('perPage') perPage: number
   ): Promise<GroupListItemDto[]> {
     return this.groupService.findAll(Number(page), Number(perPage));
   }
@@ -67,10 +67,7 @@ export class GroupController {
     type: GroupDto,
   })
   @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateGroupDto: UpdateGroupDto,
-  ): Promise<GroupDto> {
+  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto): Promise<GroupDto> {
     return this.groupService.update(id, updateGroupDto);
   }
 

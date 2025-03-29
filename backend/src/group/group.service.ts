@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import type { Prisma } from '@prisma/client';
+import type { PrismaService } from 'nestjs-prisma';
 
-import {
+import type {
   CreateGroupDto,
   GroupDto,
   GroupListItemDto,
@@ -51,10 +51,7 @@ export class GroupService {
   private readonly logger = new Logger(GroupService.name);
   constructor(private prisma: PrismaService) {}
 
-  async create({
-    parentId,
-    ...createGroupDto
-  }: CreateGroupDto): Promise<GroupDto> {
+  async create({ parentId, ...createGroupDto }: CreateGroupDto): Promise<GroupDto> {
     return this.prisma.group.create({
       data: {
         ...createGroupDto,

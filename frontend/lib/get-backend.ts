@@ -1,6 +1,8 @@
 import 'server-only';
 
-export function getBackend({ preferredNetwork }: { preferredNetwork: 'private' | 'public' }): string {
+export function getBackend({
+  preferredNetwork,
+}: { preferredNetwork: 'private' | 'public' }): string {
   const PRIVATE_API = process.env.NEXT_PUBLIC_PRIVATE_API_URL;
   const PUBLIC_API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,7 +17,9 @@ export function getBackend({ preferredNetwork }: { preferredNetwork: 'private' |
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  if (PUBLIC_API) return PUBLIC_API;
+  if (PUBLIC_API) {
+    return PUBLIC_API;
+  }
 
-  throw new Error(`NEXT_PUBLIC_API_URL is not set`);
+  throw new Error('NEXT_PUBLIC_API_URL is not set');
 }

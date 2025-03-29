@@ -1,6 +1,10 @@
 'use client';
 
-import { NavigationMenuContent, NavigationMenuItem, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
+import {
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
 
 import type { DropdownLink } from '.';
 import { ListItem } from './list-item';

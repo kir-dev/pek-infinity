@@ -13,12 +13,6 @@ export const FRONTEND_CALLBACK =
 
 export const JWT_SECRET = env.get('JWT_SECRET').required().asString();
 
-export const AUTHSCH_CLIENT_ID = env
-  .get('AUTHSCH_CLIENT_ID')
-  .required()
-  .asString();
+export const AUTHSCH_CLIENT_ID = env.get('AUTHSCH_CLIENT_ID').required().asString();
 
-export const AUTHSCH_CLIENT_SECRET = env
-  .get('AUTHSCH_CLIENT_SECRET')
-  .required()
-  .asString();
+export const AUTHSCH_CLIENT_SECRET = env.get('AUTHSCH_CLIENT_SECRET').required().asString();

@@ -3,12 +3,8 @@ import { join } from 'node:path';
 
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { type NestExpressApplication } from '@nestjs/platform-express';
-import {
-  DocumentBuilder,
-  type OpenAPIObject,
-  SwaggerModule,
-} from '@nestjs/swagger';
+import type { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, type OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import yaml from 'yaml';
 
 import { FRONTEND_CALLBACK } from '@/config/environment.config';
@@ -35,10 +31,7 @@ export async function bootstrap(): Promise<{
     .setTitle('PÉK API')
     .setDescription('Profiles and Groups')
     .setContact('kir-dev', 'https://kir-dev.hu', 'hello@kir-dev.hu')
-    .setExternalDoc(
-      'Source Code (GitHub)',
-      'https://github.com/kir-dev/pek-infinity',
-    )
+    .setExternalDoc('Source Code (GitHub)', 'https://github.com/kir-dev/pek-infinity')
     .addBearerAuth()
     .addCookieAuth('jwt')
     .build();

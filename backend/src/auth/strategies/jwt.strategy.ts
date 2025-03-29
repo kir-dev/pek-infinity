@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { UserDto } from '@/auth/entities/user.entity';
+import type { UserDto } from '@/auth/entities/user.entity';
 import { JWT_SECRET } from '@/config/environment.config';
 import { extractJwtTokenFromCookie } from '@/utils/auth.utils';
 

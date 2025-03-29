@@ -5,7 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
-export function Providers({ children, apiBasePath }: Readonly<{ children: React.ReactNode; apiBasePath: string }>) {
+export function Providers({
+  children,
+  apiBasePath,
+}: Readonly<{ children: React.ReactNode; apiBasePath: string }>) {
   axiosInstance.defaults.baseURL = apiBasePath;
   axiosInstance.defaults.withCredentials = true;
 
