@@ -9,8 +9,6 @@ model User {
     profile     Profile? // null if deleted
     memberships Membership[]
 
-    roles Role[]
-
     // -- Community Evaluation System --
     requestedEntryAwards EntryAwardRequest[] @relation("EntryAwardRequester")
     evaluatedPointAwards Evaluation[]
@@ -23,9 +21,11 @@ model User {
     sentNotifications     Notification[] @relation("sender")
 
     // -- System Timestamps --
-    createdAt DateTime? @default(now())
-    updatedAt DateTime? @updatedAt
-    lastLogin DateTime?
+    createdAt             DateTime?              @default(now())
+    updatedAt             DateTime?              @updatedAt
+    lastLogin             DateTime?
+    permissions           Authorization[]
+    appliedCodeStatements CodeDefinedStatement[] @ignore
 }
 
 model Username {

@@ -1,12 +1,11 @@
-
 model Group {
-  id                      String                @id @default(cuid())
-  name                    String                @unique
+  id                      String                 @id @default(cuid())
+  name                    String                 @unique
   description             String
   parentId                String?
   purpose                 GroupPurpose
-  parent                  Group?                @relation("ParentGroup", fields: [parentId], references: [id])
-  children                Group[]               @relation("ParentGroup")
+  parent                  Group?                 @relation("ParentGroup", fields: [parentId], references: [id])
+  children                Group[]                @relation("ParentGroup")
   isCommunity             Boolean // kor-e
   isResort                Boolean // reszort-e
   isTaskForce             Boolean // task force-e
@@ -16,6 +15,7 @@ model Group {
   guidelines              GuidelineCollection[]
   scoreboards             Scoreboard[]
   // calculated availableFlares String[]
+  appliedCodeStatements   CodeDefinedStatement[] @ignore
 }
 
 enum GroupPurpose {

@@ -1,0 +1,111 @@
+model Authorization {
+    id              String                 @id @default(cuid())
+    /// * Human-readable name for the authorization (e.g., "KIR-DEV öregtag" or "@gj profilja")
+    name            String                 @unique
+    /// * Indicates if the client should apply this authorization by default
+    defaultEnabled  Boolean                @default(false)
+    codeDefined     CodeDefinedStatement[]
+    dbDefined       DbDefinedStatement[]
+    createdAt       DateTime               @default(now())
+    updatedAt       DateTime               @updatedAt
+    authorizedUsers User[]
+    expiration      DateTime?
+}
+
+/// * example syntax
+/// ```json
+/// {
+///   "resources": ["pek:user:0123456789"],
+///   "actions":  [ "user:AttachMembership", "user:UpdatePublicProfile" ]
+/// }
+/// ```
+model DbDefinedStatement {
+    id        String   @id @default(cuid())
+    roleId    String
+    resources String[]
+    actions   String[]
+
+    auth Authorization @relation(fields: [roleId], references: [id])
+}
+
+/// * Highly compressed version of DbDefinedStatement
+/// * used for maintenance reasons
+/// * Example: GROUP_MEMBERSHIP(onGroup=kir-dev, onUser=null)
+/// * gives a set of permissions on the group to the owner of the Authorization
+model CodeDefinedStatement {
+    id            String                  @id @default(cuid())
+    authId        String
+    /// * ACTION tuple: [actionId, apply on group, apply on user]
+    implementedBy StatementImplementation
+    onGroupId     String?                 @map("groupId")
+    onGroup       Group?                  @relation(fields: [onGroupId], references: [id])
+    onUserId      String?                 @map("userId")
+    onUser        User?                   @relation(fields: [onUserId], references: [id])
+
+    auth Authorization @relation(fields: [authId], references: [id])
+}
+
+enum StatementImplementation {
+    DEFAULT_ROLE
+    USER_PROFILE
+    GROUP_NEWBIE
+    GROUP_MEMBERSHIP
+    GROUP_ADMINISTRATOR
+    GROUP_LEADER
+    RVT_MEMBER
+    RESORT_LEADER
+    RESORT_ADMINISTRATOR
+}
+
+/// * [resource type]__[action type]
+enum Action {
+    // --- User & Profile ---
+    USER__READ_AUTHORIZATIONS /// Read Authorization objects assigned to `onUser`.
+    USER_PROFILE__VIEW_BASIC /// Read basic profile info (avatar, name) of `onUser`.
+    USER_PROFILE__VIEW /// Read all profile data of `onUser`.
+    USER_PROFILE__EDIT /// Edit profile data of `onUser`.
+    USER_PROFILE__SET_PRIMARY_GROUP /// Set the primary group for `onUser`.
+
+    // --- SVIE ---
+    SVIE_CARD__REQUEST_CREATE /// Create a request for a new SVIE card.
+    SVIE_CARD__REQUEST_UPDATE /// Request an update for an existing SVIE card.
+    SVIE_CARD__ADMIN /// Administer SVIE card requests (view, approve, reject).
+
+    // --- Membership ---
+    MEMBERSHIP__LIST /// List all groups, roles, and flairs of `onUser`.
+    MEMBERSHIP__VIEW_PERFORMANCE /// List scores of `onUser` within a group context (requires MEMBERSHIP__LIST).
+    MEMBERSHIP__ADD_TO_GROUP /// Add `onUser` to `onGroup` (requires USER_PROFILE__VIEW and MEMBERSHIP__LIST).
+
+    // --- Group ---
+    GROUP__VIEW_BASIC /// View basic profile data of `onGroup`.
+    GROUP__EDIT_PROFILE /// Edit profile data of `onGroup`.
+    GROUP__VIEW_PERFORMANCE /// View scores of `onGroup` (requires MEMBERSHIP__LIST and MEMBERSHIP__VIEW_PERFORMANCE).
+    GROUP__REQUEST_CREATE /// Create a request related to the group (specific request type TBD).
+    GROUP__MANAGE_MEMBERSHIP_STATUSES /// Create, delete, assign, or unassign membership statuses (e.g., ACTIVE, NEWBIE) for any user within `onGroup`.
+    GROUP__REQUEST_LEADER_CHANGE /// Initiate a request to change the leader of `onGroup`.
+    GROUP__MANAGE_FLAIRS /// Manage flairs associated with `onGroup`.
+
+    // --- Group Leader Change Request ---
+    GROUP_LEADER_CHANGE_REQUEST__VIEW /// View requests to change the leader of a group.
+    GROUP_LEADER_CHANGE_REQUEST__EDIT /// Edit (e.g., approve, reject) requests to change the leader of a group.
+
+    // --- Evaluation & Scoreboard ---
+    GUIDELINE__READ /// Read guidelines and guideline collections.
+    GUIDELINE__MANAGE /// Create, update, or delete guidelines and guideline collections.
+    SCOREBOARD__READ /// Read scoreboard data (including point requests and entry awards). Read access is transitive from base scoreboard to submitted copies.
+    SCOREBOARD__COMMENT /// Add comments to a scoreboard or its point requests.
+    SCOREBOARD__EDIT /// Edit scoreboard details or point requests (before submission).
+    SCOREBOARD__SYNC /// Sync scoreboard details (user list, guidelines) potentially with an external source like Google Docs.
+    SCOREBOARD__SUBMIT /// Submit a copy of the current scoreboard state for evaluation.
+    SCOREBOARD__EVALUATE /// Evaluate a submitted scoreboard copy.
+
+    // --- Notification ---
+    NOTIFICATION__RECEIVE /// Read and delete notifications of `onUser`.
+
+    // --- System ---
+    SYSTEM__READ_SEMESTER /// Read the current system semester.
+    SYSTEM__SET_SEMESTER /// Set the current system semester.
+
+    // --- Admin ---
+    ADMIN__IMPERSONATE /// Allow an admin user to act as another user.
+}
