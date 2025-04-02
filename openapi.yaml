@@ -412,8 +412,11 @@ components:
       properties:
         name:
           type: string
+        id:
+          type: string
       required:
         - name
+        - id
     CreateGroupDto:
       type: object
       properties:
