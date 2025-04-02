@@ -1,9 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Request } from 'express';
+import { type CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
+import type { Request } from 'express';
 
-import { UserDto } from '@/auth/entities/user.entity';
+import type { UserDto } from '@/auth/entities/user.entity';
 
-import { FnParamExtractor, param, ParamExtractor } from './extractor';
+import { type FnParamExtractor, param, type ParamExtractor } from './extractor';
 
 const NOT_IMPLEMENTED = () => new AccessGuard(() => true);
 
@@ -31,18 +31,22 @@ export default {
 // export const Pass = () => new AccessGuard(() => true);
 
 @Injectable()
-class AccessGuard implements CanActivate {
+export class AccessGuard implements CanActivate {
   canActivate(ctx: ExecutionContext) {
     const req: Request = ctx.switchToHttp().getRequest();
     const user = req.user as UserDto | undefined;
-    if (!user) return false;
+    if (!user) {
+      return false;
+    }
 
     return this.verify({
       ctx,
       req,
       user,
       extract(extractor) {
-        if (typeof extractor === 'string') extractor = param(extractor);
+        if (typeof extractor === 'string') {
+          return param(extractor)({ ctx, req, user });
+        }
         return extractor({ ctx, req, user });
       },
     });
@@ -54,6 +58,6 @@ class AccessGuard implements CanActivate {
       req: Request;
       user: UserDto;
       extract(extractor: ParamExtractor): ReturnType<FnParamExtractor>;
-    }) => ReturnType<CanActivate['canActivate']>,
+    }) => ReturnType<CanActivate['canActivate']>
   ) {}
 }

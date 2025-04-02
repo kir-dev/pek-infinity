@@ -12,6 +12,7 @@ import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 import type { GroupService } from '@/group/group.service';
 import { ApiController } from '@/utils/controller.decorator';
+import { AccessGuard } from '@/access/access.guard';
 
 import {
   type CreateGroupDto,
