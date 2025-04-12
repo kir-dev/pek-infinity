@@ -1,6 +1,9 @@
 {
   "private": true,
-  "workspaces": ["backend", "frontend"],
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "dev": "npx concurrently --names \"backend,frontend,openapi\" -c \"bgBlue.bold,bgGreen.bold,bgYellow.bold\" \"yarn workspace backend run start:dev\" \"yarn workspace frontend run dev\" \"yarn workspace frontend run generate:watch\"",
     "build": "yarn workspace backend run build && yarn workspace frontend run build",
@@ -11,7 +14,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "concurrently": "^9.0.1"
+    "concurrently": "^9.1.2"
   },
   "packageManager": "yarn@4.4.1"
 }

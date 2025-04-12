@@ -1,3 +1,11 @@
+// Statements: These define permissions. They can be:
+// - DbDefinedStatement: Explicitly list allowed actions on specific resources.
+// - CodeDefinedStatement: Represent pre-defined permission sets (like GROUP_MEMBERSHIP, GROUP_LEADER) often tied to a specific user or group context.
+// Resources: Defined by ResourceKind (e.g., USER_PROFILE, GROUP) and can target specific instances (like a user ID) or all instances of a kind.
+// Actions: Specific operations allowed on resources (e.g., USER_PROFILE__VIEW, GROUP__EDIT_PROFILE).
+
+/// Model Authorization also known as Role
+/// * Represents a set of permissions that can be assigned to users
 model Authorization {
     id              String                 @id @default(cuid())
     /// * Human-readable name for the authorization (e.g., "KIR-DEV öregtag" or "@gj profilja")
@@ -9,55 +17,37 @@ model Authorization {
     createdAt       DateTime               @default(now())
     updatedAt       DateTime               @updatedAt
     authorizedUsers User[]
-    expiration      DateTime?
 }
 
-/// * example syntax
-/// ```json
-/// {
-///   "resources": ["pek:user:0123456789"],
-///   "actions":  [ "user:AttachMembership", "user:UpdatePublicProfile" ]
-/// }
-/// ```
-model DbDefinedStatement {
-    id        String   @id @default(cuid())
-    roleId    String
-    resources String[]
-    actions   String[]
-
-    auth Authorization @relation(fields: [roleId], references: [id])
-}
-
-/// * Highly compressed version of DbDefinedStatement
-/// * used for maintenance reasons
-/// * Example: GROUP_MEMBERSHIP(onGroup=kir-dev, onUser=null)
-/// * gives a set of permissions on the group to the owner of the Authorization
-model CodeDefinedStatement {
-    id            String                  @id @default(cuid())
-    authId        String
-    /// * ACTION tuple: [actionId, apply on group, apply on user]
-    implementedBy StatementImplementation
-    onGroupId     String?                 @map("groupId")
-    onGroup       Group?                  @relation(fields: [onGroupId], references: [id])
-    onUserId      String?                 @map("userId")
-    onUser        User?                   @relation(fields: [onUserId], references: [id])
-
-    auth Authorization @relation(fields: [authId], references: [id])
-}
-
-enum StatementImplementation {
-    DEFAULT_ROLE
+enum ResourceKind {
+    USER
     USER_PROFILE
-    GROUP_NEWBIE
-    GROUP_MEMBERSHIP
-    GROUP_ADMINISTRATOR
-    GROUP_LEADER
-    RVT_MEMBER
-    RESORT_LEADER
-    RESORT_ADMINISTRATOR
+    SVIE_CARD
+    MEMBERSHIP
+    GROUP
+    GROUP_LEADER_CHANGE_REQUEST
+    GUIDELINE
+    SCOREBOARD
+    NOTIFICATION
+    SYSTEM
+    ADMIN
 }
 
-/// * [resource type]__[action type]
+/// * Resource applied to either one specific resource or all objects of a kind
+model Resource {
+    id        String       @id @default(cuid())
+    target    ResourceKind
+    onUserId  String?
+    onGroupId String?
+    onAll     Boolean      @default(false)
+
+    onUser  User?  @relation(fields: [onUserId], references: [id])
+    onGroup Group? @relation(fields: [onGroupId], references: [id])
+}
+
+/// List of available action-authorization groups
+/// * Similar actions (view first name, view last name) are often grouped together (view profile)
+/// * @format [resource type]__[action type]
 enum Action {
     // --- User & Profile ---
     USER__READ_AUTHORIZATIONS /// Read Authorization objects assigned to `onUser`.
@@ -108,4 +98,51 @@ enum Action {
 
     // --- Admin ---
     ADMIN__IMPERSONATE /// Allow an admin user to act as another user.
+}
+
+/// * example syntax
+/// ```json
+/// {
+///   "resources": ["pek:user:0123456789"],
+///   "actions":  [ "user:AttachMembership", "user:UpdatePublicProfile" ]
+/// }
+/// ```
+model DbDefinedStatement {
+    id        String   @id @default(cuid())
+    /// @role: parent object
+    authId    String
+    resources String[]
+    actions   Action[]
+
+    auth Authorization @relation(fields: [authId], references: [id])
+}
+
+/// * Highly compressed version of DbDefinedStatement
+/// * used for maintenance reasons
+/// * Example: GROUP_MEMBERSHIP(onGroup=kir-dev, onUser=null)
+/// * gives a set of permissions on the group to the owner of the Authorization
+model CodeDefinedStatement {
+    id            String                  @id @default(cuid())
+    /// @role: parent object
+    authId        String
+    /// * ACTION tuple: [actionId, apply on group, apply on user]
+    implementedBy StatementImplementation
+    onGroupId     String?                 @map("groupId")
+    onGroup       Group?                  @relation(fields: [onGroupId], references: [id])
+    onUserId      String?                 @map("userId")
+    onUser        User?                   @relation(fields: [onUserId], references: [id])
+
+    auth Authorization @relation(fields: [authId], references: [id])
+}
+
+enum StatementImplementation {
+    DEFAULT_ROLE
+    USER_PROFILE
+    GROUP_NEWBIE
+    GROUP_MEMBERSHIP
+    GROUP_ADMINISTRATOR
+    GROUP_LEADER
+    RVT_MEMBER
+    RESORT_LEADER
+    RESORT_ADMINISTRATOR
 }

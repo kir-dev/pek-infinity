@@ -1,0 +1,30 @@
+model Membership {
+  id          String              @id @default(cuid())
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  groupId     String
+  group       Group               @relation(fields: [groupId], references: [id])
+  flairs      String[]
+  statuses    MembershipStatus[]
+  points      PointRequest[]
+  entryAwards EntryAwardRequest[]
+
+  @@unique([userId, groupId])
+}
+
+model MembershipStatus {
+  membershipId String
+  membership   Membership     @relation(fields: [membershipId], references: [id])
+  start        DateTime       @default(now())
+  until        DateTime?
+  type         MembershipKind
+
+  @@id([membershipId, start, type])
+}
+
+enum MembershipKind {
+  NEWBIE //ujonc
+  ACTIVE //aktiv
+  FORMER //oregtag
+  ARCHIVED //archivalt
+}

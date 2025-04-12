@@ -16,6 +16,7 @@ model Group {
   scoreboards             Scoreboard[]
   // calculated availableFlares String[]
   appliedCodeStatements   CodeDefinedStatement[] @ignore
+  appliedDbStatements     Resource[]             @ignore
 }
 
 enum GroupPurpose {

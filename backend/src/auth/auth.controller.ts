@@ -1,31 +1,22 @@
 import { CurrentUser } from '@kir-dev/passport-authsch';
-import {
-  Get,
-  Query,
-  Redirect,
-  Res,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Get, Query, Redirect, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { ApiFoundResponse, ApiQuery } from '@nestjs/swagger';
-import type { Response } from 'express';
-
+import { Response } from 'express';
 import { AccessService } from '@/access/access.service';
-import { RoleDto, Statement } from '@/access/dto/access.dto';
 import { AuthSchGuard } from '@/auth/guards/authsch.guard';
 import { JwtGuard } from '@/auth/guards/jwt.guard';
 import { FRONTEND_CALLBACK } from '@/config/environment.config';
 import { getHostFromUrl } from '@/utils/auth.utils';
 import { ApiController } from '@/utils/controller.decorator';
-
-import type { AuthService } from './auth.service';
-import type { UserDto } from './entities/user.entity';
+import { AuthService } from './auth.service';
+import { UserDto } from './entities/user.entity';
+import { AuthorizationEntity } from '@/access/entities/authorization.entity';
 
 @ApiController('auth', { authStrategy: 'NOT_ENFORCED' })
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly accessService: AccessService,
+    // private readonly accessService: AccessService
   ) {}
 
   @UseGuards(AuthSchGuard)
@@ -71,39 +62,38 @@ export class AuthController {
   }
 
   /**
-   * List of roles assigned to the authenticated user.
+   * List of authorizations assigned to the authenticated user.
    * @param user - The user extracted from the authentication token.
-   * @returns - An array of roles assigned to the user.
+   * @returns - An array of authorizations assigned to the user.
    */
-  @Get('role')
-  @UseGuards(JwtGuard)
-  async assignedRoles(@CurrentUser() user: UserDto): Promise<RoleDto[]> {
-    return this.accessService.userRoles(user.id);
-  }
+  // @Get('authorization')
+  // @UseGuards(JwtGuard)
+  // async assignedAuthorizations(@CurrentUser() user: UserDto): Promise<AuthorizationEntity[]> {
+  //   return this.accessService.findByAssignedToUser(user.id);
+  // }
 
-  /**
-   * List of statements assigned to the authenticated user through roles.
-   * @param user - The user extracted from the authentication token.
-   * @param requestedRoles - A list of role IDs the user has. Defaults to all roles of the user.
-   * @returns A list of statements assigned to the roles.
-   */
-  @Get('statement')
-  @UseGuards(JwtGuard)
-  async assignedStatements(
-    @CurrentUser() user: UserDto,
-    @Query('roles') requestedRoles: string[] | null = null,
-  ): Promise<Statement[]> {
-    const myRoles = await this.accessService.userRoles(user.id);
-    const myRoleIds = myRoles.map((r) => r.id);
+  // /**
+  //  * List of statements assigned to the authenticated user through authorizations.
+  //  * @param user - The user extracted from the authentication token.
+  //  * @param requestedAuths - A list of authorization IDs the user has. Defaults to all.
+  //  * @returns A list of statements assigned to the authorizations.
+  //  */
+  // @Get('authorization/statement')
+  // @UseGuards(JwtGuard)
+  // async assignedStatements(
+  //   @CurrentUser() user: UserDto,
+  //   @Query('roles') requestedAuths: string[] | null = null
+  // ): Promise<Statement[]> {
+  //   const myAuths = await this.accessService.findByAssignedToUser(user.id);
+  //   const myAuthIds = myAuths.map((r) => r.id);
 
-    const invalidRoles =
-      requestedRoles?.filter((r) => !myRoleIds.includes(r)).join(', ') ?? '';
-    if (invalidRoles) {
-      throw new UnauthorizedException(
-        `Tried to access roles the user does not have: ${invalidRoles}`,
-      );
-    }
+  //   const invalidRoles = requestedAuths?.filter((r) => !myAuthIds.includes(r)).join(', ') ?? '';
+  //   if (invalidRoles) {
+  //     throw new UnauthorizedException(
+  //       `Tried to access roles the user does not have: ${invalidRoles}`
+  //     );
+  //   }
 
-    return this.accessService.getStatements(requestedRoles ?? [user.id]);
-  }
+  //   return this.accessService.(requestedAuths ?? [user.id]);
+  // }
 }

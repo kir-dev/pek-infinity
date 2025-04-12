@@ -1,4 +1,4 @@
-import { AccessGuard } from './access.guard';
+import AccessGuard from './access.guard';
 
 describe('AccessGuard', () => {
   describe('Pass', () => {

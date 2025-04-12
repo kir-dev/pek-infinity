@@ -14,8 +14,15 @@ paths:
   /ping:
     get:
       operationId: AppPing
-      summary: ""
-      description: >-
+      parameters: []
+      responses:
+        "200":
+          description: Pong
+          content:
+            application/json:
+              schema:
+                type: string
+      summary: >-
         # Health check endpoint<br>
 
 
@@ -25,15 +32,6 @@ paths:
 
         When accessed, it returns a straightforward response indicating that the
         service is up and running.
-      parameters: []
-      responses:
-        "200":
-          description: Pong
-          example: pong
-          content:
-            application/json:
-              schema:
-                type: string
       tags: *a1
   /api/v4/auth/login:
     get:
@@ -44,53 +42,50 @@ paths:
           description: ""
         "302":
           description: Redirects to the AuthSch login page.
-        "401": &a5
+        "401": &a2
           description: Unauthorized
-          example: &a2
-            response:
-              data:
-                statusCode: 401
-                error: Unauthorized
-                message: Human readable error
-            status: 401
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-              example: *a2
-        "403": &a6
+              example:
+                response:
+                  data:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Human readable error
+                status: 401
+        "403": &a3
           description: Forbidden
-          example: &a3
-            response:
-              data:
-                statusCode: 403
-                error: Forbidden
-                message: Human readable error
-            status: 403
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-              example: *a3
-        "500": &a7
+              example:
+                response:
+                  data:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Human readable error
+                status: 403
+        "500": &a4
           description: Internal Server Error
-          example: &a4
-            response:
-              data:
-                statusCode: 500
-                error: Internal Server Error
-                message: Human readable error
-            status: 500
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-              example: *a4
-      tags: &a8
-        - auth
-      security: &a9
+              example:
+                response:
+                  data:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Human readable error
+                status: 500
+      security: &a5
         - bearer: []
         - jwt: []
+      tags: &a6
+        - auth
   /api/v4/auth/callback:
     get:
       operationId: AuthOauthRedirect
@@ -104,11 +99,11 @@ paths:
           description: ""
         "302":
           description: Redirects to the frontend and sets cookie with JWT.
-        "401": *a5
-        "403": *a6
-        "500": *a7
-      tags: *a8
-      security: *a9
+        "401": *a2
+        "403": *a3
+        "500": *a4
+      security: *a5
+      tags: *a6
   /api/v4/auth/logout:
     get:
       operationId: AuthLogout
@@ -118,11 +113,11 @@ paths:
           description: ""
         "302":
           description: Redirects to the frontend and clears the JWT cookie.
-        "401": *a5
-        "403": *a6
-        "500": *a7
-      tags: *a8
-      security: *a9
+        "401": *a2
+        "403": *a3
+        "500": *a4
+      security: *a5
+      tags: *a6
   /api/v4/auth/me:
     get:
       operationId: AuthMe
@@ -134,11 +129,361 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserDto"
-        "401": *a5
-        "403": *a6
-        "500": *a7
-      tags: *a8
-      security: *a9
+        "401": *a2
+        "403": *a3
+        "500": *a4
+      security: *a5
+      tags: *a6
+  /api/v4/access/authorization:
+    get:
+      operationId: AccessRoleFindAll
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AuthorizationSummaryDto"
+        "401": &a7
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example:
+                response:
+                  data:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Human readable error
+                status: 401
+        "403": &a8
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example:
+                response:
+                  data:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Human readable error
+                status: 403
+        "500": &a9
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example:
+                response:
+                  data:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Human readable error
+                status: 500
+      security: &a10
+        - bearer: []
+        - jwt: []
+      tags: &a11
+        - access/authorization
+    post:
+      operationId: AccessRoleCreate
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAuthorizationDto"
+      responses:
+        "201":
+          description: ""
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      summary: Create a new named list of statements.
+      tags: *a11
+  /api/v4/access/authorization/by-id/{id}:
+    get:
+      operationId: AccessRoleFindOneById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorizationEntity"
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      tags: *a11
+  /api/v4/access/authorization/by-name/{name}:
+    get:
+      operationId: AccessRoleFindOneByName
+      parameters:
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthorizationEntity"
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      tags: *a11
+  /api/v4/access/authorization/{id}/metadata:
+    put:
+      operationId: AccessRoleUpdate
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAuthorizationDto"
+      responses:
+        "200":
+          description: ""
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      tags: *a11
+  /api/v4/access/authorization/{id}:
+    delete:
+      operationId: AccessRoleDelete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      tags: *a11
+  /api/v4/access/authorization/{id}/assignment:
+    post:
+      operationId: AccessRoleAssign
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignAuthorizationDto"
+      responses:
+        "201":
+          description: ""
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      summary: Assign a list of users to this authorization.
+      tags: *a11
+    delete:
+      operationId: AccessRoleRevoke
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignAuthorizationDto"
+      responses:
+        "200":
+          description: ""
+        "401": *a7
+        "403": *a8
+        "500": *a9
+      security: *a10
+      summary: |-
+        Revoke a list of users from this authorization.
+        This is the inverse of the assign method.
+      tags: *a11
+  /api/v4/access/statement/db:
+    post:
+      operationId: AccessStatementCreateDbStatement
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDbStatementDto"
+      responses:
+        "201":
+          description: ""
+        "401": &a12
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example:
+                response:
+                  data:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Human readable error
+                status: 401
+        "403": &a13
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example:
+                response:
+                  data:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Human readable error
+                status: 403
+        "500": &a14
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AxiosErrorDto"
+              example:
+                response:
+                  data:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Human readable error
+                status: 500
+      security: &a15
+        - bearer: []
+        - jwt: []
+      summary: Create a new statement which is entirely stored in the database.
+      tags: &a16
+        - access/statement
+  /api/v4/access/statement/db/{id}:
+    put:
+      operationId: AccessStatementUpdateDbStatement
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDbStatementDto"
+      responses:
+        "200":
+          description: ""
+        "401": *a12
+        "403": *a13
+        "500": *a14
+      security: *a15
+      tags: *a16
+  /api/v4/access/statement/code:
+    post:
+      operationId: AccessStatementCreateCodeStatement
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCodeStatementDto"
+      responses:
+        "201":
+          description: ""
+        "401": *a12
+        "403": *a13
+        "500": *a14
+      security: *a15
+      summary: >-
+        Create a new statement, where only the parameters are stored in the
+        database.
+
+        The actual statement is calculated at runtime.
+      tags: *a16
+  /api/v4/access/statement/code/{id}:
+    put:
+      operationId: AccessStatementUpdateCodeStatement
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCodeStatementDto"
+      responses:
+        "200":
+          description: ""
+        "401": *a12
+        "403": *a13
+        "500": *a14
+      security: *a15
+      tags: *a16
+  /api/v4/access/statement/{id}:
+    delete:
+      operationId: AccessStatementDelete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+        "401": *a12
+        "403": *a13
+        "500": *a14
+      security: *a15
+      tags: *a16
   /api/v4/group:
     post:
       operationId: GroupCreate
@@ -148,7 +493,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateGroupDto"
+              $ref: "#/components/schemas/Function"
       responses:
         "201":
           description: Create group
@@ -156,67 +501,64 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupDto"
-        "401": &a13
+        "401": &a17
           description: Unauthorized
-          example: &a10
-            response:
-              data:
-                statusCode: 401
-                error: Unauthorized
-                message: Human readable error
-            status: 401
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-              example: *a10
-        "403": &a14
+              example:
+                response:
+                  data:
+                    statusCode: 401
+                    error: Unauthorized
+                    message: Human readable error
+                status: 401
+        "403": &a18
           description: Forbidden
-          example: &a11
-            response:
-              data:
-                statusCode: 403
-                error: Forbidden
-                message: Human readable error
-            status: 403
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-              example: *a11
-        "500": &a15
+              example:
+                response:
+                  data:
+                    statusCode: 403
+                    error: Forbidden
+                    message: Human readable error
+                status: 403
+        "500": &a19
           description: Internal Server Error
-          example: &a12
-            response:
-              data:
-                statusCode: 500
-                error: Internal Server Error
-                message: Human readable error
-            status: 500
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/AxiosErrorDto"
-              example: *a12
-      tags: &a16
-        - group
-      security: &a17
+              example:
+                response:
+                  data:
+                    statusCode: 500
+                    error: Internal Server Error
+                    message: Human readable error
+                status: 500
+      security: &a20
         - bearer: []
         - jwt: []
+      tags: &a21
+        - group
     get:
       operationId: GroupFindAll
       parameters:
         - name: page
           required: false
           in: query
-          example: 1
           schema:
+            example: 1
             type: number
         - name: perPage
           required: false
           in: query
-          example: 10
           schema:
+            example: 10
             type: number
       responses:
         "200":
@@ -227,11 +569,11 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/GroupListItemDto"
-        "401": *a13
-        "403": *a14
-        "500": *a15
-      tags: *a16
-      security: *a17
+        "401": *a17
+        "403": *a18
+        "500": *a19
+      security: *a20
+      tags: *a21
   /api/v4/group/{id}:
     get:
       operationId: GroupFindOne
@@ -248,11 +590,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupDto"
-        "401": *a13
-        "403": *a14
-        "500": *a15
-      tags: *a16
-      security: *a17
+        "401": *a17
+        "403": *a18
+        "500": *a19
+      security: *a20
+      tags: *a21
     put:
       operationId: GroupUpdate
       parameters:
@@ -266,7 +608,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpdateGroupDto"
+              $ref: "#/components/schemas/Function"
       responses:
         "200":
           description: Update group
@@ -274,11 +616,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupDto"
-        "401": *a13
-        "403": *a14
-        "500": *a15
-      tags: *a16
-      security: *a17
+        "401": *a17
+        "403": *a18
+        "500": *a19
+      security: *a20
+      tags: *a21
     delete:
       operationId: GroupRemove
       parameters:
@@ -292,11 +634,11 @@ paths:
           description: ""
         "204":
           description: Delete group
-        "401": *a13
-        "403": *a14
-        "500": *a15
-      tags: *a16
-      security: *a17
+        "401": *a17
+        "403": *a18
+        "500": *a19
+      security: *a20
+      tags: *a21
 info:
   title: PÉK API
   description: Profiles and Groups
@@ -417,36 +759,395 @@ components:
       required:
         - name
         - id
-    CreateGroupDto:
+    AuthorizationSummaryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: Unique identifier for the authorization
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        name:
+          type: string
+          minLength: 7
+          maxLength: 20
+          description: Human-readable name for the authorization
+          example: KIR-DEV öregtag
+        defaultEnabled:
+          type: boolean
+          description: Indicates if the client should apply this authorization by default
+      required:
+        - id
+        - name
+        - defaultEnabled
+    CodeStatementEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the statement
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        authId:
+          type: string
+          description: ID of the parent authorization
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        implementedBy:
+          type: string
+          description: Implementation of the statement
+          enum:
+            - DEFAULT_ROLE
+            - USER_PROFILE
+            - GROUP_NEWBIE
+            - GROUP_MEMBERSHIP
+            - GROUP_ADMINISTRATOR
+            - GROUP_LEADER
+            - RVT_MEMBER
+            - RESORT_LEADER
+            - RESORT_ADMINISTRATOR
+          example: DEFAULT_ROLE
+        onGroupId:
+          type: string
+          nullable: true
+          description: ID of the group this statement applies to (if applicable)
+          example: clg2hq8vw0002uh0g0pzm1jd0
+        onUserId:
+          type: string
+          nullable: true
+          description: ID of the user this statement applies to (if applicable)
+          example: clg2hq8vw0003uh0g0pzm1jd1
+      required:
+        - id
+        - authId
+        - implementedBy
+        - onGroupId
+        - onUserId
+    DatabaseStatementEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the statement
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        authId:
+          type: string
+          description: ID of the parent authorization
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        resources:
+          description: List of resources this statement applies to
+          type: array
+          items:
+            type: string
+        actions:
+          type: array
+          description: List of actions allowed by this statement
+          items:
+            type: string
+            enum:
+              - USER__READ_AUTHORIZATIONS
+              - USER_PROFILE__VIEW_BASIC
+              - USER_PROFILE__VIEW
+              - USER_PROFILE__EDIT
+              - USER_PROFILE__SET_PRIMARY_GROUP
+              - SVIE_CARD__REQUEST_CREATE
+              - SVIE_CARD__REQUEST_UPDATE
+              - SVIE_CARD__ADMIN
+              - MEMBERSHIP__LIST
+              - MEMBERSHIP__VIEW_PERFORMANCE
+              - MEMBERSHIP__ADD_TO_GROUP
+              - GROUP__VIEW_BASIC
+              - GROUP__EDIT_PROFILE
+              - GROUP__VIEW_PERFORMANCE
+              - GROUP__REQUEST_CREATE
+              - GROUP__MANAGE_MEMBERSHIP_STATUSES
+              - GROUP__REQUEST_LEADER_CHANGE
+              - GROUP__MANAGE_FLAIRS
+              - GROUP_LEADER_CHANGE_REQUEST__VIEW
+              - GROUP_LEADER_CHANGE_REQUEST__EDIT
+              - GUIDELINE__READ
+              - GUIDELINE__MANAGE
+              - SCOREBOARD__READ
+              - SCOREBOARD__COMMENT
+              - SCOREBOARD__EDIT
+              - SCOREBOARD__SYNC
+              - SCOREBOARD__SUBMIT
+              - SCOREBOARD__EVALUATE
+              - NOTIFICATION__RECEIVE
+              - SYSTEM__READ_SEMESTER
+              - SYSTEM__SET_SEMESTER
+              - ADMIN__IMPERSONATE
+      required:
+        - id
+        - authId
+        - resources
+        - actions
+    AuthorizationEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: Unique identifier for the authorization
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        name:
+          type: string
+          minLength: 7
+          maxLength: 20
+          description: Human-readable name for the authorization
+          example: KIR-DEV öregtag
+        defaultEnabled:
+          type: boolean
+          description: Indicates if the client should apply this authorization by default
+        codeDefined:
+          description: statements stored as code, defined for the authorization
+          type: array
+          items:
+            $ref: "#/components/schemas/CodeStatementEntry"
+        dbDefined:
+          description: statements stored as database, defined for the authorization
+          type: array
+          items:
+            $ref: "#/components/schemas/DatabaseStatementEntry"
+        createdAt:
+          format: date-time
+          type: string
+          description: Timestamp when the authorization was created
+          example: 2023-04-03T00:00:00.000Z
+        updatedAt:
+          format: date-time
+          type: string
+          description: Timestamp when the authorization was last updated
+          example: 2023-04-03T00:00:00.000Z
+      required:
+        - id
+        - name
+        - defaultEnabled
+        - codeDefined
+        - dbDefined
+        - createdAt
+        - updatedAt
+    CreateAuthorizationDto:
       type: object
       properties:
         name:
           type: string
-        description:
-          type: string
-        parentId:
-          type: string
-        purpose:
-          type: object
-        isCommunity:
+          minLength: 7
+          maxLength: 20
+          description: Human-readable name for the authorization
+          example: KIR-DEV öregtag
+        defaultEnabled:
           type: boolean
-        isResort:
-          type: boolean
-        isTaskForce:
-          type: boolean
-        hasTransitiveMembership:
-          type: boolean
-        isArchived:
-          type: boolean
+          description: Indicates if the client should apply this authorization by default
       required:
         - name
-        - description
-        - purpose
-        - isCommunity
-        - isResort
-        - isTaskForce
-        - hasTransitiveMembership
-        - isArchived
+        - defaultEnabled
+    UpdateAuthorizationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 7
+          maxLength: 20
+          description: Human-readable name for the authorization
+          example: KIR-DEV Admin
+        defaultEnabled:
+          type: boolean
+          description: Indicates if the client should apply this authorization by default
+          example: true
+    AssignAuthorizationDto:
+      type: object
+      properties:
+        userIds:
+          description: IDs of the users to assign/unassign the authorization to
+          example:
+            - clg2hq8vw0000uh0g0pzm1jd8
+            - clg2hq8vw0001uh0g0pzm1jd9
+          minItems: 1
+          items:
+            type: array
+            minLength: 1
+          type: array
+      required:
+        - userIds
+    CreateDbStatementDto:
+      type: object
+      properties:
+        authId:
+          type: string
+          description: ID of the Authorization this statement belongs to
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        resources:
+          minItems: 1
+          description: List of resource identifiers (e.g., pek:user:123, pek:group:abc)
+          example:
+            - pek:user:clg2hq8vw0000uh0g0pzm1jd8
+          items:
+            type: array
+            minLength: 1
+          type: array
+        actions:
+          type: array
+          minItems: 1
+          description: List of actions allowed on the resources
+          example:
+            - USER_PROFILE__VIEW
+            - USER_PROFILE__EDIT
+          items:
+            type: string
+            enum:
+              - USER__READ_AUTHORIZATIONS
+              - USER_PROFILE__VIEW_BASIC
+              - USER_PROFILE__VIEW
+              - USER_PROFILE__EDIT
+              - USER_PROFILE__SET_PRIMARY_GROUP
+              - SVIE_CARD__REQUEST_CREATE
+              - SVIE_CARD__REQUEST_UPDATE
+              - SVIE_CARD__ADMIN
+              - MEMBERSHIP__LIST
+              - MEMBERSHIP__VIEW_PERFORMANCE
+              - MEMBERSHIP__ADD_TO_GROUP
+              - GROUP__VIEW_BASIC
+              - GROUP__EDIT_PROFILE
+              - GROUP__VIEW_PERFORMANCE
+              - GROUP__REQUEST_CREATE
+              - GROUP__MANAGE_MEMBERSHIP_STATUSES
+              - GROUP__REQUEST_LEADER_CHANGE
+              - GROUP__MANAGE_FLAIRS
+              - GROUP_LEADER_CHANGE_REQUEST__VIEW
+              - GROUP_LEADER_CHANGE_REQUEST__EDIT
+              - GUIDELINE__READ
+              - GUIDELINE__MANAGE
+              - SCOREBOARD__READ
+              - SCOREBOARD__COMMENT
+              - SCOREBOARD__EDIT
+              - SCOREBOARD__SYNC
+              - SCOREBOARD__SUBMIT
+              - SCOREBOARD__EVALUATE
+              - NOTIFICATION__RECEIVE
+              - SYSTEM__READ_SEMESTER
+              - SYSTEM__SET_SEMESTER
+              - ADMIN__IMPERSONATE
+      required:
+        - authId
+        - resources
+        - actions
+    UpdateDbStatementDto:
+      type: object
+      properties:
+        resources:
+          minItems: 1
+          description: List of resource identifiers (e.g., pek:user:123, pek:group:abc)
+          example:
+            - pek:user:clg2hq8vw0000uh0g0pzm1jd8
+          items:
+            type: array
+            minLength: 1
+          type: array
+        actions:
+          type: array
+          minItems: 1
+          description: List of actions allowed on the resources
+          example:
+            - USER_PROFILE__VIEW
+            - USER_PROFILE__EDIT
+          items:
+            type: string
+            enum:
+              - USER__READ_AUTHORIZATIONS
+              - USER_PROFILE__VIEW_BASIC
+              - USER_PROFILE__VIEW
+              - USER_PROFILE__EDIT
+              - USER_PROFILE__SET_PRIMARY_GROUP
+              - SVIE_CARD__REQUEST_CREATE
+              - SVIE_CARD__REQUEST_UPDATE
+              - SVIE_CARD__ADMIN
+              - MEMBERSHIP__LIST
+              - MEMBERSHIP__VIEW_PERFORMANCE
+              - MEMBERSHIP__ADD_TO_GROUP
+              - GROUP__VIEW_BASIC
+              - GROUP__EDIT_PROFILE
+              - GROUP__VIEW_PERFORMANCE
+              - GROUP__REQUEST_CREATE
+              - GROUP__MANAGE_MEMBERSHIP_STATUSES
+              - GROUP__REQUEST_LEADER_CHANGE
+              - GROUP__MANAGE_FLAIRS
+              - GROUP_LEADER_CHANGE_REQUEST__VIEW
+              - GROUP_LEADER_CHANGE_REQUEST__EDIT
+              - GUIDELINE__READ
+              - GUIDELINE__MANAGE
+              - SCOREBOARD__READ
+              - SCOREBOARD__COMMENT
+              - SCOREBOARD__EDIT
+              - SCOREBOARD__SYNC
+              - SCOREBOARD__SUBMIT
+              - SCOREBOARD__EVALUATE
+              - NOTIFICATION__RECEIVE
+              - SYSTEM__READ_SEMESTER
+              - SYSTEM__SET_SEMESTER
+              - ADMIN__IMPERSONATE
+    CreateCodeStatementDto:
+      type: object
+      properties:
+        authId:
+          type: string
+          description: ID of the Authorization this statement belongs to
+          example: clg2hq8vw0000uh0g0pzm1jd8
+        implementedBy:
+          type: string
+          description: The predefined implementation logic for this statement
+          enum:
+            - DEFAULT_ROLE
+            - USER_PROFILE
+            - GROUP_NEWBIE
+            - GROUP_MEMBERSHIP
+            - GROUP_ADMINISTRATOR
+            - GROUP_LEADER
+            - RVT_MEMBER
+            - RESORT_LEADER
+            - RESORT_ADMINISTRATOR
+          example: GROUP_MEMBERSHIP
+        onGroupId:
+          type: string
+          description: Optional Group ID context for the statement implementation
+          example: clg2hq8vw0002uh0g0pzm1jda
+        onUserId:
+          type: string
+          description: Optional User ID context for the statement implementation
+          example: clg2hq8vw0000uh0g0pzm1jd8
+      required:
+        - authId
+        - implementedBy
+    UpdateCodeStatementDto:
+      type: object
+      properties:
+        implementedBy:
+          type: string
+          description: The predefined implementation logic for this statement
+          enum:
+            - DEFAULT_ROLE
+            - USER_PROFILE
+            - GROUP_NEWBIE
+            - GROUP_MEMBERSHIP
+            - GROUP_ADMINISTRATOR
+            - GROUP_LEADER
+            - RVT_MEMBER
+            - RESORT_LEADER
+            - RESORT_ADMINISTRATOR
+          example: GROUP_MEMBERSHIP
+        onGroupId:
+          type: string
+          nullable: true
+          description: Optional Group ID context for the statement implementation. Set to
+            null to remove.
+          example: clg2hq8vw0002uh0g0pzm1jda
+        onUserId:
+          type: string
+          nullable: true
+          description: Optional User ID context for the statement implementation. Set to
+            null to remove.
+          example: clg2hq8vw0000uh0g0pzm1jd8
+    Function:
+      type: object
+      properties: {}
     GroupListItemDto:
       type: object
       properties:
@@ -574,27 +1275,6 @@ components:
         - children
         - parent
         - memberships
-    UpdateGroupDto:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        parentId:
-          type: string
-        purpose:
-          type: object
-        isCommunity:
-          type: boolean
-        isResort:
-          type: boolean
-        isTaskForce:
-          type: boolean
-        hasTransitiveMembership:
-          type: boolean
-        isArchived:
-          type: boolean
 externalDocs:
   description: Source Code (GitHub)
   url: https://github.com/kir-dev/pek-infinity

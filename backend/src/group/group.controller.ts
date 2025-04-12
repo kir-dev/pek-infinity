@@ -1,18 +1,9 @@
-import {
-  Body,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
-import type { GroupService } from '@/group/group.service';
+import { GroupService } from '@/group/group.service';
 import { ApiController } from '@/utils/controller.decorator';
-import { AccessGuard } from '@/access/access.guard';
+import AccessGuard from '@/access/access.guard';
 
 import {
   type CreateGroupDto,
@@ -55,7 +46,7 @@ export class GroupController {
     example: 10,
   })
   @Get()
-  @UseGuards(AccessGuard.GroupFind())
+  //@UseGuards(AccessGuard.GroupFind())
   findAll(
     @Query('page') page: number,
     @Query('perPage') perPage: number

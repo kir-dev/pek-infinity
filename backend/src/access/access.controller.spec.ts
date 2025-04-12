@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AccessController } from './access-role.controller';
+import { Test, type TestingModule } from '@nestjs/testing';
+import { AccessRoleController } from './access-authorization.controller';
 
 describe('AccessController', () => {
-  let controller: AccessController;
+  let controller: AccessRoleController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AccessController],
+      controllers: [AccessRoleController],
     }).compile();
 
-    controller = module.get<AccessController>(AccessController);
+    controller = module.get<AccessRoleController>(AccessRoleController);
   });
 
   it('should be defined', () => {

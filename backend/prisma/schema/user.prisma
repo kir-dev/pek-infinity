@@ -26,6 +26,7 @@ model User {
     lastLogin             DateTime?
     permissions           Authorization[]
     appliedCodeStatements CodeDefinedStatement[] @ignore
+    appliedDbStatements   Resource[]             @ignore
 }
 
 model Username {

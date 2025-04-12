@@ -1,7 +1,7 @@
 import { type CanActivate, type ExecutionContext, Injectable } from '@nestjs/common';
-import type { Request } from 'express';
+import { Request } from 'express';
 
-import type { UserDto } from '@/auth/entities/user.entity';
+import { UserDto } from '@/auth/entities/user.entity';
 
 import { type FnParamExtractor, param, type ParamExtractor } from './extractor';
 

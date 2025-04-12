@@ -1,5 +1,3 @@
-
-
 model GuidelineCollection {
     id          String       @id @default(cuid())
     groupId     String
@@ -40,7 +38,7 @@ model Scoreboard {
     status            RequestStatus       @default(NOT_SUBMITTED)
     createdAt         DateTime            @default(now())
     updatedAt         DateTime            @updatedAt
-    submittedAt        DateTime?
+    submittedAt       DateTime?
     version           Int                 @default(1)
     discussion        Json[] // { userId?: Int, message: String, createdAt: DateTime }[]
     previousVersionId String?             @unique

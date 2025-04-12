@@ -1,5 +1,5 @@
 import { ExecutionContext } from '@nestjs/common';
-import type { Request } from 'express';
+import { Request } from 'express';
 
 import { UserDto } from '@/auth/entities/user.entity';
 
@@ -21,7 +21,9 @@ export type FnParamExtractor = (params: {
  */
 export const param = (param: string, { optional = false } = {}) =>
   (({ req }) => {
-    if (optional || req.params[param]) return req.params[param] ?? null;
+    if (optional || req.params[param]) {
+      return req.params[param] ?? null;
+    }
     throw new TypeError(`Param ${param} is not defined`);
   }) as FnParamExtractor;
 
@@ -32,6 +34,8 @@ export const param = (param: string, { optional = false } = {}) =>
  */
 export const userId = ({ optional = false } = {}) =>
   (({ user }) => {
-    if (optional || user?.id) return user?.id ?? null;
-    throw new TypeError(`User is not defined`);
+    if (optional || user?.id) {
+      return user?.id ?? null;
+    }
+    throw new TypeError('User is not defined');
   }) as FnParamExtractor;

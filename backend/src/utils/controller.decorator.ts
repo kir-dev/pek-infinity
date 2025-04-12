@@ -40,7 +40,7 @@ export function ApiController(
     ApiInternalServerErrorResponse({
       type: AxiosErrorDto<InternalServerErrorDto>,
       description: 'Internal Server Error',
-      status: 500,
+      // status: 500,
       example: {
         response: {
           data: {
@@ -60,7 +60,7 @@ export function ApiController(
       ApiUnauthorizedResponse({
         type: AxiosErrorDto<UnauthorizedErrorDto>,
         description: 'Unauthorized',
-        status: 401,
+        // status: 401,
         example: {
           response: {
             data: {
@@ -75,7 +75,7 @@ export function ApiController(
       ApiForbiddenResponse({
         type: AxiosErrorDto<ForbiddenErrorDto>,
         description: 'Forbidden',
-        status: 403,
+        // status: 403,
         example: {
           response: {
             data: {

@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import type { Prisma } from '@prisma/client';
-import type { PrismaService } from 'nestjs-prisma';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
-import type {
+import {
   CreateGroupDto,
   GroupDto,
   GroupListItemDto,
@@ -37,9 +37,14 @@ const GroupDtoSelect = {
       user: {
         select: {
           id: true,
-          firstName: true,
-          lastName: true,
-          nickname: true,
+          profile: {
+            // Select specific fields from the related Profile
+            select: {
+              firstName: true,
+              lastName: true,
+              nickname: true,
+            },
+          },
         },
       },
     },
@@ -49,9 +54,9 @@ const GroupDtoSelect = {
 @Injectable()
 export class GroupService {
   private readonly logger = new Logger(GroupService.name);
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create({ parentId, ...createGroupDto }: CreateGroupDto): Promise<GroupDto> {
+  async create({ parentId, ...createGroupDto }: CreateGroupDto): Promise<any> {
     return this.prisma.group.create({
       data: {
         ...createGroupDto,
@@ -72,7 +77,7 @@ export class GroupService {
     });
   }
 
-  async findById(id: string): Promise<GroupDto> {
+  async findById(id: string): Promise<any> {
     const group = await this.prisma.group.findUnique({
       where: { id },
       select: GroupDtoSelect,
@@ -85,7 +90,7 @@ export class GroupService {
     return group;
   }
 
-  async update(id: string, updateGroupDto: UpdateGroupDto): Promise<GroupDto> {
+  async update(id: string, updateGroupDto: UpdateGroupDto): Promise<any> {
     try {
       return this.prisma.group.update({
         where: { id },

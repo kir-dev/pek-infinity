@@ -1,5 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
-import type { Request } from 'express';
+import { Request } from 'express';
 
 export function getHostFromUrl(url: string): string {
   const hostWithPort = new URL(url).host;
