@@ -1,67 +1,67 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
-    "root": true,
-	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-	"files": {
-		"ignoreUnknown": false,
-		"includes": ["**", "!**/frontend/pek-api/**/*"]
-	},
-	"formatter": {
-		"enabled": true,
-		"useEditorconfig": true,
-		"formatWithErrors": false,
-		"indentStyle": "space",
-		"indentWidth": 2,
-		"lineEnding": "lf",
-		"lineWidth": 100
-	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
-	"linter": {
-		"rules": {
-			"recommended": true,
-			"complexity": {
-				"noUselessStringConcat": "warn",
-				"noVoid": "error"
-			},
-			"correctness": {
-				"noUnusedVariables": "warn"
-			},
-			"style": {
-				"noNegationElse": "warn",
-				"noYodaExpression": "error",
-				"useBlockStatements": "warn",
-				"useCollapsedElseIf": "warn",
-				"noNonNullAssertion": "off",
-				"useArrayLiterals": "warn"
-			},
-			"suspicious": {
-				"noExplicitAny": "off"
-			}
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"jsxQuoteStyle": "single",
-			"trailingCommas": "es5",
-			"semicolons": "always",
-			"quoteStyle": "single"
-		}
-	},
-	"overrides": [
-		{
-			"includes": ["**/backend/src/**/*"],
-			"linter": {
-				"rules": {
-					"style": {
-						"useImportType": "off"
-					}
-				}
-			},
-			"javascript": {
-				"parser": {
-					"unsafeParameterDecoratorsEnabled": true
-				}
-			}
-		}
-	]
+  "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
+  "root": true,
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**", "!**/generated/**/*", "!**/openapi.json"]
+  },
+  "formatter": {
+    "enabled": true,
+    "useEditorconfig": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noUselessStringConcat": "warn",
+        "noVoid": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": "warn"
+      },
+      "style": {
+        "noNegationElse": "warn",
+        "noYodaExpression": "error",
+        "useBlockStatements": "warn",
+        "useCollapsedElseIf": "warn",
+        "noNonNullAssertion": "off",
+        "useArrayLiterals": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "quoteStyle": "single"
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/backend/src/**/*"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      },
+      "javascript": {
+        "parser": {
+          "unsafeParameterDecoratorsEnabled": true
+        }
+      }
+    }
+  ]
 }
