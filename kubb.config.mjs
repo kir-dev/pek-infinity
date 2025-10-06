@@ -6,6 +6,7 @@ import { pluginOas } from '@kubb/plugin-oas';
 import { pluginReactQuery } from '@kubb/plugin-react-query';
 import { pluginTs } from '@kubb/plugin-ts';
 import { pluginZod } from '@kubb/plugin-zod';
+
 /**
  * remove "Controller" from the filesnames
  * @param {{ group: string }} ctx
