@@ -24,6 +24,7 @@ export default defineConfig({
   output: {
     path: './generated/',
     clean: true,
+    barrelType: false,
   },
   plugins: [
     pluginOas({ group: { type: 'tag', name: trimController } }),
