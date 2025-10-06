@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/api": {
       "get": {
         "operationId": "AppGetRoot",
         "parameters": [],
@@ -15,9 +15,70 @@
         ]
       }
     },
-    "/user": {
+    "/api/auth/login": {
+      "get": {
+        "operationId": "AuthLogin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v4/auth/logout": {
+      "get": {
+        "operationId": "AuthLogoutv4",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/callback": {
+      "get": {
+        "operationId": "AuthOauthRedirect",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v4/auth/me": {
+      "get": {
+        "operationId": "AuthMev4",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v4/user": {
       "post": {
-        "operationId": "UserCreate",
+        "operationId": "UserCreatev4",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -39,7 +100,7 @@
         ]
       },
       "get": {
-        "operationId": "UserFindAll",
+        "operationId": "UserFindAllv4",
         "parameters": [],
         "responses": {
           "200": {
@@ -51,9 +112,9 @@
         ]
       }
     },
-    "/user/{id}": {
+    "/api/v4/user/{id}": {
       "get": {
-        "operationId": "UserFindOne",
+        "operationId": "UserFindOnev4",
         "parameters": [
           {
             "name": "id",
@@ -74,7 +135,7 @@
         ]
       },
       "patch": {
-        "operationId": "UserUpdate",
+        "operationId": "UserUpdatev4",
         "parameters": [
           {
             "name": "id",
@@ -105,7 +166,7 @@
         ]
       },
       "delete": {
-        "operationId": "UserRemove",
+        "operationId": "UserRemovev4",
         "parameters": [
           {
             "name": "id",
@@ -126,9 +187,9 @@
         ]
       }
     },
-    "/group": {
+    "/api/v4/group": {
       "post": {
-        "operationId": "GroupCreate",
+        "operationId": "GroupCreatev4",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -150,7 +211,7 @@
         ]
       },
       "get": {
-        "operationId": "GroupFindAll",
+        "operationId": "GroupFindAllv4",
         "parameters": [],
         "responses": {
           "200": {
@@ -162,9 +223,9 @@
         ]
       }
     },
-    "/group/{id}": {
+    "/api/v4/group/{id}": {
       "get": {
-        "operationId": "GroupFindOne",
+        "operationId": "GroupFindOnev4",
         "parameters": [
           {
             "name": "id",
@@ -185,7 +246,7 @@
         ]
       },
       "patch": {
-        "operationId": "GroupUpdate",
+        "operationId": "GroupUpdatev4",
         "parameters": [
           {
             "name": "id",
@@ -216,7 +277,7 @@
         ]
       },
       "delete": {
-        "operationId": "GroupRemove",
+        "operationId": "GroupRemovev4",
         "parameters": [
           {
             "name": "id",
@@ -237,9 +298,9 @@
         ]
       }
     },
-    "/membership": {
+    "/api/v4/membership": {
       "post": {
-        "operationId": "MembershipCreate",
+        "operationId": "MembershipCreatev4",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -261,7 +322,7 @@
         ]
       },
       "get": {
-        "operationId": "MembershipFindAll",
+        "operationId": "MembershipFindAllv4",
         "parameters": [],
         "responses": {
           "200": {
@@ -273,9 +334,9 @@
         ]
       }
     },
-    "/membership/{id}": {
+    "/api/v4/membership/{id}": {
       "get": {
-        "operationId": "MembershipFindOne",
+        "operationId": "MembershipFindOnev4",
         "parameters": [
           {
             "name": "id",
@@ -296,7 +357,7 @@
         ]
       },
       "patch": {
-        "operationId": "MembershipUpdate",
+        "operationId": "MembershipUpdatev4",
         "parameters": [
           {
             "name": "id",
@@ -327,7 +388,7 @@
         ]
       },
       "delete": {
-        "operationId": "MembershipRemove",
+        "operationId": "MembershipRemovev4",
         "parameters": [
           {
             "name": "id",

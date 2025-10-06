@@ -1,16 +1,35 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Logger } from '@nestjs/common';
-import type { OpenAPIObject } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  type OpenAPIObject,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { createApp } from './app';
+import { capitalize } from './utils/capitalize';
 
 async function bootstrap() {
-  const { app, document } = await createApp();
+  const app = await createApp();
+
+  const config = new DocumentBuilder()
+    .setTitle('PEK Infinity API')
+    .setDescription('API for PEK Infinity project')
+    .setVersion('1.0')
+    .build();
+
+  const document: OpenAPIObject = SwaggerModule.createDocument(app, config, {
+    operationIdFactory: (controller, method, version) =>
+      `${capitalize(controller.replace('Controller', ''))}${capitalize(method)}${version ?? ''}`,
+  });
+  SwaggerModule.setup('api', app, document);
 
   // Generate OpenAPI spec to workspace root
   writeDocument(document);
 
   await app.listen(process.env.PORT ?? 3000);
+
+  Logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
 
