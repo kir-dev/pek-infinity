@@ -1,0 +1,38 @@
+model Group {
+  id                      String                @id @default(cuid())
+  name                    String                @unique
+  description             String
+  parentId                String?
+  purpose                 GroupPurpose
+  parent                  Group?                @relation("ParentGroup", fields: [parentId], references: [id])
+  children                Group[]               @relation("ParentGroup")
+  isCommunity             Boolean // kor-e
+  isResort                Boolean // reszort-e
+  isTaskForce             Boolean // task force-e
+  hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
+  isArchived              Boolean
+  memberships             Membership[]
+  guidelines              GuidelineCollection[]
+  scoreboards             Scoreboard[]
+  // calculated availableFlares String[]
+}
+
+enum GroupPurpose {
+  UNKNOWN
+  OLD // @map("old")
+  COMMITTEE // @map("bizottság")
+  PARTY // @map("bulis")
+  CIRCLE // @map("csoport")
+  D // @map("D")
+  ELLIPSE // @map("ellipszis")
+  YEAR_CLASS // @map("évfolyam")
+  GROUP // @map("Kor")
+  CULTURE // @map("kultur")
+  PROJECT // @map("projekt")
+  EVENT // @map("rendezveny")
+  RESORT // @map("reszort")
+  SPORT // @map("sport")
+  PROFESSIONAL // @map("szakmai kör")
+  FLOOR // @map("szint")
+  SERVICE // @map("szolgáltató kör")
+}

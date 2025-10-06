@@ -1,0 +1,116 @@
+model GuidelineCollection {
+  id          String       @id @default(cuid())
+  groupId     String
+  group       Group        @relation(fields: [groupId], references: [id])
+  termId      String
+  semesterId  String
+  semester    Semester     @relation(fields: [semesterId], references: [name])
+  guidelines  Guideline[]
+  scoreboards Scoreboard[]
+}
+
+model Guideline {
+  id              String              @id @default(cuid())
+  name            String
+  description     String
+  postCategory    PostCategory
+  maxPerMember    Int
+  maxPerGuideline Int
+  collectionId    String
+  collection      GuidelineCollection @relation(fields: [collectionId], references: [id])
+  requests        PointRequest[]
+}
+
+enum PostCategory {
+  WORK
+  RESPONSIBILITY
+}
+
+model Scoreboard {
+  id                String              @id @default(cuid())
+  guidelinesId      String
+  guidelines        GuidelineCollection @relation(fields: [guidelinesId], references: [id])
+  groupId           String
+  group             Group               @relation(fields: [groupId], references: [id])
+  semesterId        String
+  semester          Semester            @relation(fields: [semesterId], references: [name])
+  pointRequests     PointRequest[]
+  status            RequestStatus       @default(NOT_SUBMITTED)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  submittedAt       DateTime?
+  version           Int                 @default(1)
+  discussion        Json[] // { userId?: Int, message: String, createdAt: DateTime }[]
+  previousVersionId String?             @unique
+  previousVersion   Scoreboard?         @relation("ScoreboardVersions", fields: [previousVersionId], references: [id])
+  nextVersion       Scoreboard?         @relation("ScoreboardVersions")
+  evaluation        Evaluation?
+
+  @@unique([groupId, semesterId, version])
+}
+
+model PointRequest {
+  id           String     @id @default(cuid())
+  scoreboardId String
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+  guidelineId  String
+  guideline    Guideline  @relation(fields: [guidelineId], references: [id])
+  points       Int
+  discussion   Json[]
+
+  @@unique([scoreboardId, membershipId, guidelineId])
+}
+
+model Evaluation {
+  scoreboardId String     @id
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  createdAt    DateTime   @default(now())
+  evaluatorId  String
+  evaluator    User       @relation(fields: [evaluatorId], references: [id])
+}
+
+model EntryAwardRequest {
+  id            String         @id @default(cuid())
+  type          EntryAwardType @default(KULSOS_DO)
+  justification String
+  // We save both the membership and the user to make it easier to query and make migration from v3 easier
+  membershipId  String
+  membership    Membership     @relation(fields: [membershipId], references: [id])
+  awardeeId     String
+  awardee       User           @relation(fields: [awardeeId], references: [id])
+  semesterId    String
+  semester      Semester       @relation(fields: [semesterId], references: [name])
+  status        RequestStatus  @default(NOT_SUBMITTED)
+  requesterId   String
+  requester     User           @relation("EntryAwardRequester", fields: [requesterId], references: [id])
+  evaluatorId   String
+  evaluator     User           @relation("EntryAwardEvaluator", fields: [evaluatorId], references: [id])
+
+  @@unique([membershipId, semesterId])
+}
+
+/// * https://vik.wiki/GYIK_-_Sch%C3%B6nherz#K.C3.B6z.C3.A9let
+enum EntryAwardType {
+  KULSOS_DO         @map("KDO")
+  KOLLEGIUMI_BELEPO @map("KB")
+  ALLANDO_BELEPO    @map("AB")
+}
+
+enum RequestStatus {
+  NOT_SUBMITTED
+  NOT_YET_EVALUATED
+  ACCEPTED
+  REJECTED
+}
+
+model PointHistory {
+  awardeeId  String
+  awardee    User     @relation(fields: [awardeeId], references: [id])
+  semesterId String
+  semester   Semester @relation(fields: [semesterId], references: [name])
+  score      Int
+
+  @@id([awardeeId, semesterId])
+}

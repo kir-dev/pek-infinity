@@ -1,0 +1,7 @@
+model Semester {
+  name               String                @id
+  guidelines         GuidelineCollection[]
+  scoreboards        Scoreboard[]
+  entryAwardRequests EntryAwardRequest[]
+  pointHistories     PointHistory[]
+}

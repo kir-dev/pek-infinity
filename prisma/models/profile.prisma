@@ -1,0 +1,101 @@
+/// * A `SvieCard` modell a SVIE (Schönherzes Villamosmérnökök és Informatikusok Egyesülete) tagjainak érzékeny adatait tárolja.
+/// * Ez a modell elengedhetetlen a SVIE tagsági szabályzatának betartásához, ahogyan azt az Alapszabály 3. szekciója meghatározza.
+/// * Kizárólag a SVIE vezetősége módosíthatja, és az adatokhoz csak a felhasználó és a SVIE vezetősége férhet hozzá a magánszféra és az adatok integritásának biztosítása érdekében.
+
+model SvieCard {
+  userId      String              @id @unique
+  user        User                @relation(fields: [userId], references: [id])
+  homeAddress String
+  birthPlace  String
+  birthDate   DateTime            @db.Date()
+  birthName   String
+  mothersName String
+  fullName    String
+  email       String
+  statuses    SvieStatusHistory[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model SvieStatusHistory {
+  id        String     @id @default(cuid())
+  card      SvieCard   @relation(fields: [cardId], references: [userId])
+  cardId    String
+  status    SvieStatus
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum SvieStatus {
+  // * Külső tag:
+  // Betöltötte a 18. életévét, és egy Kör tagja.
+  FOREIGN
+  // * Rendes tag:
+  // A külső tagság feltételeinek megfelel és a BME VIK nappali tagozatos hallgatója.
+  ACTIVE
+  // * Öreg tag:
+  // Korábban külső vagy rendes tag volt, vagy a BME VIK-en hallgatói jogviszonnyal rendelkezett.
+  FORMAL
+}
+
+model Profile {
+  userId           String                @id @unique
+  user             User                  @relation(fields: [userId], references: [id])
+  firstName        String?
+  lastName         String?
+  nickname         String?
+  cellPhone        String?
+  room             String?
+  dormitory        Dormitory?            @default(UNKNOWN)
+  gender           Gender?               @default(UNKNOWN)
+  studentStatus    StudentStatus?        @default(UNKNOWN)
+  externalAccounts ExternalAccountLink[]
+}
+
+enum Dormitory {
+  KARMAN
+  TETENY
+  SCH
+  BAROSS
+  BERCSENYI
+  VASARHELYI
+  EXTERNAL
+  UNKNOWN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum StudentStatus {
+  ACTIVE
+  GRADUATED
+  OTHER
+  UNKNOWN
+}
+
+model ExternalAccountLink {
+  id          String                  @id @default(cuid())
+  protocol    ExternalAccountProtocol
+  accountName String
+  ownerId     String
+  owner       Profile                 @relation(fields: [ownerId], references: [userId])
+}
+
+enum ExternalAccountProtocol {
+  X_FORMERLY_TWITTER     @map("twitter")
+  SKYPE                  @map("skype")
+  CALL_SIGN              @map("call_sign")
+  IRC                    @map("irc")
+  GTALK                  @map("gtalk")
+  JABBER                 @map("jabber")
+  META_FORMERLY_FACEBOOK @map("facebook")
+  TELEGRAM               @map("Telegram")
+  SCH_MAIL               @map("sch_mail")
+  HIMZO                  @map("Hímzek")
+  GMAIL                  @map("gmail")
+  EASTER_EGG             @map("🍆")
+}

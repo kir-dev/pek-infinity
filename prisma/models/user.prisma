@@ -1,3 +1,34 @@
+/// * Central model representing a user in the PÉK (Profile and Community Management System)
+/// * This model stores both profile information and system user data
 model User {
-  id        String     @id
+  id        String     @id @default(cuid())
+  authSchId String     @unique
+  usernames Username[]
+
+  svie        SvieCard?
+  profile     Profile? // null if deleted
+  memberships Membership[]
+
+  // -- Community Evaluation System --
+  requestedEntryAwards EntryAwardRequest[] @relation("EntryAwardRequester")
+  evaluatedPointAwards Evaluation[]
+  evaluatedEntryAwards EntryAwardRequest[] @relation("EntryAwardEvaluator")
+  entries              EntryAwardRequest[]
+  points               PointHistory[]
+
+  // -- External Integrations and Privacy --
+  receivedNotifications Notification[] @relation("recipient")
+  sentNotifications     Notification[] @relation("sender")
+
+  // -- System Timestamps --
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  lastLogin DateTime?
+}
+
+model Username {
+  humanId   String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

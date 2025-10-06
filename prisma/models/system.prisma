@@ -1,0 +1,12 @@
+model SystemAttributes {
+  name  SystemAttributeKey @id
+  value String             @db.VarChar(255)
+}
+
+enum SystemAttributeKey {
+  SEMESTER
+  NEWBIE_PERIOD
+  LAST_LOG_SENT
+  MAX_POINT_FOR_SEMESTER
+  EVALUATION_PERIOD
+}
