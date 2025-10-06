@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "generate": "kubb generate"
+    "generate:kubb": "kubb generate",
+    "generate:prisma": "prisma generate --require-models --no-hints",
+    "postinstall": "npm run generate:kubb && npm run generate:prisma"
   },
   "devDependencies": {
     "@kubb/cli": "^4.1.2",
@@ -10,6 +12,10 @@
     "@kubb/plugin-oas": "^4.1.2",
     "@kubb/plugin-react-query": "^4.1.2",
     "@kubb/plugin-ts": "^4.1.2",
-    "@kubb/plugin-zod": "^4.1.2"
+    "@kubb/plugin-zod": "^4.1.2",
+    "prisma": "^6.16.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.3"
   }
 }
