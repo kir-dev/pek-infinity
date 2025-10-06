@@ -1,38 +1,47 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
-  "root": true,
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
-    "ignoreUnknown": false,
     "includes": ["**", "!**/generated/**/*", "!**/openapi.json"]
   },
   "formatter": {
-    "enabled": true,
-    "useEditorconfig": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 100
+    "indentStyle": "space"
   },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
+    "domains": {
+      "project": "recommended"
+    },
     "rules": {
-      "recommended": true,
       "complexity": {
-        "noUselessStringConcat": "warn",
-        "noVoid": "error"
+        "noUselessStringConcat": "on"
       },
       "correctness": {
-        "noUnusedVariables": "warn"
+        "noUnusedFunctionParameters": {
+          "level": "on",
+          "fix": "safe",
+          "options": {}
+        }
       },
       "style": {
-        "noNegationElse": "warn",
-        "noYodaExpression": "error",
-        "useBlockStatements": "warn",
-        "useCollapsedElseIf": "warn",
+        "noNegationElse": "on",
         "noNonNullAssertion": "off",
-        "useArrayLiterals": "warn"
+        "noYodaExpression": "on",
+        "useCollapsedElseIf": "on",
+        "useFilenamingConvention": {
+          "level": "on",
+          "options": {
+            "filenameCases": ["kebab-case"]
+          }
+        },
+        "useBlockStatements": {
+          "fix": "safe",
+          "level": "on",
+          "options": {}
+        }
       },
       "suspicious": {
         "noExplicitAny": "off"
@@ -43,25 +52,12 @@
     "formatter": {
       "jsxQuoteStyle": "single",
       "trailingCommas": "es5",
-      "semicolons": "always",
       "quoteStyle": "single"
     }
   },
-  "overrides": [
-    {
-      "includes": ["**/backend/src/**/*"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useImportType": "off"
-          }
-        }
-      },
-      "javascript": {
-        "parser": {
-          "unsafeParameterDecoratorsEnabled": true
-        }
-      }
+  "assist": {
+    "actions": {
+      "recommended": true
     }
-  ]
+  }
 }
