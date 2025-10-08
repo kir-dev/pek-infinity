@@ -1,0 +1,67 @@
+model Policy {
+  id       Int     @id @default(autoincrement())
+  name     String // e.g., "Simonyi Elnök"
+  //   isElevated   Boolean // Requires sudo mode
+  canIssue Boolean @default(false) // Owners can create child policies as a subset
+
+  // delegation hierarchy
+  parentId Int?
+  parent   Policy?  @relation("PolicyHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children Policy[] @relation("PolicyHierarchy")
+
+  // Relations
+  statements Statement[]
+
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  PolicyAssignment PolicyAssignment[]
+
+  @@index([parentId])
+  @@index([name])
+}
+
+model Statement {
+  id       String @id @default(cuid())
+  policyId Int
+  policy   Policy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  // only allow actions on this exact user
+  userIdRestrict  String?
+  userRestriction User?   @relation(fields: [userIdRestrict], references: [id])
+
+  // only allow actions on this exact group
+  groupIdRestrict  String?
+  groupRestriction Group?  @relation(fields: [groupIdRestrict], references: [id])
+
+  resource String
+
+  viewMembers      Boolean
+  editMembers      Boolean
+  viewGroup        Boolean
+  editGroupProfile Boolean
+  moveGroupOwner   Boolean
+  viewScores       Boolean
+  editScores       Boolean
+  evaluateScores   Boolean
+
+  viewBasicProfile Boolean
+  viewFullProfile  Boolean
+  editProfile      Boolean
+}
+
+model PolicyAssignment {
+  userId String
+  user   User   @relation("HasPolicy", fields: [userId], references: [id], onDelete: Cascade)
+
+  policyId Int
+  policy   Policy @relation(fields: [policyId], references: [id], onDelete: Cascade)
+
+  // Audit trail
+  assignedAt     DateTime @default(now())
+  assignedBy     String? // User ID of who assigned this policy
+  assignedByUser User?    @relation("AssignedPolicy", fields: [assignedBy], references: [id])
+
+  @@id([userId, policyId])
+  @@index([userId])
+  @@index([policyId])
+}
