@@ -5,7 +5,6 @@ model User {
   authSchId String     @unique
   usernames Username[]
 
-  svie        SvieCard?
   profile     Profile? // null if deleted
   memberships Membership[]
 
