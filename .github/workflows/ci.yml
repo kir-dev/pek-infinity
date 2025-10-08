@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: master
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint & Prisma Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run biome check
+        run: npx biome check .
+
+      - name: Prisma format --check
+        run: npx prisma format --check
+
+      - name: Prisma validate
+        env:
+          POSTGRES_PRISMA_URL: "postgresql://fake:fake@example.com:5432/fake"
+        run: npx prisma validate
+
+  backend-unit-test:
+    name: Unit Test Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run backend unit tests
+        run: npm run test --workspace backend
+
+      - name: Run backend e2e tests
+        run: npm run test:e2e --workspace backend
+
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build backend
+        run: npm run build --workspace backend
