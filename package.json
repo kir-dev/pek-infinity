@@ -1,10 +1,14 @@
 {
+  "workspaces": [
+    "backend"
+  ],
   "scripts": {
     "generate:kubb": "kubb generate",
     "generate:prisma": "prisma generate --require-models --no-hints",
     "postinstall": "npm run generate:kubb && npm run generate:prisma"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.5",
     "@kubb/cli": "^4.1.2",
     "@kubb/core": "^4.1.2",
     "@kubb/plugin-client": "^4.1.2",
@@ -13,7 +17,7 @@
     "@kubb/plugin-react-query": "^4.1.2",
     "@kubb/plugin-ts": "^4.1.2",
     "@kubb/plugin-zod": "^4.1.2",
-    "prisma": "^6.16.3"
+    "prisma": "^6.17.0"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3"

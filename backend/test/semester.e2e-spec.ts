@@ -2,13 +2,18 @@ import { type INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, type TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types';
+import { JwtStrategy } from '@/auth/strategy/jwt.strategy';
 import { PrismaService } from '@/prisma/prisma.service';
 import { SemesterModule } from '@/semester/semester.module';
-import { createMockPrismaService } from './prisma-mock.util';
+import {
+  createMockJwtStrategy,
+  createMockPrismaService,
+} from './services-mock.util';
 
 describe('Semester (e2e)', () => {
   let app: INestApplication<App>;
   let mockPrismaService: ReturnType<typeof createMockPrismaService>;
+  let mockJwtStrategy: ReturnType<typeof createMockJwtStrategy>;
 
   const VALID_SEMESTER = '2024-2025/1';
   const ANOTHER_SEMESTER = '2023-2024/1';
@@ -50,12 +55,15 @@ describe('Semester (e2e)', () => {
 
   beforeEach(async () => {
     mockPrismaService = createMockPrismaService();
+    mockJwtStrategy = createMockJwtStrategy();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [SemesterModule],
     })
       .overrideProvider(PrismaService)
       .useValue(mockPrismaService)
+      .overrideProvider(JwtStrategy)
+      .useValue(mockJwtStrategy)
       .compile();
 
     app = moduleFixture.createNestApplication();

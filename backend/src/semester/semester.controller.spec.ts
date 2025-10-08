@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@/prisma/prisma.service';
-import { createMockPrismaService } from '../../test/prisma-mock.util';
+import { createMockPrismaService } from '../../test/services-mock.util';
 import { SemesterController } from './semester.controller';
 import { SemesterService } from './semester.service';
 
