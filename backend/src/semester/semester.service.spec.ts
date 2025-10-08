@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { PrismaService } from '@/prisma/prisma.service';
-import { createMockPrismaService } from '../../test/prisma-mock.util';
+import { createMockPrismaService } from '../../test/services-mock.util';
 import { SemesterService } from './semester.service';
 
 describe('SemesterService', () => {
