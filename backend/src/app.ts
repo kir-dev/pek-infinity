@@ -1,4 +1,4 @@
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
@@ -7,6 +7,7 @@ export async function createApp() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   app
     .setGlobalPrefix('api')
