@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './group/group.module';
 import { MembershipModule } from './membership/membership.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { SemesterModule } from './semester/semester.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     GroupModule,
     MembershipModule,
+    SemesterModule,
   ],
   controllers: [AppController],
   providers: [],

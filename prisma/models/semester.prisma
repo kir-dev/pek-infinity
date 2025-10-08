@@ -5,3 +5,7 @@ model Semester {
   entryAwardRequests EntryAwardRequest[]
   pointHistories     PointHistory[]
 }
+
+model CurrentSemester {
+  semesterName String @id
+}

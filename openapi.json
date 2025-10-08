@@ -7,7 +7,14 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -24,6 +31,7 @@
             "description": ""
           }
         },
+        "summary": "Redirects to the authsch login page",
         "tags": [
           "Auth"
         ]
@@ -31,7 +39,7 @@
     },
     "/api/v4/auth/logout": {
       "get": {
-        "operationId": "AuthLogoutv4",
+        "operationId": "AuthLogout",
         "parameters": [],
         "responses": {
           "200": {
@@ -52,6 +60,7 @@
             "description": ""
           }
         },
+        "summary": "Endpoint for authsch to call after login\n\nRedirects to the frontend with the jwt token",
         "tags": [
           "Auth"
         ]
@@ -59,11 +68,18 @@
     },
     "/api/v4/auth/me": {
       "get": {
-        "operationId": "AuthMev4",
+        "operationId": "AuthMe",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtUserDto"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -71,40 +87,26 @@
             "bearer": []
           }
         ],
+        "summary": "Endpoint for jwt token validation",
         "tags": [
           "Auth"
         ]
       }
     },
-    "/api/v4/user": {
-      "post": {
-        "operationId": "UserCreatev4",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "User"
-        ]
-      },
+    "/api/v4/user/me": {
       "get": {
-        "operationId": "UserFindAllv4",
+        "operationId": "UserGetMe",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -114,7 +116,7 @@
     },
     "/api/v4/user/{id}": {
       "get": {
-        "operationId": "UserFindOnev4",
+        "operationId": "UserFindOne",
         "parameters": [
           {
             "name": "id",
@@ -127,7 +129,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -135,7 +144,7 @@
         ]
       },
       "patch": {
-        "operationId": "UserUpdatev4",
+        "operationId": "UserUpdate",
         "parameters": [
           {
             "name": "id",
@@ -158,7 +167,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -166,7 +182,7 @@
         ]
       },
       "delete": {
-        "operationId": "UserRemovev4",
+        "operationId": "UserRemove",
         "parameters": [
           {
             "name": "id",
@@ -179,7 +195,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -189,7 +212,7 @@
     },
     "/api/v4/group": {
       "post": {
-        "operationId": "GroupCreatev4",
+        "operationId": "GroupCreate",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -203,7 +226,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -211,11 +241,18 @@
         ]
       },
       "get": {
-        "operationId": "GroupFindAllv4",
+        "operationId": "GroupFindAll",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -225,7 +262,7 @@
     },
     "/api/v4/group/{id}": {
       "get": {
-        "operationId": "GroupFindOnev4",
+        "operationId": "GroupFindOne",
         "parameters": [
           {
             "name": "id",
@@ -238,7 +275,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -246,7 +290,7 @@
         ]
       },
       "patch": {
-        "operationId": "GroupUpdatev4",
+        "operationId": "GroupUpdate",
         "parameters": [
           {
             "name": "id",
@@ -269,7 +313,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -277,7 +328,7 @@
         ]
       },
       "delete": {
-        "operationId": "GroupRemovev4",
+        "operationId": "GroupRemove",
         "parameters": [
           {
             "name": "id",
@@ -290,7 +341,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -300,7 +358,7 @@
     },
     "/api/v4/membership": {
       "post": {
-        "operationId": "MembershipCreatev4",
+        "operationId": "MembershipCreate",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -314,7 +372,14 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -322,11 +387,18 @@
         ]
       },
       "get": {
-        "operationId": "MembershipFindAllv4",
+        "operationId": "MembershipFindAll",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -336,7 +408,7 @@
     },
     "/api/v4/membership/{id}": {
       "get": {
-        "operationId": "MembershipFindOnev4",
+        "operationId": "MembershipFindOne",
         "parameters": [
           {
             "name": "id",
@@ -349,7 +421,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -357,7 +436,7 @@
         ]
       },
       "patch": {
-        "operationId": "MembershipUpdatev4",
+        "operationId": "MembershipUpdate",
         "parameters": [
           {
             "name": "id",
@@ -380,7 +459,14 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -388,7 +474,7 @@
         ]
       },
       "delete": {
-        "operationId": "MembershipRemovev4",
+        "operationId": "MembershipRemove",
         "parameters": [
           {
             "name": "id",
@@ -401,11 +487,95 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "tags": [
           "Membership"
+        ]
+      }
+    },
+    "/api/v4/semester": {
+      "get": {
+        "operationId": "SemesterAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Semester"
+        ]
+      }
+    },
+    "/api/v4/semester/current": {
+      "get": {
+        "operationId": "SemesterCurrent",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "tags": [
+          "Semester"
+        ]
+      },
+      "patch": {
+        "operationId": "SemesterChange",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeSemesterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": ""
+          },
+          "400": {
+            "description": "Invalid semester"
+          }
+        },
+        "tags": [
+          "Semester"
         ]
       }
     }
@@ -420,9 +590,20 @@
   "servers": [],
   "components": {
     "schemas": {
-      "CreateUserDto": {
+      "JwtUserDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "iat": {
+            "type": "number"
+          },
+          "exp": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "iat",
+          "exp"
+        ]
       },
       "UpdateUserDto": {
         "type": "object",
@@ -443,6 +624,19 @@
       "UpdateMembershipDto": {
         "type": "object",
         "properties": {}
+      },
+      "ChangeSemesterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "/^20[0-9]{2}-20[0-9]{2}\\/[12]$/",
+            "example": "2022-2023/1"
+          }
+        },
+        "required": [
+          "name"
+        ]
       }
     }
   }

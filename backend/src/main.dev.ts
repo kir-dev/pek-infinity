@@ -20,7 +20,7 @@ async function bootstrap() {
 
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config, {
     operationIdFactory: (controller, method, version) =>
-      `${capitalize(controller.replace('Controller', ''))}${capitalize(method)}${version ?? ''}`,
+      `${capitalize(controller.replace('Controller', ''))}${capitalize(method)}${version === 'v4' ? '' : (version ?? '')}`,
   });
   SwaggerModule.setup('api', app, document);
 
