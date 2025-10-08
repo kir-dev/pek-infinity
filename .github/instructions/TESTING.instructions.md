@@ -4,9 +4,10 @@ applyTo: "/**/*spec.ts"
 
 # AI Testing Instructions (for .spec.ts files)
 
-Purpose: teach the AI agent practical, actionable testing skills and provide short examples the assistant can reuse when helping engineers write or review tests.
+Purpose: teach the AI agent practical, actionable testing skills and provide examples from the actual codebase that the assistant can reference when helping engineers write or review tests.
 
-Principles (short):
+## Core Testing Principles
+
 - Learn the intent: read feature goals, acceptance criteria, and user flows before designing tests.
 - Test behaviours, not implementation: assert public contracts and observable outcomes.
 - Make failures reproducible: include minimal repro steps, exact environment, logs, and a small failing script if possible.
@@ -18,16 +19,148 @@ Principles (short):
 - Name tests by behaviour and intent; include a short comment for tricky cases.
 - Validate fixes end-to-end and add observability checks for unstable areas.
 
-Common mistakes to avoid (one-line mitigations):
-- Sleeps/timing-based waits → use polling or explicit synchronization.
-- Testing private internals → test observable behaviour instead.
-- Over-mocking core logic → run integration tests with real components where reasonable.
-- Shared global state → reset state per test or use fresh fixtures.
-- Huge slow test suites → split into fast unit + narrower integration + minimal E2E.
+## E2E Testing Setup
 
+Standard setup pattern for NestJS e2e tests:
 
-Code Rules:
+```typescript
+describe('YourFeature (e2e)', () => {
+  let app: INestApplication<App>;
+  let mockPrismaService: ReturnType<typeof createMockPrismaService>;
+
+  beforeEach(async () => {
+    mockPrismaService = createMockPrismaService();
+
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [YourModule],
+    })
+      .overrideProvider(PrismaService)
+      .useValue(mockPrismaService)
+      .compile();
+
+    app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ transform: true }));
+    await app.init();
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+});
+```
+
+Key points:
+- Always initialize a fresh application instance for each test
+- Set up global pipes and middleware that match production configuration
+- Clean up resources after each test
+- Use typed mock services
+
+## Data Setup Patterns
+
+### Mock State Setup
+
+Create helper functions to set up consistent test states:
+
+```typescript
+function setupTestState() {
+  mockPrismaService.entity.findMany.mockResolvedValue([
+    { id: '1', name: 'test1' },
+    { id: '2', name: 'test2' },
+  ]);
+  mockPrismaService.entity.findFirst.mockResolvedValue({
+    id: '1', name: 'test1'
+  });
+}
+
+function mockCleanState() {
+  mockPrismaService.entity.findMany.mockResolvedValue([]);
+  mockPrismaService.entity.findFirst.mockResolvedValue(null);
+}
+```
+
+Benefits:
+- Reusable mock data setup
+- Consistent test states across related test cases
+- Clear separation between different test scenarios
+
+## Test Case Organization
+
+Group related tests using describe blocks:
+
+```typescript
+describe('PATCH /endpoint', () => {
+  const INVALID_INPUTS = [
+    { input: 'invalid-format', reason: 'wrong format' },
+    { input: '', reason: 'empty string' },
+    { input: {}, reason: 'empty object' },
+  ];
+
+  it.each(INVALID_INPUTS)(
+    'should reject invalid input: %p',
+    async (invalidInput) => {
+      setupTestState();
+
+      await request(app.getHttpServer())
+        .patch('/endpoint')
+        .send(invalidInput)
+        .expect(400);
+    }
+  );
+
+  it('should accept valid input', async () => {
+    setupTestState();
+
+    await request(app.getHttpServer())
+      .patch('/endpoint')
+      .send(validInput)
+      .expect(200);
+  });
+});
+```
+
+Key practices:
+- Group related test cases
+- Use parametrized tests for similar scenarios
+- Test both success and error cases
+- Verify response status codes and content types
+
+## Prisma Mocking Guidelines
+
+### Setting Up Mock Prisma Service
+
+```typescript
+const mockPrismaService = createMockPrismaService();
+
+// Mock specific operations
+mockPrismaService.entity.findUnique.mockResolvedValue(data);
+mockPrismaService.entity.create.mockResolvedValue(newData);
+
+// Mock transactions
+mockPrismaService.$transaction.mockResolvedValue(undefined);
+```
+
+Best practices:
+- Mock at the repository level
+- Return realistic data shapes
+- Consider edge cases (empty results, errors)
+- Mock transactions when testing complex operations
+
+## Common Mistakes to Avoid
+
+- Sleeps/timing-based waits → use polling or explicit synchronization
+- Testing private internals → test observable behaviour instead
+- Over-mocking core logic → run integration tests with real components where reasonable
+- Shared global state → reset state per test or use fresh fixtures
+- Huge slow test suites → split into fast unit + narrower integration + minimal E2E
+
+## Code Rules
+
 - Do NOT import nestjs primitive classes such as Controller, Service and Module as type, only use the normal import for these classes.
+- Always clean up resources in afterEach/afterAll blocks
+- Use strongly typed mock data and services
+- Keep test files alongside the code they test
+- Follow AAA pattern: Arrange, Act, Assert
+
 # Examples
 
 <example>
