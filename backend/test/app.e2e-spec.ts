@@ -3,20 +3,29 @@ import { Test, type TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '@/app.module';
+import { JwtStrategy } from '@/auth/strategy/jwt.strategy';
 import { PrismaService } from '@/prisma/prisma.service';
-import { createMockPrismaService } from './prisma-mock.util';
+import {
+  createMockJwtStrategy,
+  createMockPrismaService,
+} from './services-mock.util';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
+  let mockPrismaService: ReturnType<typeof createMockPrismaService>;
+  let mockJwtStrategy: ReturnType<typeof createMockJwtStrategy>;
 
   beforeEach(async () => {
-    const mockPrismaService = createMockPrismaService();
+    mockPrismaService = createMockPrismaService();
+    mockJwtStrategy = createMockJwtStrategy();
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
       .overrideProvider(PrismaService)
       .useValue(mockPrismaService)
+      .overrideProvider(JwtStrategy)
+      .useValue(mockJwtStrategy)
       .compile();
 
     app = moduleFixture.createNestApplication();

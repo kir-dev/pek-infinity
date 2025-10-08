@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/generated/**/*", "!**/openapi.json"]
+    "includes": ["**", ".*/**", "!**/generated/**/*", "!**/openapi.json"]
   },
   "formatter": {
     "indentStyle": "space"
