@@ -24,7 +24,7 @@ export class SemesterController {
   @Header('Content-Type', 'text/plain')
   @ApiOkResponse({ content: { 'text/plain': { schema: { type: 'string' } } } })
   @ApiBadRequestResponse({ description: 'Invalid semester' })
-  async change(@Body() { name }: ChangeSemesterDto) {
-    await this.semesterService.setCurrent(Semester(name));
+  async change(@Body() { name }: ChangeSemesterDto): Promise<string> {
+    return await this.semesterService.setCurrent(Semester(name));
   }
 }

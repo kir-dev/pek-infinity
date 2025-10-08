@@ -5,7 +5,7 @@ import { SEMESTER_REGEX } from '../type/semester.type';
 export class ChangeSemesterDto {
   @ApiProperty({
     example: '2022-2023/1',
-    pattern: SEMESTER_REGEX.toString(),
+    pattern: SEMESTER_REGEX.source,
   })
   @IsString()
   @IsNotEmpty()
