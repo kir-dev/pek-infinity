@@ -90,19 +90,18 @@ describe('SemesterService', () => {
   describe('setCurrent', () => {
     it('should set the current semester and return it', async () => {
       const semesterName = '2024-2025/1';
-      prisma.$transaction.mockResolvedValue(undefined);
 
       const result = await service.setCurrent(semesterName);
 
-      expect(prisma.$transaction).toHaveBeenCalledWith([
-        prisma.semester.upsert({
-          create: { name: semesterName },
-          where: { name: semesterName },
-          update: {},
-        }),
-        prisma.currentSemester.deleteMany(),
-        prisma.currentSemester.create({ data: { semesterName } }),
-      ]);
+      expect(prisma.semester.upsert).toHaveBeenCalledWith({
+        create: { name: semesterName },
+        where: { name: semesterName },
+        update: {},
+      });
+      expect(prisma.currentSemester.deleteMany).toHaveBeenCalledWith();
+      expect(prisma.currentSemester.create).toHaveBeenCalledWith({
+        data: { semesterName },
+      });
       expect(result).toBe(semesterName);
     });
 
