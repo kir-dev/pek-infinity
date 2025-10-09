@@ -32,7 +32,7 @@ const mockPrismaModel = () => ({
 });
 
 export function createMockPrismaService() {
-  return {
+  const result = {
     semester: mockPrismaModel(),
     currentSemester: mockPrismaModel(),
     username: mockPrismaModel(),
@@ -56,11 +56,18 @@ export function createMockPrismaService() {
     $executeRawUnsafe: vi.fn(),
     $extends: vi.fn(),
     $queryRawUnsafe: vi.fn(),
-    $transaction: vi.fn(),
+    $transaction: vi
+      .fn()
+      .mockImplementation((cbOrArray) =>
+        Array.isArray(cbOrArray)
+          ? cbOrArray.map((cb) => cb(result))
+          : cbOrArray(result)
+      ),
     $connect: vi.fn(),
     $disconnect: vi.fn(),
     $on: vi.fn(),
     $queryRaw: vi.fn(),
     $executeRaw: vi.fn(),
   } satisfies { [K in keyof TPrismaClient]: any };
+  return result;
 }

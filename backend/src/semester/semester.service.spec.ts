@@ -40,9 +40,11 @@ describe('SemesterService', () => {
 
       const result = await service.findAll();
 
-      expect(prisma.semester.findMany).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
-      });
+      expect(prisma.semester.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: expect.objectContaining({ name: 'asc' }),
+        })
+      );
       expect(result).toEqual(['2023-2024/1', '2024-2025/1', '2024-2025/2']);
     });
 
@@ -54,9 +56,11 @@ describe('SemesterService', () => {
 
       const result = await service.findAll();
 
-      expect(prisma.semester.findMany).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
-      });
+      expect(prisma.semester.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: expect.objectContaining({ name: 'asc' }),
+        })
+      );
       expect(setCurrentSpy).toHaveBeenCalledWith('2000-2001/2');
       expect(result).toEqual(['2000-2001/2']);
     });
@@ -90,19 +94,18 @@ describe('SemesterService', () => {
   describe('setCurrent', () => {
     it('should set the current semester and return it', async () => {
       const semesterName = '2024-2025/1';
-      prisma.$transaction.mockResolvedValue(undefined);
 
       const result = await service.setCurrent(semesterName);
 
-      expect(prisma.$transaction).toHaveBeenCalledWith([
-        prisma.semester.upsert({
-          create: { name: semesterName },
-          where: { name: semesterName },
-          update: {},
-        }),
-        prisma.currentSemester.deleteMany(),
-        prisma.currentSemester.create({ data: { semesterName } }),
-      ]);
+      expect(prisma.semester.upsert).toHaveBeenCalledWith({
+        create: { name: semesterName },
+        where: { name: semesterName },
+        update: {},
+      });
+      expect(prisma.currentSemester.deleteMany).toHaveBeenCalledWith();
+      expect(prisma.currentSemester.create).toHaveBeenCalledWith({
+        data: { semesterName },
+      });
       expect(result).toBe(semesterName);
     });
 

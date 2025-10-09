@@ -35,7 +35,6 @@ describe('Semester (e2e)', () => {
     mockPrismaService.currentSemester.create.mockResolvedValue({
       semesterName: VALID_SEMESTER,
     });
-    mockPrismaService.$transaction.mockResolvedValue(undefined);
   }
 
   function _mockPrismaCleanState() {
@@ -50,7 +49,6 @@ describe('Semester (e2e)', () => {
     mockPrismaService.currentSemester.create.mockResolvedValue({
       semesterName: '2000-2001/2',
     });
-    mockPrismaService.$transaction.mockResolvedValue(undefined);
   }
 
   beforeEach(async () => {
