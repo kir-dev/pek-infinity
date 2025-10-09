@@ -521,6 +521,7 @@
             }
           }
         },
+        "summary": "Get all known semesters",
         "tags": [
           "Semester"
         ]
@@ -542,6 +543,7 @@
             "description": ""
           }
         },
+        "summary": "Get current semester",
         "tags": [
           "Semester"
         ]
@@ -574,8 +576,71 @@
             "description": "Invalid semester"
           }
         },
+        "summary": "Set a new semester as current.\n\nIf the semester doesn't exist, it will be created.",
         "tags": [
           "Semester"
+        ]
+      }
+    },
+    "/api/v4/user/{userId}/external-account": {
+      "get": {
+        "operationId": "ExternalAccountGet",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Get all linked external accounts of this user",
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "operationId": "ExternalAccountUpdateBatch",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExternalAccountBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "Validation failed"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "summary": "Update the external accounts of this user in batch",
+        "tags": [
+          "User"
         ]
       }
     }
@@ -636,6 +701,49 @@
         },
         "required": [
           "name"
+        ]
+      },
+      "ExternalAccountDto": {
+        "type": "object",
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "X_FORMERLY_TWITTER",
+              "SKYPE",
+              "CALL_SIGN",
+              "IRC",
+              "GTALK",
+              "JABBER",
+              "META_FORMERLY_FACEBOOK",
+              "TELEGRAM",
+              "SCH_MAIL",
+              "HIMZO",
+              "GMAIL",
+              "EASTER_EGG"
+            ]
+          },
+          "accountName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "protocol",
+          "accountName"
+        ]
+      },
+      "UpdateExternalAccountBatchDto": {
+        "type": "object",
+        "properties": {
+          "accounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalAccountDto"
+            }
+          }
+        },
+        "required": [
+          "accounts"
         ]
       }
     }

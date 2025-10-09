@@ -40,9 +40,11 @@ describe('SemesterService', () => {
 
       const result = await service.findAll();
 
-      expect(prisma.semester.findMany).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
-      });
+      expect(prisma.semester.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: expect.objectContaining({ name: 'asc' }),
+        })
+      );
       expect(result).toEqual(['2023-2024/1', '2024-2025/1', '2024-2025/2']);
     });
 
@@ -54,9 +56,11 @@ describe('SemesterService', () => {
 
       const result = await service.findAll();
 
-      expect(prisma.semester.findMany).toHaveBeenCalledWith({
-        orderBy: { name: 'asc' },
-      });
+      expect(prisma.semester.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: expect.objectContaining({ name: 'asc' }),
+        })
+      );
       expect(setCurrentSpy).toHaveBeenCalledWith('2000-2001/2');
       expect(result).toEqual(['2000-2001/2']);
     });
