@@ -28,15 +28,17 @@ export class SemesterService {
       throw new Error('Invalid semester');
     }
 
-    await this.prisma.$transaction([
-      this.prisma.semester.upsert({
-        create: { name: semesterName },
-        where: { name: semesterName },
-        update: {},
-      }),
-      this.prisma.currentSemester.deleteMany(),
-      this.prisma.currentSemester.create({ data: { semesterName } }),
-    ]);
+    await this.prisma.semester.upsert({
+      create: { name: semesterName },
+      where: { name: semesterName },
+      update: {},
+    });
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.currentSemester.deleteMany();
+      await tx.currentSemester.create({ data: { semesterName } });
+    });
+
     return semesterName;
   }
 }

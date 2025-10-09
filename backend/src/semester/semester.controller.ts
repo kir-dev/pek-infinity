@@ -8,11 +8,18 @@ import { Semester } from './type/semester.type';
 export class SemesterController {
   constructor(private readonly semesterService: SemesterService) {}
 
+  /**
+   * Get all known semesters
+   */
   @Get('')
   async all(): Promise<string[]> {
     return await this.semesterService.findAll();
   }
 
+  /**
+   * Get current semester
+   * @returns YYYY-YYYY/X where X is the semester number
+   */
   @ApiOkResponse({ content: { 'text/plain': { schema: { type: 'string' } } } })
   @Get('current')
   @Header('Content-Type', 'text/plain')
@@ -20,6 +27,13 @@ export class SemesterController {
     return await this.semesterService.getCurrent();
   }
 
+  /**
+   * Set a new semester as current.
+   *
+   * If the semester doesn't exist, it will be created.
+   * @param param0
+   * @returns the now current semester
+   */
   @Patch('current')
   @Header('Content-Type', 'text/plain')
   @ApiOkResponse({ content: { 'text/plain': { schema: { type: 'string' } } } })
