@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { injectable } from 'tsyringe';
 import { PrismaClient } from '@prisma/client';
+import { injectable } from 'tsyringe';
 
 @injectable()
 export class PrismaService extends PrismaClient {

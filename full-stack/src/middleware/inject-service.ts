@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { container } from 'tsyringe';
 import { createMiddleware } from '@tanstack/react-start';
+import { container } from 'tsyringe';
 import type { RequestContext } from './types';
 
 export function injectService<T>(ServiceClass: new (...args: any[]) => T) {

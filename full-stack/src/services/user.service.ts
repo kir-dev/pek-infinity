@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { injectable, inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { PrismaService } from './prisma.service';
 
 @injectable()

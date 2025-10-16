@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { container } from 'tsyringe';
 import { createMiddleware } from '@tanstack/react-start';
+import { container } from 'tsyringe';
 import { PrismaService } from '../services/prisma.service';
 import type { RequestContext } from './types';
 
@@ -11,13 +11,13 @@ export function authGuard(requiredScopes: string[]) {
     // 1. Authenticate user (example: from session/token)
     // In a real implementation, you would extract user from JWT token or session
     // For now, we're using a mock user for demonstration purposes
-    ctx.user = { 
-      id: 'mock-user-id', 
-      scopes: requiredScopes // Mock: granting all required scopes
+    ctx.user = {
+      id: 'mock-user-id',
+      scopes: requiredScopes, // Mock: granting all required scopes
     };
 
     // 2. Check scopes
-    const hasAllScopes = requiredScopes.every(scope =>
+    const hasAllScopes = requiredScopes.every((scope) =>
       ctx.user!.scopes.includes(scope)
     );
     if (!hasAllScopes) {

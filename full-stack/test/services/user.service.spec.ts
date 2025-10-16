@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { container } from 'tsyringe';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { PrismaService } from '../../src/services/prisma.service';
 import { UserService } from '../../src/services/user.service';
 import { createMockPrismaService } from '../services-mock.util';
@@ -43,7 +43,9 @@ describe('UserService', () => {
     const mockUser = { id: '123', name: 'Jane Doe' };
     mockPrisma.user.update.mockResolvedValue(mockUser as any);
 
-    const result = await userService.updateUserProfile('123', { name: 'Jane Doe' });
+    const result = await userService.updateUserProfile('123', {
+      name: 'Jane Doe',
+    });
 
     expect(result).toEqual(mockUser);
     expect(mockPrisma.user.update).toHaveBeenCalledWith({

@@ -1,6 +1,11 @@
 import 'reflect-metadata';
 import { createFileRoute } from '@tanstack/react-router';
-import { injectService, authGuard, SCOPE, type RequestContext } from '../../middleware';
+import {
+  authGuard,
+  injectService,
+  type RequestContext,
+  SCOPE,
+} from '../../middleware';
 import { UserService } from '../../services/user.service';
 
 export const Route = createFileRoute('/user/profile')({
@@ -12,7 +17,7 @@ export const Route = createFileRoute('/user/profile')({
     handlers: {
       GET: async ({ context }) => {
         const ctx = context as RequestContext;
-        
+
         // Type-safe service access
         const result = await ctx.service.getUserProfile(ctx.user!.id);
 
@@ -43,8 +48,8 @@ function UserProfileComponent() {
       <div className='max-w-2xl mx-auto'>
         <h1 className='text-3xl font-bold mb-4'>User Profile</h1>
         <p className='text-gray-400'>
-          This is an example route demonstrating NestJS-style dependency injection
-          in TanStack Start.
+          This is an example route demonstrating NestJS-style dependency
+          injection in TanStack Start.
         </p>
         <div className='mt-8 p-6 bg-slate-800 rounded-lg border border-slate-700'>
           <h2 className='text-xl font-semibold mb-2'>Features:</h2>
