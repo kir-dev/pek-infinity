@@ -54,6 +54,9 @@
       "jsxQuoteStyle": "single",
       "trailingCommas": "es5",
       "quoteStyle": "single"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
     }
   },
   "assist": {
