@@ -1,0 +1,30 @@
+{
+  "projectName": "pek-infinity",
+  "mode": "file-router",
+  "typescript": true,
+  "tailwind": true,
+  "packageManager": "npm",
+  "addOnOptions": {
+    "prisma": {
+      "database": "postgres"
+    }
+  },
+  "git": true,
+  "version": 1,
+  "framework": "react-cra",
+  "chosenAddOns": [
+    "biome",
+    "start",
+    "prisma",
+    "db",
+    "form",
+    "mcp",
+    "shadcn",
+    "t3env",
+    "table",
+    "store",
+    "storybook",
+    "tanstack-query",
+    "tRPC"
+  ]
+}

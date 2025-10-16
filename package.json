@@ -1,5 +1,6 @@
 {
   "workspaces": [
+    "full-stack",
     "backend"
   ],
   "scripts": {
@@ -8,18 +9,18 @@
     "postinstall": "npm run generate:kubb && npm run generate:prisma"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.5",
-    "@kubb/cli": "^4.1.2",
-    "@kubb/core": "^4.1.2",
-    "@kubb/plugin-client": "^4.1.2",
-    "@kubb/plugin-faker": "^4.1.2",
-    "@kubb/plugin-oas": "^4.1.2",
-    "@kubb/plugin-react-query": "^4.1.2",
-    "@kubb/plugin-ts": "^4.1.2",
-    "@kubb/plugin-zod": "^4.1.2",
-    "prisma": "^6.17.0"
+    "@biomejs/biome": "^2.2.6",
+    "@kubb/cli": "^4.1.3",
+    "@kubb/core": "^4.1.3",
+    "@kubb/plugin-client": "^4.1.3",
+    "@kubb/plugin-faker": "^4.1.3",
+    "@kubb/plugin-oas": "^4.1.3",
+    "@kubb/plugin-react-query": "^4.1.3",
+    "@kubb/plugin-ts": "^4.1.3",
+    "@kubb/plugin-zod": "^4.1.3",
+    "prisma": "^6.17.1"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.3"
+    "@prisma/client": "^6.17.1"
   }
 }
