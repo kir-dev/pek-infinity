@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { container } from 'tsyringe';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { PrismaService } from '../../src/services/prisma.service';
 import { UserService } from '../../src/services/user.service';
 import { createMockPrismaService } from '../services-mock.util';
