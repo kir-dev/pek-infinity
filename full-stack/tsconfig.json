@@ -13,6 +13,10 @@
     "verbatimModuleSyntax": false,
     "noEmit": true,
 
+    /* Decorator support for tsyringe */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
     /* Linting */
     "skipLibCheck": true,
     "strict": true,

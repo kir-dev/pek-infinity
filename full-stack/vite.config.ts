@@ -14,6 +14,22 @@ const config = defineConfig({
     tanstackStart(),
     viteReact(),
   ],
+  esbuild: {
+    target: 'ES2022',
+    tsconfigRaw: {
+      compilerOptions: {
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+      },
+    },
+  },
+  ssr: {
+    // Don't try to bundle Prisma in SSR, keep it as external
+    external: ['@prisma/client'],
+  },
+  optimizeDeps: {
+    include: ['@prisma/client'],
+  },
 });
 
 export default config;
