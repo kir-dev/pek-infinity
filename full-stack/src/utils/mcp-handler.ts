@@ -1,43 +1,43 @@
-import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
+import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import type { JSONRPCMessage } from '@modelcontextprotocol/sdk/types.js'
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import type { JSONRPCMessage } from '@modelcontextprotocol/sdk/types.js';
 
 export async function handleMcpRequest(
   request: Request,
-  server: McpServer,
+  server: McpServer
 ): Promise<Response> {
   try {
-    const jsonRpcRequest = (await request.json()) as JSONRPCMessage
+    const jsonRpcRequest = (await request.json()) as JSONRPCMessage;
 
     const [clientTransport, serverTransport] =
-      InMemoryTransport.createLinkedPair()
+      InMemoryTransport.createLinkedPair();
 
-    let responseData: JSONRPCMessage | null = null
+    let responseData: JSONRPCMessage | null = null;
 
     clientTransport.onmessage = (message: JSONRPCMessage) => {
-      responseData = message
-    }
+      responseData = message;
+    };
 
-    await server.connect(serverTransport)
+    await server.connect(serverTransport);
 
-    await clientTransport.start()
-    await serverTransport.start()
+    await clientTransport.start();
+    await serverTransport.start();
 
-    await clientTransport.send(jsonRpcRequest)
+    await clientTransport.send(jsonRpcRequest);
 
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 10));
 
-    await clientTransport.close()
-    await serverTransport.close()
+    await clientTransport.close();
+    await serverTransport.close();
 
     return Response.json(responseData, {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
+    });
   } catch (error) {
-    console.error('MCP handler error:', error)
+    console.error('MCP handler error:', error);
 
     // Return a JSON-RPC error response
     return Response.json(
@@ -55,7 +55,7 @@ export async function handleMcpRequest(
         headers: {
           'Content-Type': 'application/json',
         },
-      },
-    )
+      }
+    );
   }
 }

@@ -1,4 +1,4 @@
-import type { Message } from '@/db-collections'
+import type { Message } from '@/db-collections';
 
 export const getAvatarColor = (username: string) => {
   const colors = [
@@ -10,19 +10,19 @@ export const getAvatarColor = (username: string) => {
     'bg-red-500',
     'bg-yellow-500',
     'bg-teal-500',
-  ]
+  ];
   const index = username
     .split('')
-    .reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  return colors[index % colors.length]
-}
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return colors[index % colors.length];
+};
 
 export default function Messages({
   messages,
   user,
 }: {
-  messages: Message[]
-  user: string
+  messages: Message[];
+  user: string;
 }) {
   return (
     <>
@@ -40,7 +40,7 @@ export default function Messages({
           >
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${getAvatarColor(
-                msg.user,
+                msg.user
               )}`}
             >
               {msg.user.charAt(0).toUpperCase()}
@@ -54,15 +54,15 @@ export default function Messages({
               }`}
             >
               {msg.user !== user && (
-                <p className="text-xs text-gray-500 mb-1 font-medium">
+                <p className='text-xs text-gray-500 mb-1 font-medium'>
                   {msg.user}
                 </p>
               )}
-              <p className="text-sm">{msg.text}</p>
+              <p className='text-sm'>{msg.text}</p>
             </div>
           </div>
         </div>
       ))}
     </>
-  )
+  );
 }

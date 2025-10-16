@@ -1,28 +1,22 @@
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import type { QueryClient } from '@tanstack/react-query';
 import {
+  createRootRouteWithContext,
   HeadContent,
   Scripts,
-  createRootRouteWithContext,
-} from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-
-import Header from '../components/Header'
-
-import StoreDevtools from '../lib/demo-store-devtools'
-
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-
-import appCss from '../styles.css?url'
-
-import type { QueryClient } from '@tanstack/react-query'
-
-import type { TRPCRouter } from '@/integrations/trpc/router'
-import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
+} from '@tanstack/react-router';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
+import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query';
+import type { TRPCRouter } from '@/integrations/trpc/router';
+import Header from '../components/header';
+import TanStackQueryDevtools from '../integrations/tanstack-query/devtools';
+import StoreDevtools from '../lib/demo-store-devtools';
+import appCss from '../styles.css?url';
 
 interface MyRouterContext {
-  queryClient: QueryClient
+  queryClient: QueryClient;
 
-  trpc: TRPCOptionsProxy<TRPCRouter>
+  trpc: TRPCOptionsProxy<TRPCRouter>;
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -48,11 +42,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   }),
 
   shellComponent: RootDocument,
-})
+});
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
         <HeadContent />
       </head>
@@ -75,5 +69,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }
