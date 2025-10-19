@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { container } from 'tsyringe';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { PrismaService } from '../../src/services/prisma.service';
-import { UserService } from '../../src/services/user.service';
-import { createMockPrismaService } from '../services-mock.util';
+import { PrismaService } from '@/domains/prisma';
+import { MockPrismaService } from '@/domains/prisma/__test__/prisma.service.mock';
+import { UserService } from '@/domains/user';
 
 describe('Dependency Injection Integration', () => {
-  let mockPrisma: ReturnType<typeof createMockPrismaService>;
+  let mockPrisma: MockPrismaService;
 
   beforeEach(() => {
     container.clearInstances();
@@ -17,7 +17,7 @@ describe('Dependency Injection Integration', () => {
   });
 
   it('should resolve services with dependencies', () => {
-    mockPrisma = createMockPrismaService();
+    mockPrisma = new MockPrismaService();
     container.registerInstance(PrismaService, mockPrisma as any);
 
     const userService = container.resolve(UserService);
@@ -27,14 +27,14 @@ describe('Dependency Injection Integration', () => {
   });
 
   it('should inject PrismaService into UserService', async () => {
-    mockPrisma = createMockPrismaService();
+    mockPrisma = new MockPrismaService();
     container.registerInstance(PrismaService, mockPrisma as any);
 
     const userService = container.resolve(UserService);
     const mockUser = { id: 'test-id', name: 'Test User' };
     mockPrisma.user.findUnique.mockResolvedValue(mockUser as any);
 
-    const result = await userService.getUserProfile('test-id');
+    const result = await userService.findByAuthSchId('test-id');
 
     expect(result).toEqual(mockUser);
     expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
@@ -43,7 +43,7 @@ describe('Dependency Injection Integration', () => {
   });
 
   it('should handle multiple service resolutions', () => {
-    mockPrisma = createMockPrismaService();
+    mockPrisma = new MockPrismaService();
     container.registerInstance(PrismaService, mockPrisma as any);
 
     const service1 = container.resolve(UserService);
@@ -57,7 +57,7 @@ describe('Dependency Injection Integration', () => {
   });
 
   it('should clear instances properly', () => {
-    mockPrisma = createMockPrismaService();
+    mockPrisma = new MockPrismaService();
     container.registerInstance(PrismaService, mockPrisma as any);
 
     const service1 = container.resolve(UserService);
@@ -66,7 +66,7 @@ describe('Dependency Injection Integration', () => {
     container.clearInstances();
 
     // After clearing, we need to re-register
-    const newMockPrisma = createMockPrismaService();
+    const newMockPrisma = new MockPrismaService();
     container.registerInstance(PrismaService, newMockPrisma as any);
 
     const service2 = container.resolve(UserService);

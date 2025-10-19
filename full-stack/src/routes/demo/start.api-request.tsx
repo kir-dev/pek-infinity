@@ -1,19 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
-
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-
-function getNames() {
-  return fetch('/demo/api/names').then((res) => res.json());
-}
+import { useServerFn } from '@tanstack/react-start';
+import { listGroups } from '../api/group/-service';
 
 export const Route = createFileRoute('/demo/start/api-request')({
   component: Home,
+  loader: async () => {
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery({
+      queryKey: ['groups'],
+      queryFn: () => listGroups(),
+    });
+
+    return {
+      dehydratedState: dehydrate(queryClient),
+    };
+  },
 });
 
 function Home() {
-  const { data: names = [] } = useQuery({
-    queryKey: ['names'],
-    queryFn: getNames,
+  const { data: groups = [] } = useQuery({
+    queryKey: ['groups'],
+    queryFn: useServerFn(listGroups),
   });
 
   return (
@@ -28,12 +37,12 @@ function Home() {
       <div className='w-full max-w-2xl p-8 rounded-xl backdrop-blur-md bg-black/50 shadow-xl border-8 border-black/10'>
         <h1 className='text-2xl mb-4'>Start API Request Demo - Names List</h1>
         <ul className='mb-4 space-y-2'>
-          {names.map((name) => (
+          {groups.map((group) => (
             <li
-              key={name}
+              key={group.id}
               className='bg-white/10 border border-white/20 rounded-lg p-3 backdrop-blur-sm shadow-md'
             >
-              <span className='text-lg text-white'>{name}</span>
+              <span className='text-lg text-white'>{group.name}</span>
             </li>
           ))}
         </ul>

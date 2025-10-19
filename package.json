@@ -1,8 +1,4 @@
 {
-  "workspaces": [
-    "full-stack",
-    "backend"
-  ],
   "scripts": {
     "generate:kubb": "kubb generate",
     "generate:prisma": "prisma generate --require-models --no-hints",

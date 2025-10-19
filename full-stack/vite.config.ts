@@ -3,6 +3,7 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import viteReact from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import viteTsConfigPaths from 'vite-tsconfig-paths';
+import { nitroV2Plugin } from '@tanstack/nitro-v2-vite-plugin';
 
 const config = defineConfig({
   plugins: [
@@ -12,6 +13,9 @@ const config = defineConfig({
     }),
     tailwindcss(),
     tanstackStart(),
+    nitroV2Plugin({
+      preset: 'node-server'
+    }),
     viteReact(),
   ],
   esbuild: {
@@ -20,15 +24,8 @@ const config = defineConfig({
       compilerOptions: {
         experimentalDecorators: true,
         emitDecoratorMetadata: true,
-      },
+      } as any,
     },
-  },
-  ssr: {
-    // Don't try to bundle Prisma in SSR, keep it as external
-    external: ['@prisma/client'],
-  },
-  optimizeDeps: {
-    include: ['@prisma/client'],
   },
 });
 

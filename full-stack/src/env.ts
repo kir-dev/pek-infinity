@@ -3,7 +3,9 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    SERVER_URL: z.string().url().optional(),
+    SERVER_URL: z.url().optional(),
+    JWT_SECRET: z.string().min(32),
+    POSTGRES_PRISMA_URL: z.url(),
   },
 
   /**
@@ -36,4 +38,6 @@ export const env = createEnv({
    * explicitly specify this option as true.
    */
   emptyStringAsUndefined: true,
+
+  skipValidation: process.env.NODE_ENV === 'test',
 });

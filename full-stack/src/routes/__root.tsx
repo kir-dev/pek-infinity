@@ -5,12 +5,12 @@ import {
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query';
 import type { TRPCRouter } from '@/integrations/trpc/router';
-import Header from '../components/header';
-import TanStackQueryDevtools from '../integrations/tanstack-query/devtools';
-import StoreDevtools from '../lib/demo-store-devtools';
+import { Header } from '../components/header';
+import TanStackQueryDevtools from '../devtools/tanstack-query.devtools';
+import TanStackRouterDevTools from '../devtools/tanstack-router.devtools';
+import StoreDevtools from '../devtools/tanstack-store.devtools';
 import appCss from '../styles.css?url';
 
 interface MyRouterContext {
@@ -58,10 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             position: 'bottom-right',
           }}
           plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
+            TanStackRouterDevTools,
             StoreDevtools,
             TanStackQueryDevtools,
           ]}

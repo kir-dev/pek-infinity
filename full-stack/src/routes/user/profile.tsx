@@ -1,12 +1,8 @@
 import 'reflect-metadata';
 import { createFileRoute } from '@tanstack/react-router';
-import {
-  authGuard,
-  injectService,
-  type RequestContext,
-  SCOPE,
-} from '../../middleware';
-import { UserService } from '../../services/user.service';
+import { json } from '@tanstack/react-start';
+import { UserService } from '@/domains/user';
+import { authGuard, injectService, SCOPE } from '../../middleware';
 
 export const Route = createFileRoute('/user/profile')({
   server: {
@@ -16,25 +12,17 @@ export const Route = createFileRoute('/user/profile')({
     ],
     handlers: {
       GET: async ({ context }) => {
-        const ctx = context as RequestContext;
+        const result = await context.service.findAll();
 
-        // Type-safe service access
-        const result = await ctx.service.getUserProfile(ctx.user!.id);
-
-        return new Response(JSON.stringify(result), {
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return json(result);
       },
       POST: async ({ request, context }) => {
-        const ctx = context as RequestContext;
         const body = await request.json();
 
         // Type-safe service access
-        const result = await ctx.service.updateUserProfile(ctx.user!.id, body);
+        const result = await context.service.update(123, body);
 
-        return new Response(JSON.stringify(result), {
-          headers: { 'Content-Type': 'application/json' },
-        });
+        return json(result);
       },
     },
   },

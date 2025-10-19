@@ -1,13 +1,10 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
-import { prisma } from '@/db';
 
 const getTodos = createServerFn({
   method: 'GET',
 }).handler(async () => {
-  return await prisma.todo.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+  return [{ id: 1, title: 'Sample Todo' }];
 });
 
 const createTodo = createServerFn({
@@ -15,9 +12,7 @@ const createTodo = createServerFn({
 })
   .inputValidator((data: { title: string }) => data)
   .handler(async ({ data }) => {
-    return await prisma.todo.create({
-      data,
-    });
+
   });
 
 export const Route = createFileRoute('/demo/prisma')({
