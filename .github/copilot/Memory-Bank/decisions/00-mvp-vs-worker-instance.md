@@ -1,8 +1,8 @@
 ---
-file: decisions/00-mvp-vs-enterprise.md
-purpose: "Feature-by-feature breakdown of MVP vs enterprise; scope, timeline, reversibility"
+file: decisions/00-mvp-vs-worker-instance.md
+purpose: "Feature-by-feature breakdown of MVP vs worker-instance; scope, timeline, reversibility"
 triggers: ["planning sprint", "estimating PR scope", "questioning feature scope"]
-keywords: ["MVP", "enterprise", "scope", "timeline", "feature", "rollout"]
+keywords: ["MVP", "worker-instance", "scope", "timeline", "feature", "rollout"]
 dependencies: []
 urgency: "high"
 size: "2000 words"
@@ -16,17 +16,17 @@ created: "2025-10-20"
 
 ---
 
-# Decision: MVP vs Enterprise Features
+# Decision: MVP vs Worker Instance Features
 
 ## Overview
 
-This matrix clarifies what's in MVP 1.0 (single cloud instance) vs what's enterprise rollout (1.1+).
+This matrix clarifies what's in MVP 1.0 (single hub instance) vs what's worker instance rollout (1.1+).
 
-**Key principle**: MVP code is enterprise-ready. We're not rewriting; we're enabling.
+**Key principle**: MVP code is worker-ready. We're not rewriting; we're enabling.
 
 ## Feature Matrix
 
-| Feature | MVP | Enterprise | Notes |
+| Feature | MVP | Worker | Notes |
 |---------|-----|-----------|-------|
 | **Auth & Authorization** |
 | Global JWT (httpOnly cookie) | ✅ Yes | ✅ Yes | Same everywhere |
@@ -38,38 +38,38 @@ This matrix clarifies what's in MVP 1.0 (single cloud instance) vs what's enterp
 | x-policy-hint header | ❌ No | ✅ Yes | Performance optimization |
 | Instance-level auth guards | ❌ No | ✅ Yes | Each instance validates |
 | **Data & Schema** |
-| Realm model | ✅ Yes | ✅ Yes | Set to 'cloud' in MVP |
+| Realm model | ✅ Yes | ✅ Yes | Set to 'hub' in MVP |
 | realmId on all models | ✅ Yes | ✅ Yes | Enforced in MVP |
 | Realm filtering in queries | ✅ Yes | ✅ Yes | Must-follow rule in MVP |
 | **Service Layer** |
 | Services (realm-agnostic) | ✅ Yes | ✅ Yes | Same code everywhere |
-| tRPC procedures | ✅ Yes | ✅ Yes | Local in MVP, remote in enterprise |
+| tRPC procedures | ✅ Yes | ✅ Yes | Local in MVP, remote in worker |
 | DI (tsyringe) | ✅ Yes | ✅ Yes | Same everywhere |
 | **Frontend & Routing** |
 | Unified frontend (pek.com) | ✅ Yes | ✅ Yes | Single domain |
 | serverFn (RPC-only) | ✅ Yes | ✅ Yes | Same everywhere |
 | Local service calls (MVP) | ✅ Yes | ❌ No | MVP only via DI |
-| tRPC client calls (Enterprise) | ❌ No | ✅ Yes | Enterprise only |
+| tRPC client calls (Worker) | ❌ No | ✅ Yes | Worker only |
 | Response combining logic | ⚠️ Partial | ✅ Yes | MVP: trivial (one instance) |
 | **Middleware** |
 | jwtGuard | ✅ Yes | ✅ Yes | Same everywhere |
 | authGuard (MVP version) | ✅ Yes | ✅ Limited | MVP only for local checks |
-| routingMiddleware | ❌ No | ✅ Yes | Enterprise only |
+| routingMiddleware | ❌ No | ✅ Yes | Worker only |
 | **Scaling** |
-| Single cloud instance | ✅ Yes | ✅ Yes | MVP only has cloud |
-| Multiple enterprise instances | ❌ No | ✅ Yes | Enterprise feature |
-| BFF pattern | ⚠️ Implicit | ✅ Explicit | Cloud is BFF in enterprise |
-| Instance discovery (federation) | ❌ No | ✅ Yes | Added in enterprise |
+| Single hub instance | ✅ Yes | ✅ Yes | MVP only has hub |
+| Multiple worker instances | ❌ No | ✅ Yes | Worker feature |
+| BFF pattern | ⚠️ Implicit | ✅ Explicit | Hub is BFF in worker |
+| Instance discovery (federation) | ❌ No | ✅ Yes | Added in worker |
 | **Operational** |
 | Feature flags | ❌ No | ✅ Yes | MVP doesn't need them yet |
-| Audit logs for admins | ❌ No | ✅ Yes | Enterprise admins query logs |
+| Audit logs for admins | ❌ No | ✅ Yes | Worker admins query logs |
 | Instance registry | ❌ No | ✅ Yes | Track deployed instances |
 
-## MVP 1.0 Scope (Single Cloud Instance)
+## MVP 1.0 Scope (Single Hub Instance)
 
 ### What We're Building
 
-- One cloud instance, one database
+- One hub instance, one database
 - Central auth (AuthSCH)
 - User profiles, groups, evaluations
 - Policies and hierarchical permissions
@@ -77,7 +77,7 @@ This matrix clarifies what's in MVP 1.0 (single cloud instance) vs what's enterp
 
 ### What We're Preparing For (But Not Implementing)
 
-- Realm model (exists, set to 'cloud')
+- Realm model (exists, set to 'hub')
 - realmId filtering (enforced, all queries use it)
 - Policy snapshots (infrastructure ready, unused)
 - tRPC procedures (alongside serverFn, but local)
@@ -118,9 +118,9 @@ src/domains/{domain}/
 | Service layer | Weeks 2-3 | Services, tRPC procedures |
 | Frontend | Weeks 3-5 | serverFn, hooks, components |
 | Testing | Weeks 5-6 | Full coverage |
-| Deployment | Week 7+ | Cloud instance live |
+| Deployment | Week 7+ | Hub instance live |
 
-## Enterprise 1.1+ Rollout (Multiple Instances)
+## Worker 1.1+ Rollout (Multiple Instances)
 
 ### What We're Adding (When Needed)
 
@@ -142,7 +142,7 @@ src/domains/{domain}/
 
 **routingMiddleware** (new file):
 ```typescript
-// Enterprise only: routes requests to multiple instances
+// Worker only: routes requests to multiple instances
 export const routingMiddleware = (worker, instanceRouter) => {...}
 ```
 
@@ -152,7 +152,7 @@ export const routingMiddleware = (worker, instanceRouter) => {...}
 .middleware([jwtGuard, authGuard])
 .handler(async ({ context: { injector } }) => {...})
 
-// Enterprise (same code, different middleware):
+// Worker (same code, different middleware):
 .middleware([jwtGuard, routingMiddleware(procedures.findOne)])
 .handler(async ({ context: { responses } }) => {...})
 ```
@@ -165,7 +165,7 @@ export class GroupService {
 }
 ```
 
-### Enterprise Timeline
+### Worker Timeline
 
 **Estimated**: Q2-Q3 2025 (when scaling is needed)
 
@@ -175,7 +175,7 @@ export class GroupService {
 | Instance API | Weeks 2-4 | tRPC endpoints |
 | Federation | Weeks 4-6 | User → instance mapping |
 | Testing | Weeks 6-8 | Multi-instance scenarios |
-| Rollout | Week 8+ | First enterprise instances live |
+| Rollout | Week 8+ | First worker instances live |
 
 ## Why This Split?
 
@@ -186,14 +186,14 @@ export class GroupService {
 3. **Simpler debugging** - No network calls to troubleshoot
 4. **Lower ops burden** - One database, one instance
 
-### Enterprise-Ready Design
+### Worker-Ready Design
 
 1. **Code reuse** - Service layer doesn't change
 2. **Database foundation** - realmId everywhere, ready for isolation
 3. **Middleware abstraction** - Can swap local for remote calls
 4. **Type safety** - Procedures are typed, can be called locally or via tRPC
 
-## Migration Path: MVP → Enterprise
+## Migration Path: MVP → Worker
 
 ### No Breaking Changes
 
@@ -205,7 +205,7 @@ MVP serverFn:
   return svc.findOne(id);
 })
 
-Enterprise serverFn (same code, different middleware):
+Worker serverFn (same code, different middleware):
 .middleware([jwtGuard, routingMiddleware(procedure)])
 .handler(async ({ context: { responses } }) => {
   return responses.successResponses[0]?.data;
@@ -217,7 +217,7 @@ async findOne(id: string) { ... }  // ← UNCHANGED
 
 ### What Changes
 
-| Component | MVP | Enterprise | Effort |
+| Component | MVP | Worker | Effort |
 |-----------|-----|-----------|--------|
 | Middleware | jwtGuard + authGuard | jwtGuard + routingMiddleware | Medium |
 | Handler | Local service call | Response combining | Low |
@@ -227,9 +227,9 @@ async findOne(id: string) { ... }  // ← UNCHANGED
 
 ## Risks & Mitigations
 
-### Risk: Scaling to Enterprise Later is Painful
+### Risk: Scaling to Worker Later is Painful
 
-**Mitigation**: Build MVP with enterprise-ready code structure (this document ensures it)
+**Mitigation**: Build MVP with worker-ready code structure (this document ensures it)
 
 ### Risk: realmId Filtering Adds Overhead in MVP
 
@@ -237,7 +237,7 @@ async findOne(id: string) { ... }  // ← UNCHANGED
 
 ### Risk: Feature Flags Complexity in MVP
 
-**Mitigation**: Don't use feature flags in MVP. Add when enterprise is live.
+**Mitigation**: Don't use feature flags in MVP. Add when worker is live.
 
 ### Risk: tRPC Procedures Unused in MVP
 
@@ -245,19 +245,19 @@ async findOne(id: string) { ... }  // ← UNCHANGED
 
 ## Rollback Plan
 
-**If enterprise rollout goes wrong:**
+**If worker rollout goes wrong:**
 
 1. Keep MVP running (it's unchanged)
-2. Disable enterprise instances
+2. Disable worker instances
 3. Route users back to MVP
-4. Debug enterprise layer
+4. Debug worker layer
 5. Re-enable when fixed
 
 No data loss, no breaking changes.
 
 ## Checklist: MVP Must Include
 
-- [ ] Realm model (set to 'cloud')
+- [ ] Realm model (set to 'hub')
 - [ ] realmId on all models
 - [ ] All queries filter by realmId
 - [ ] Services are realm-agnostic
@@ -267,7 +267,7 @@ No data loss, no breaking changes.
 - [ ] Tests for realm isolation
 - [ ] Documentation (this file)
 
-## Checklist: Enterprise Adds
+## Checklist: Worker Adds
 
 - [ ] Redis setup
 - [ ] routingMiddleware

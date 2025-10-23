@@ -23,7 +23,7 @@ created: "2025-10-20"
 2. **Dependency injection**—use tsyringe `@injectable()` and `@inject()`
 3. **Database access only**—services call Prisma (or other data layer)
 4. **Testable in isolation**—mock PrismaService, run tests without HTTP
-5. **Reusable**—same service code for MVP (local DI) and enterprise (tRPC)
+5. **Reusable**—same service code for MVP (local DI) and worker (tRPC)
 
 ---
 
@@ -169,7 +169,7 @@ async findMany() {
 }
 ```
 
-**Why?** In enterprise, you call same service from multiple instances. Each instance filters by its own realmId.
+**Why?** In worker, you call same service from multiple instances. Each instance filters by its own realmId.
 
 ### ❌ Authentication/Authorization
 
@@ -187,7 +187,7 @@ async findOne(id: string) {
 }
 ```
 
-**Why?** Auth is cross-cutting concern. Same service used by different auth layers (MVP vs enterprise).
+**Why?** Auth is cross-cutting concern. Same service used by different auth layers (MVP vs worker).
 
 ### ❌ HTTP/Protocol Details
 

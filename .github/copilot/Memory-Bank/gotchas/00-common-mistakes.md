@@ -6,7 +6,7 @@ keywords: ["mistake", "bug", "gotcha", "leakage", "bypass", "debug", "common", "
 dependencies: ["rules/00-realm-isolation.md", "rules/01-auth-enforcement.md", "rules/02-service-purity.md"]
 urgency: "critical"
 size: "2000 words"
-sections: ["intro", "mistake-1-service-realm-param", "mistake-2-missing-realmid-filter", "mistake-3-auth-in-handler", "mistake-4-middleware-order", "mistake-5-hardcoded-cloud", "mistake-6-type-drift", "debug-checklist"]
+sections: ["intro", "mistake-1-service-realm-param", "mistake-2-missing-realmid-filter", "mistake-3-auth-in-handler", "mistake-4-middleware-order", "mistake-5-hardcoded-hub", "mistake-6-type-drift", "debug-checklist"]
 status: "active"
 
 
@@ -49,7 +49,7 @@ const group = await groupService.findOne(groupId, realmId);
 
 ### Why It's Wrong
 
-1. **Can't reuse MVP→Enterprise:** Service bound to realm awareness
+1. **Can't reuse MVP→Worker:** Service bound to realm awareness
 2. **Caller must know realm:** Causes proliferation of realm awareness throughout code
 3. **Harder to test:** Every test must mock realm parameter
 4. **No centralized realm control:** Realm filtering scattered across service calls
@@ -57,20 +57,20 @@ const group = await groupService.findOne(groupId, realmId);
 ### The Problem in Action
 
 ```typescript
-// Scenario: MVP works, but enterprise needs separate realm instances
-// New code tries to reuse service in enterprise realm handler:
+// Scenario: MVP works, but worker instance needs separate realm instances
+// New code tries to reuse service in worker instance realm handler:
 
-// Enterprise instance server:
-export const enterpriseGroupProcedure = t.procedure
-  .use(authGuard)  // ← Auth provides enterpriseRealmId
+// Worker instance server:
+export const workerGroupProcedure = t.procedure
+  .use(authGuard)  // ← Auth provides workerRealmId
   .input(GroupFetchSchema)
   .query(async ({ ctx, input }) => {
-    // Service already baked in realm awareness for cloud
-    // But enterprise wants to use same service with enterpriseRealmId
-    
+    // Service already baked in realm awareness for hub
+    // But worker instance wants to use same service with workerRealmId
+
     // Problem: Service designed for MVP realm, not flexible
     const group = await groupService.findOne(input.id, ctx.realmId);
-    // Service doesn't know it's meant for enterprise context
+    // Service doesn't know it's meant for worker instance context
   });
 ```
 
@@ -132,9 +132,9 @@ export class GroupService {
 // Result: Returns groups from ALL realms!
 const groups = await groupService.findByName('Engineering');
 // Returns: [
-//   { id: 'g1', name: 'Engineering', realmId: 'cloud' },
-//   { id: 'g2', name: 'Engineering', realmId: 'enterprise-1' },
-//   { id: 'g3', name: 'Engineering', realmId: 'enterprise-2' },  ← DATA LEAKAGE!
+//   { id: 'g1', name: 'Engineering', realmId: 'hub' },
+//   { id: 'g2', name: 'Engineering', realmId: 'worker-1' },
+//   { id: 'g3', name: 'Engineering', realmId: 'worker-2' },  ← DATA LEAKAGE!
 // ]
 ```
 
@@ -144,9 +144,9 @@ const groups = await groupService.findByName('Engineering');
 
 ```typescript
 // Security vulnerability:
-// 1. User logs into cloud realm
+// 1. User logs into hub realm
 // 2. Searches for "IT" group
-// 3. Gets results from enterprise realm (unauthorized!)
+// 3. Gets results from worker realm (unauthorized!)
 // 4. Can see member names, hierarchy, policies of other realm
 ```
 
@@ -342,32 +342,32 @@ export const deleteGroupFn = createServerFn()
 
 ---
 
-## Mistake 5: Hardcoded "Cloud" Realm
+## Mistake 5: Hardcoded "Hub" Realm
 
 ### The Mistake
 
 ```typescript
 // ❌ WRONG: Hardcoded realm constant
-const CLOUD_REALM = 'cloud-instance-id';
+const HUB_REALM = 'hub-instance-id';
 
 @injectable()
 export class UserService {
   async findUserProfile(userId: string) {
-    // Always queries cloud realm, can't work in enterprise!
+    // Always queries hub realm, can't work in worker instance!
     return this.prisma.user.findUnique({
-      where: { id_realmId: { id: userId, realmId: CLOUD_REALM } },
+      where: { id_realmId: { id: userId, realmId: HUB_REALM } },
     });
   }
 }
 
-// Enterprise instance tries to use this:
-// Service only looks in cloud realm, not enterprise realm!
-// Result: "User not found" even though user exists in enterprise
+// Worker instance tries to use this:
+// Service only looks in hub realm, not worker realm!
+// Result: "User not found" even though user exists in worker instance
 ```
 
 ### Why It's Wrong
 
-**Won't scale:** Enterprise instances need their own realm context.
+**Won't scale:** Worker instances need their own realm context.
 
 ### The Right Way
 
@@ -383,8 +383,8 @@ export const getUserProfileFn = createServerFn()
     return user;
   });
 
-// Works in cloud: realmId = 'cloud-instance-id'
-// Works in enterprise: realmId = 'enterprise-conf-2025'
+// Works in hub: realmId = 'hub-instance-id'
+// Works in worker instance: realmId = 'worker-conf-2025'
 // Same code, different realm context!
 ```
 
@@ -462,7 +462,7 @@ When something looks wrong, check these in order:
 - [ ] Are enums using `Prisma.$Enums.XXX`?
 - [ ] Do tests verify schema rejects invalid data?
 
-### 🚀 Scalability (MVP→Enterprise)
+### 🚀 Scalability (MVP→Worker Instance)
 
 - [ ] Does service accept realm parameter?
 - [ ] Is realm injected by caller, not service?
@@ -499,8 +499,7 @@ const group = await prisma.group.findUnique({
 console.log('User policy:', context.policy);
 console.log('User realm:', context.realmId);
 
-// ← Aha! realmId mismatch! User's policy is from cloud realm,
-// but they're trying to edit group in enterprise realm
-// Fix: Auth provider must return correct realmId for enterprise
+// ← Aha! realmId mismatch! User's policy is from hub realm,
+// but they're trying to edit group in worker instance realm
+// Fix: Auth provider must return correct realmId for worker instance
 ```
-

@@ -19,14 +19,14 @@ created: "2025-10-20"
 ## What is a Realm?
 
 A **realm** is an isolated data boundary. Each realm:
-- Has unique ID (e.g., "cloud", "enterprise-acme-corp", "conference-2025")
+- Has unique ID (e.g., "hub", "worker-acme-corp", "conference-2025")
 - Owns specific data (groups, memberships, evaluations)
 - Is governed by own policies
 - Has no visibility into other realms (unless explicitly bridged)
 
 **Examples:**
-- Cloud realm: `"cloud"` - SchönHerz central
-- Enterprise realm: `"enterprise-acme-corp"` - Acme Corporation department
+- Hub realm: `"hub"` - SchönHerz central
+- Worker realm: `"worker-acme-corp"` - Acme Corporation department
 - Event realm: `"conference-vik-2025"` - VIK conference 2025
 
 ## Why realmId?
@@ -36,14 +36,14 @@ A **realm** is an isolated data boundary. Each realm:
 ```typescript
 // ❌ BAD: No realm filter
 const groups = await prisma.group.findMany();
-// Returns: Groups from cloud + all enterprises + all events
+// Returns: Groups from hub + all workers + all events
 // Data leakage!
 
 // ✅ GOOD: With realm filter
 const groups = await prisma.group.findMany({
-  where: { realmId: "cloud" }
+  where: { realmId: "hub" }
 });
-// Returns: Only cloud groups
+// Returns: Only hub groups
 ```
 
 **Solution**: Every model that has realm-specific data includes `realmId` field.
@@ -54,25 +54,25 @@ const groups = await prisma.group.findMany({
 
 | Model | Why | Example |
 |-------|-----|---------|
-| `Group` | Each realm has own groups | Cloud groups ≠ Enterprise groups |
-| `Membership` | Realms have different members | Alice member in cloud, not in enterprise-acme |
-| `Semester` | Realms have own semesters | Cloud semester != Event realm semester |
-| `Scoreboard` | Evaluations per realm | Cloud evaluations != Enterprise evaluations |
-| `Guideline` | Evaluation criteria per realm | Cloud guidelines != Event guidelines |
-| `FeatureFlag` | Features enabled per realm | Feature X enabled in cloud, disabled in enterprise |
-| `PolicyAssignment` | Policies per realm | Alice is GOD in cloud, Manager in enterprise-acme |
-| `Statement` | Permissions per realm | Cloud GOD has different permissions than enterprise GOD |
+| `Group` | Each realm has own groups | Hub groups ≠ Worker groups |
+| `Membership` | Realms have different members | Alice member in hub, not in worker-acme |
+| `Semester` | Realms have own semesters | Hub semester != Event realm semester |
+| `Scoreboard` | Evaluations per realm | Hub evaluations != Worker evaluations |
+| `Guideline` | Evaluation criteria per realm | Hub guidelines != Event guidelines |
+| `FeatureFlag` | Features enabled per realm | Feature X enabled in hub, disabled in worker |
+| `PolicyAssignment` | Policies per realm | Alice is GOD in hub, Manager in worker-acme |
+| `Statement` | Permissions per realm | Hub GOD has different permissions than worker GOD |
 
 ### ❌ Does NOT Need realmId (Global Data)
 
 | Model | Why | Example |
 |-------|-----|---------|
 | `User` | Single identity across all realms | Alice is one user globally |
-| `Profile` | Single profile per user (in cloud) | Alice's name/email stored once in cloud |
+| `Profile` | Single profile per user (in hub) | Alice's name/email stored once in hub |
 | `Policy` (base) | Can be inherited across realms* | Hierarchy policy can be reused |
 | `ExternalAccountLink` | Linked to user profile | Alice's Twitter linked to her global profile |
 
-*Note: In practice, enterprises might have their own policies. Add realmId to Policy if policy isn't shared.
+*Note: In practice, workers might have their own policies. Add realmId to Policy if policy isn't shared.
 
 ## Prisma Schema: Adding realmId
 
@@ -230,7 +230,7 @@ async function createGroup(data: GroupCreateInput, realm: string) {
     where: { id: data.parentId }
   });
   
-  // What if parent is in 'enterprise-a' and child in 'enterprise-b'?
+  // What if parent is in 'worker-a' and child in 'worker-b'?
 }
 ```
 
@@ -262,16 +262,16 @@ async function createGroup(data: GroupCreateInput, realm: string) {
 describe('Realm isolation', () => {
   it('should only return groups from specified realm', async () => {
     // Create groups in two realms
-    await createGroup('engineering', 'cloud');
-    await createGroup('engineering', 'enterprise-acme');
+    await createGroup('engineering', 'hub');
+    await createGroup('engineering', 'worker-acme');
     
-    // Query cloud realm
-    const cloudGroups = await prisma.group.findMany({
-      where: { realmId: 'cloud' }
+    // Query hub realm
+    const hubGroups = await prisma.group.findMany({
+      where: { realmId: 'hub' }
     });
     
-    expect(cloudGroups).toHaveLength(1);
-    expect(cloudGroups[0].realmId).toBe('cloud');
+    expect(hubGroups).toHaveLength(1);
+    expect(hubGroups[0].realmId).toBe('hub');
   });
 
   it('should prevent cross-realm queries', async () => {
@@ -291,47 +291,47 @@ describe('Realm isolation', () => {
 ```typescript
 describe('Group creation with cascading', () => {
   it('should escalate to parent in same realm only', async () => {
-    const cloudParent = await createGroup('cloud-parent', 'cloud');
-    const enterpriseParent = await createGroup('enterprise-parent', 'enterprise-acme');
+    const hubParent = await createGroup('hub-parent', 'hub');
+    const workerParent = await createGroup('worker-parent', 'worker-acme');
     
-    // Create child under cloud parent (in cloud realm)
-    const cloudChild = await createGroup(
-      { parentId: cloudParent.id, name: 'cloud-child' },
-      'cloud'
+    // Create child under hub parent (in hub realm)
+    const hubChild = await createGroup(
+      { parentId: hubParent.id, name: 'hub-child' },
+      'hub'
     );
     
-    // Verify escalation added to cloud policy
-    const cloudEscalation = await prisma.statement.findFirst({
+    // Verify escalation added to hub policy
+    const hubEscalation = await prisma.statement.findFirst({
       where: { 
-        groupIdRestrict: cloudChild.id,
-        policy: { name: 'GOD in cloud' }
+        groupIdRestrict: hubChild.id,
+        policy: { name: 'GOD in hub' }
       }
     });
-    expect(cloudEscalation).toBeDefined();
+    expect(hubEscalation).toBeDefined();
     
-    // Verify NO escalation to enterprise policy
-    const enterpriseEscalation = await prisma.statement.findFirst({
+    // Verify NO escalation to worker policy
+    const workerEscalation = await prisma.statement.findFirst({
       where: { 
-        groupIdRestrict: cloudChild.id,
-        policy: { name: 'GOD in enterprise' }
+        groupIdRestrict: hubChild.id,
+        policy: { name: 'GOD in worker' }
       }
     });
-    expect(enterpriseEscalation).toBeNull();
+    expect(workerEscalation).toBeNull();
   });
 });
 ```
 
 ## Migration: Adding Realm
 
-### For MVP (Single Cloud Realm)
+### For MVP (Single Hub Realm)
 
 1. Add `Realm` model
-2. Create default realm: `{ id: 'cloud', name: 'Cloud' }`
-3. Add `realmId` to all required models with `@default('cloud')`
+2. Create default realm: `{ id: 'hub', name: 'Hub' }`
+3. Add `realmId` to all required models with `@default('hub')`
 4. Make realmId NOT NULL after backfill
 5. Add indexes on realmId
 
-### For Enterprise (Multiple Realms)
+### For Worker (Multiple Realms)
 
 1. Same as MVP
 2. Create instance realms when deploying new instances

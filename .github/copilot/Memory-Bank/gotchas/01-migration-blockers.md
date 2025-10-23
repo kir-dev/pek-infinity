@@ -1,9 +1,9 @@
 ---
 file: gotchas/01-migration-blockers.md
-purpose: "Understand what breaks MVP→Enterprise migration if done wrong"
+purpose: "Understand what breaks MVP→Worker Instance migration if done wrong"
 triggers: ["scaling planning", "code review before release", "architectural decision"]
-keywords: ["migration", "blocker", "scale", "enterprise", "impossible", "refactor", "debt"]
-dependencies: ["gotchas/00-common-mistakes.md", "decisions/00-mvp-vs-enterprise.md"]
+keywords: ["migration", "blocker", "scale", "worker-instance", "impossible", "refactor", "debt"]
+dependencies: ["gotchas/00-common-mistakes.md", "decisions/00-mvp-vs-worker-instance.md"]
 urgency: "high"
 size: "1500 words"
 sections: ["intro", "blocker-1-service-realm-aware", "blocker-2-data-leakage", "blocker-3-auth-in-handler", "blocker-4-hardcoded-endpoints", "blocker-5-monolithic-policy", "blocker-6-circular-deps", "prevention-checklist"]
@@ -14,11 +14,11 @@ status: "active"
 
 ---
 
-# Migration Blockers: MVP→Enterprise
+# Migration Blockers: MVP→Worker Instance
 
 ## Introduction
 
-**These architectural mistakes make MVP→Enterprise scaling impossible without massive refactoring.**
+**These architectural mistakes make MVP→Worker Instance scaling impossible without massive refactoring.**
 
 Mistakes in Gotchas/00 are bugs. Mistakes here are **architectural debt that compounds**. Found late, they cost weeks of rework.
 
@@ -34,15 +34,15 @@ Mistakes in Gotchas/00 are bugs. Mistakes here are **architectural debt that com
 export class GroupService {
   async findAll(realmId: string) {  // ← Service expects realm
     // All business logic hardcoded for this shape
-    // Can't be called from enterprise without major refactoring
+    // Can't be called from worker instance without major refactoring
     return this.prisma.group.findMany({ where: { realmId } });
   }
 }
 
 // MVP works great:
-const cloudGroups = await groupService.findAll('cloud');
+const hubGroups = await groupService.findAll('hub');
 
-// Enterprise scaling time: "Let's reuse this service"
+// Worker instance scaling time: "Let's reuse this service"
 // But service architecture is MVP-specific:
 // - Takes realmId as parameter
 // - All callers must know and pass realm
@@ -55,7 +55,7 @@ const cloudGroups = await groupService.findAll('cloud');
 1. Every service call must accept realmId
 2. Realm knowledge spreads to 100+ call sites
 3. Testing becomes realm-aware everywhere
-4. Enterprise code can't cleanly separate cloud concerns
+4. Worker instance code can't cleanly separate hub concerns
 
 **Refactoring cost:** 5-10 days to rebuild service layer
 
@@ -77,19 +77,19 @@ export class GroupService {
   }
 }
 
-// MVP: Cloud realm injected
-const cloudModule = {
+// MVP: Hub realm injected
+const hubModule = {
   providers: [
     GroupService,
-    { provide: 'REALM_ID', useValue: 'cloud' },
+    { provide: 'REALM_ID', useValue: 'hub' },
   ],
 };
 
-// Enterprise: Enterprise realm injected
-const enterpriseModule = {
+// Worker Instance: Worker realm injected
+const workerModule = {
   providers: [
     GroupService,
-    { provide: 'REALM_ID', useValue: enterpriseRealmId },  // Different realm
+    { provide: 'REALM_ID', useValue: workerRealmId },  // Different realm
   ],
 };
 
@@ -115,10 +115,10 @@ const group = await prisma.group.findUnique({
   where: { id: 'g1' },
 });
 
-// Enterprise scaling: Multiple realms with overlapping IDs
+// Worker instance scaling: Multiple realms with overlapping IDs
 // Two instances generate ids independently
-const group1 = await prisma.group.create({ data: { id: 'g1', realmId: 'cloud' } });
-const group2 = await prisma.group.create({ data: { id: 'g1', realmId: 'ent1' } });
+const group1 = await prisma.group.create({ data: { id: 'g1', realmId: 'hub' } });
+const group2 = await prisma.group.create({ data: { id: 'g1', realmId: 'worker-1' } });
 // ↑ Database accepts both (different realms)
 
 // But queries don't enforce realm:
@@ -164,7 +164,7 @@ model Membership {
 
 // Queries force realm isolation:
 const group = await prisma.group.findUnique({
-  where: { id_realmId: { id: 'g1', realmId: 'cloud' } },
+  where: { id_realmId: { id: 'g1', realmId: 'hub' } },
 });
 // ← Must specify realm, no ambiguity!
 ```
@@ -194,7 +194,7 @@ export const deleteGroupFn = createServerFn()
 // 100 more handlers with same check...
 // Someone maintains it, finds all 100, updates them all to new schema
 
-// Later: Enterprise needs different auth provider
+// Later: Worker instance needs different auth provider
 // Now you need to update 100+ handlers for new auth logic
 // Risk: Miss one, security hole!
 ```
@@ -205,7 +205,7 @@ export const deleteGroupFn = createServerFn()
 1. Auth logic change requires 100+ file edits
 2. Easy to miss one handler (security hole)
 3. Can't test auth centrally
-4. Enterprise provider can't override MVP provider
+4. Worker instance provider can't override MVP provider
 
 **Refactoring cost:** 1-2 weeks of risky changes
 
@@ -232,7 +232,7 @@ export const updateGroupProcedure = t.procedure
   });
 
 // Change auth logic once: all procedures update automatically!
-// Enterprise provider: create new enterpriseAuthGuard, apply to enterprise procedures
+// Worker instance provider: create new workerAuthGuard, apply to worker procedures
 ```
 
 ---
@@ -242,19 +242,19 @@ export const updateGroupProcedure = t.procedure
 ### The Problem
 
 ```typescript
-// ❌ BLOCKER: Hardcoded cloud endpoint
-const CLOUD_API = 'https://api.pek.com';
+// ❌ BLOCKER: Hardcoded hub endpoint
+const HUB_API = 'https://api.pek.com';
 
 @injectable()
 export class UserService {
   async fetchUserProfile(userId: string) {
-    return fetch(`${CLOUD_API}/users/${userId}`);
+    return fetch(`${HUB_API}/users/${userId}`);
   }
 }
 
-// Works for MVP, but enterprise can't use this service:
-// - Always calls cloud endpoint
-// - Can't point to enterprise instance
+// Works for MVP, but worker instance can't use this service:
+// - Always calls hub endpoint
+// - Can't point to worker instance
 // - Requires complete service rewrite
 ```
 
@@ -277,19 +277,19 @@ export class UserService {
   }
 }
 
-// MVP: Cloud endpoint
-const cloudModule = {
+// MVP: Hub endpoint
+const hubModule = {
   providers: [
     UserService,
     { provide: 'API_URL', useValue: 'https://api.pek.com' },
   ],
 };
 
-// Enterprise: Enterprise endpoint
-const enterpriseModule = {
+// Worker Instance: Worker endpoint
+const workerModule = {
   providers: [
     UserService,
-    { provide: 'API_URL', useValue: enterpriseApiUrl },
+    { provide: 'API_URL', useValue: workerApiUrl },
   ],
 };
 
@@ -306,18 +306,18 @@ const enterpriseModule = {
 // ❌ BLOCKER: Policy logic monolithic (MVP-only)
 export class PolicyService {
   async getUserPolicies(userId: string, realmId: string) {
-    // Business logic hardcoded for cloud realm rules
+    // Business logic hardcoded for hub realm rules
     // - Specific statement types (SIMONYI_ELNOK, BOARD_MEMBER, etc)
     // - Specific cascading rules
     // - Hardcoded policy hierarchy
     
-    // Enterprise can't customize policies without changing code
+    // Worker instance can't customize policies without changing code
     // Different departments have different policy structures
-    // Result: Copy-paste code for each enterprise instance
+    // Result: Copy-paste code for each worker instance
   }
 }
 
-// Enterprise Policy: Needs custom rules
+// Worker Instance Policy: Needs custom rules
 // MVP Policy: Hardcoded hierarchy
 // → Must fork service, maintain separately
 // → Code duplication, bug propagation
@@ -325,7 +325,7 @@ export class PolicyService {
 
 ### Why It's a Blocker
 
-**Unmaintainable:** Each enterprise needs policy fork.
+**Unmaintainable:** Each worker instance needs policy fork.
 
 ### The Right Way (From Start)
 
@@ -347,17 +347,17 @@ export class PolicyService {
   }
 }
 
-// MVP: Cloud policy resolver (hardcoded)
-class CloudPolicyResolver implements PolicyResolver {
+// MVP: Hub policy resolver (hardcoded)
+class HubPolicyResolver implements PolicyResolver {
   async getStatements(userId: string) {
     // Schönherz college policies
   }
 }
 
-// Enterprise: Custom policy resolver
+// Worker Instance: Custom policy resolver
 class CustomPolicyResolver implements PolicyResolver {
   async getStatements(userId: string) {
-    // This enterprise's custom rules
+    // This worker instance's custom rules
   }
 }
 
@@ -399,7 +399,7 @@ export class MembershipService {
 // At scale, these cycles create:
 // - Testing nightmares (can't mock cleanly)
 // - Deployment issues (initialization order unclear)
-// - Enterprise instance can't reuse without refactoring
+// - Worker instance can't reuse without refactoring
 ```
 
 ### Why It's a Blocker
@@ -462,7 +462,7 @@ export class GroupManagementService {
 ### Architecture
 - [ ] Services don't accept realm parameter?
 - [ ] Realm injected via DI, not passed?
-- [ ] No hardcoded cloud/MVP realm constants?
+- [ ] No hardcoded hub/MVP realm constants?
 - [ ] No hardcoded endpoints?
 
 ### Database
@@ -483,8 +483,8 @@ export class GroupManagementService {
 - [ ] Policy system extensible (interface)?
 - [ ] Auth provider swappable?
 
-### Enterprise Readiness
-- [ ] Same code runs in cloud + enterprise?
+### Worker Instance Readiness
+- [ ] Same code runs in hub + worker instance?
 - [ ] Can DI module be overridden per deployment?
 - [ ] No fork-and-modify for each instance?
 - [ ] Scaling plan doesn't require refactoring?
@@ -504,4 +504,3 @@ If you see these, push back:
 🚩 Policy logic hardcoded (not extensible)  
 
 Each one is a future refactoring tax. Stop them early.
-

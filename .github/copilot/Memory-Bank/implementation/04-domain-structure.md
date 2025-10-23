@@ -110,7 +110,7 @@ export class GroupService {
   }
 }
 
-// ✅ tRPC PROCEDURES (MVP + Enterprise)
+// ✅ tRPC PROCEDURES (MVP + Worker)
 export const groupProcedures = {
   findOne: procedure
     .input(z.object({ id: z.cuid() }))

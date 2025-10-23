@@ -6,7 +6,7 @@ keywords: ["flow", "diagram", "sequence", "request", "auth", "policy", "cascade"
 dependencies: ["architecture/01-auth-system.md", "architecture/02-service-patterns.md"]
 urgency: "medium"
 size: "1200 words"
-sections: ["mvp-request-flow", "enterprise-request-flow", "auth-flow", "policy-cascade-flow", "error-handling"]
+sections: ["mvp-request-flow", "worker-instance-request-flow", "auth-flow", "policy-cascade-flow", "error-handling"]
 status: "active"
 
 
@@ -16,15 +16,15 @@ status: "active"
 
 # Reference: Request Flows & Diagrams
 
-## MVP Request Flow (Single Cloud Instance)
+## MVP Request Flow (Single Hub Instance)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                    MVP REQUEST FLOW                                  │
-│                 (Cloud Instance, Single Realm)                       │
+│                 (Hub Instance, Single Realm)                       │
 └─────────────────────────────────────────────────────────────────────┘
 
-User Browser                 TanStack Start              Cloud Backend
+User Browser                 TanStack Start              Hub Backend
     │                              │                          │
     │  1. Click "View Groups"      │                          │
     ├─────────────────────────────>│                          │
@@ -53,7 +53,7 @@ User Browser                 TanStack Start              Cloud Backend
     │                              ├────────────────────────>│
     │                              │  findMany({              │
     │                              │    where: {              │
-    │                              │      realmId: 'cloud'    │
+    │                              │      realmId: 'hub'    │
     │                              │    }                     │
     │                              │  })                      │
     │                              │                          │
@@ -75,20 +75,20 @@ Legend:
 
 ---
 
-## Enterprise Request Flow (Multiple Instances)
+## Worker Request Flow (Multiple Instances)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│              ENTERPRISE REQUEST FLOW                                 │
-│           (Cloud BFF → Enterprise Instance)                          │
+│              Worker REQUEST FLOW                                 │
+│           (Hub BFF → Worker Instance)                          │
 └─────────────────────────────────────────────────────────────────────┘
 
-User Browser              Cloud BFF              Enterprise Instance
+User Browser              Hub BFF              Worker Instance
     │                       │                          │
     │  1. Request group     │                          │
     ├──────────────────────>│                          │
     │                       │  2. authGuard           │
-    │                       │  (validate cloud JWT)   │
+    │                       │  (validate hub JWT)   │
     │                       │                          │
     │                       │  3. Determine realm     │
     │                       │  (from policy snapshot) │
@@ -98,36 +98,36 @@ User Browser              Cloud BFF              Enterprise Instance
     │                       │  Redis cache            │
     │                       │  {policy, permissions}  │
     │                       │                          │
-    │                       │  5. Call enterprise API │
+    │                       │  5. Call worker API │
     │                       ├─────────────────────────>│
     │                       │  tRPC getGroupsFn       │
     │                       │  + x-policy-hint header │
     │                       │  (cached permissions)   │
     │                       │                          │
-    │                       │  6. Enterprise validates│
+    │                       │  6. Worker validates│
     │                       │  policy hint            │
     │                       │  (quick check)          │
     │                       │  realm = 'ent-conf-25' │
     │                       │                          │
-    │                       │  7. Query enterprise DB │
+    │                       │  7. Query worker DB │
     │                       │  where realmId =        │
     │                       │    'ent-conf-25'        │
     │                       │                          │
     │                       │ <─────────────────────────
-    │                       │  8. Enterprise response │
+    │                       │  8. Worker response │
     │                       │  {groups, metadata}     │
     │                       │                          │
     │  <──────────────────────                         │
-    │  9. Cloud combines    │                          │
+    │  9. Hub combines    │                          │
     │  (federation view)    │                          │
     │  + other realms' data │                          │
 
 Legend:
-- Cloud BFF acts as reverse proxy
+- Hub BFF acts as reverse proxy
 - Policy snapshot cached in Redis
-- Enterprise gets policy hint (optimization)
-- Enterprise queries own realm
-- Cloud combines multiple realm responses for federated view
+- Worker gets policy hint (optimization)
+- Worker queries own realm
+- Hub combines multiple realm responses for federated view
 ```
 
 ---
@@ -140,7 +140,7 @@ Legend:
 │         JWT Generation → Policy Snapshot → Redis Cache              │
 └─────────────────────────────────────────────────────────────────────┘
 
-User Browser              AuthSCH OAuth       Cloud Backend              Redis
+User Browser              AuthSCH OAuth       Hub Backend              Redis
     │                         │                    │                      │
     │  1. Login button        │                    │                      │
     ├────────────────────────>│                    │                      │
@@ -432,4 +432,3 @@ Benefits:
 - Cache still hits 99% of time
 - Clean separation of concerns
 ```
-

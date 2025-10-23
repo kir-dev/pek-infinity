@@ -1,7 +1,7 @@
 ---
 file: architecture/03-middleware-layering.md
-purpose: "Middleware stack differences between MVP and enterprise; order matters, guard responsibilities"
-triggers: ["implementing middleware", "debugging auth failures", "adding new guard", "scaling to enterprise"]
+purpose: "Middleware stack differences between MVP and worker-instance; order matters, guard responsibilities"
+triggers: ["implementing middleware", "debugging auth failures", "adding new guard", "scaling to worker-instance"]
 keywords: ["middleware", "guard", "stack", "order", "jwtGuard", "authGuard", "routing"]
 dependencies: ["architecture/01-auth-system.md", "architecture/02-service-patterns.md"]
 urgency: "critical"
@@ -14,7 +14,7 @@ created: "2025-10-20"
 
 ---
 
-# Middleware Layering: MVP vs Enterprise
+# Middleware Layering: MVP vs Worker Instance
 
 ## Core Principle: Middleware Order is Critical
 
@@ -53,7 +53,7 @@ Request comes in
   ↓
 3️⃣ localServiceMiddleware (MVP specific)
    └─ Resolve service via DI (tsyringe)
-   └─ Inject Prisma (scoped to cloud realm)
+   └─ Inject Prisma (scoped to hub realm)
    └─ Inject service into context
   ↓
 Handler
@@ -78,7 +78,7 @@ export const getGroupFn = createServerFn({ method: 'GET' })
   });
 ```
 
-## Enterprise Middleware Stack
+## Worker Middleware Stack
 
 ### Multiple Instances, tRPC Routing
 
@@ -91,7 +91,7 @@ Request comes in
    └─ Decode JWT → user info
    └─ Inject user into context
   ↓
-2️⃣ routingMiddleware (NEW for enterprise)
+2️⃣ routingMiddleware (NEW for worker)
    └─ Determine which instances user has access to
    └─ For each instance:
    │   ├─ Fetch instance JWT from cache (or refresh)
@@ -110,7 +110,7 @@ Handler
   └─ Return combined result
 ```
 
-### Enterprise Stack Code
+### Worker Stack Code
 
 ```typescript
 export const getGroupFn = createServerFn({ method: 'GET' })
@@ -136,11 +136,11 @@ export const getGroupFn = createServerFn({ method: 'GET' })
 
 ### jwtGuard
 
-**Runs in:** MVP + Enterprise (same)
+**Runs in:** MVP + Worker (same)
 
 **Responsibilities:**
 - Extract JWT from httpOnly cookie
-- Validate JWT signature (using shared secret or cloud's public key)
+- Validate JWT signature (using shared secret or hub's public key)
 - Decode JWT claims (userId, issuedAt, expiresAt)
 - Check expiry
 - Inject `user` into context
@@ -172,7 +172,7 @@ export const jwtGuard = () => async (req, context) => {
 
 ### authGuard (MVP)
 
-**Runs in:** MVP only (instances have their own authGuard in enterprise)
+**Runs in:** MVP only (instances have their own authGuard in worker instance)
 
 **Responsibilities:**
 - Check user has required permissions
@@ -213,9 +213,9 @@ export const authGuard = (requiredScopes: Scope[]) =>
   };
 ```
 
-### routingMiddleware (Enterprise)
+### routingMiddleware (Worker)
 
-**Runs in:** Enterprise only
+**Runs in:** Worker only
 
 **Responsibilities:**
 - Get instances user has access to
@@ -316,10 +316,10 @@ export const routingMiddleware = <T>(
 
 **Problem**: No user in context. authGuard crashes with undefined error.
 
-### ❌ Gotcha 2: authGuard in Enterprise serverFn
+### ❌ Gotcha 2: authGuard in Worker serverFn
 
 ```typescript
-// Enterprise serverFn
+// Worker serverFn
 .middleware([
   jwtGuard(),
   authGuard(['GROUP_VIEW']),  // ❌ Wrong! Auth is per-instance
@@ -327,7 +327,7 @@ export const routingMiddleware = <T>(
 ])
 ```
 
-**Problem**: authGuard checks cloud instance permissions, not instance-specific permissions. Enterprise should only check on instances themselves.
+**Problem**: authGuard checks hub instance permissions, not instance-specific permissions. Worker instance should only check on instances themselves.
 
 ### ❌ Gotcha 3: No error handling in routingMiddleware
 
@@ -350,16 +350,16 @@ routingMiddleware(
 // Middleware collects:
 results = {
   allResponses: [
-    { instance: 'cloud', data: [Group1, Group2] },
-    { instance: 'enterprise-acme', data: [Group3, Group4] },
-    { instance: 'enterprise-conf', error: ForbiddenError }
+    { instance: 'hub', data: [Group1, Group2] },
+    { instance: 'worker-acme', data: [Group3, Group4] },
+    { instance: 'worker-conf', error: ForbiddenError }
   ],
   successResponses: [
-    { instance: 'cloud', data: [Group1, Group2] },
-    { instance: 'enterprise-acme', data: [Group3, Group4] }
+    { instance: 'hub', data: [Group1, Group2] },
+    { instance: 'worker-acme', data: [Group3, Group4] }
   ],
   unauthResponses: [
-    { instance: 'enterprise-conf', error: ForbiddenError }
+    { instance: 'worker-conf', error: ForbiddenError }
   ],
   errorResponses: []
 }
@@ -375,21 +375,21 @@ const allGroups = results.successResponses
 ```typescript
 results = {
   allResponses: [
-    { instance: 'cloud', data: [...] },
-    { instance: 'enterprise-acme', error: TimeoutError }
+    { instance: 'hub', data: [...] },
+    { instance: 'worker-acme', error: TimeoutError }
   ],
   successResponses: [
-    { instance: 'cloud', data: [...] }
+    { instance: 'hub', data: [...] }
   ],
   unauthResponses: [],
   errorResponses: [
-    { instance: 'enterprise-acme', error: TimeoutError }
+    { instance: 'worker-acme', error: TimeoutError }
   ]
 }
 
 // Handler:
 if (results.successResponses.length > 0) {
-  return results.successResponses[0].data; // Return cloud results
+  return results.successResponses[0].data; // Return hub results
 }
 if (results.errorResponses.length > 0) {
   throw new Error('Some instances unavailable');
@@ -424,7 +424,7 @@ it('should validate JWT before checking auth', async () => {
 ## Middleware Checklist
 
 - [ ] jwtGuard is FIRST in middleware array
-- [ ] authGuard (if MVP) or routingMiddleware (if enterprise) is SECOND
+- [ ] authGuard (if MVP) or routingMiddleware (if worker instance) is SECOND
 - [ ] Services/handlers only run after middleware passes
 - [ ] All guards have try-catch for proper error responses
 - [ ] Middleware doesn't modify request data (only adds to context)

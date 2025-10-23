@@ -25,9 +25,13 @@ tRPC procedures are the reusable business logic layer. They handle:
 - Service layer calls
 - Error handling
 
-**Procedures are called by:**
-1. **serverFn** (MVP): Local DI invocation
-2. **tRPC client** (Enterprise): HTTP via tRPC router
+**Status: Worker-only (Year 2+)**
+
+This file documents the pattern for **future tRPC routing** when multi-instance federation is added. **MVP uses serverFn + local service calls only.**
+
+**Future Procedures called by:**
+1. **serverFn** (MVP): Calls services directly via DI
+2. **tRPC client** (Worker): HTTP calls to remote instances
 
 ```typescript
 import { procedure, router } from '@trpc/server';

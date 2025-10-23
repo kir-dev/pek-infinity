@@ -294,9 +294,9 @@ export const authGuard = (requiredScopes: string[]) =>
 
 ---
 
-## Policy Caching (Enterprise)
+## Policy Caching (Worker)
 
-In enterprise, policy checks are expensive. Cache them.
+In worker, policy checks are expensive. Cache them.
 
 ```typescript
 // ✅ PATTERN: Cache policies with TTL

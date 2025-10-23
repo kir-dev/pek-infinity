@@ -1,13 +1,13 @@
 ---
 file: implementation/02-serverfn-routing.md
-purpose: "serverFn as BFF routing layer, jwtGuard, routingMiddleware pattern, response combining, MVP vs enterprise"
+purpose: "serverFn as BFF routing layer, jwtGuard, routingMiddleware pattern, response combining, MVP vs worker-instance"
 triggers: ["implementing serverFn endpoint", "designing routing layer", "combining multi-instance responses"]
 keywords: ["serverFn", "routing", "BFF", "jwtGuard", "routingMiddleware", "response-combining", "aggregation"]
 dependencies: ["architecture/04-routing-aggregation.md", "architecture/01-auth-system.md", "implementation/01-trpc-procedures.md"]
 urgency: "critical"
 size: "2000 words"
 template: true
-sections: ["core-pattern", "jwt-guard", "routing-middleware", "response-combining", "mvp-vs-enterprise", "real-examples", "error-handling", "performance", "gotchas", "checklist"]
+sections: ["core-pattern", "jwt-guard", "routing-middleware", "response-combining", "mvp-vs-worker-instance", "real-examples", "error-handling", "performance", "gotchas", "checklist"]
 status: "active"
 
 
@@ -292,13 +292,13 @@ export const publishGroupsFn = createServerFn({ method: 'POST' })
 
 ---
 
-## MVP vs Enterprise: Same Code
+## MVP vs Worker Instance: Same Code
 
 **In MVP:**
 - routingMiddleware returns single instance (this BFF instance)
 - Worker calls procedure directly via DI
 
-**In Enterprise:**
+**In Worker Instance:**
 - routingMiddleware returns multiple instances
 - Worker makes tRPC client calls via HTTP
 
@@ -313,8 +313,8 @@ async function mvpWorker(instance, { data }) {
   return procedure._def.query({ input: data, ctx });
 }
 
-// Enterprise: routingMiddleware calls tRPC client
-async function enterpriseWorker(instance, { data }) {
+// Worker Instance: routingMiddleware calls tRPC client
+async function workerInstanceWorker(instance, { data }) {
   // instance is remote, call via tRPC client
   const client = getTRPCClient(instance.url, { headers: { authorization: `Bearer ${jwt}` } });
   return client.group.findOne.query(data);
@@ -322,7 +322,7 @@ async function enterpriseWorker(instance, { data }) {
 
 // serverFn stays the same!
 export const getGroupFn = createServerFn()
-  .middleware([jwtGuard, routingMiddleware(isEnterprise ? enterpriseWorker : mvpWorker)])
+  .middleware([jwtGuard, routingMiddleware(isWorkerInstance ? workerInstanceWorker : mvpWorker)])
   .handler(async ({ context: { responses } }) => {
     return responses.successResponses[0]?.data;
   });
@@ -531,5 +531,4 @@ const unique = Array.from(new Map(
 - [ ] Partial failures handled appropriately
 - [ ] Tests cover: success, partial success, total failure
 - [ ] Comment explains combining strategy
-- [ ] Same code works MVP → Enterprise (confirmed mentally or in tests)
-
+- [ ] Same code works MVP → Worker Instance (confirmed mentally or in tests)

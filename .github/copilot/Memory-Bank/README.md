@@ -35,9 +35,9 @@ This memory bank documents architectural decisions, implementation patterns, val
 3. `gotchas/00-common-mistakes.md` (what breaks)
 
 **I need to understand the big picture:**
-1. `architecture/00-federation-model.md` (why cloud + enterprise)
+1. `architecture/00-federation-model.md` (why hub + worker-instance)
 2. `architecture/01-auth-system.md` (auth flow)
-3. `decisions/00-mvp-vs-enterprise.md` (what's in MVP vs later)
+3. `decisions/00-mvp-vs-worker-instance.md` (what's in MVP vs later)
 4. `reference/00-request-flows.md` (visual flows)
 
 **I'm questioning a design decision:**
@@ -50,10 +50,10 @@ This memory bank documents architectural decisions, implementation patterns, val
 
 | File | Purpose | Size |
 |------|---------|------|
-| `00-federation-model.md` | Cloud + enterprise instances, BFF routing | 1500w |
+| `00-federation-model.md` | Hub + worker instances, BFF routing | 1500w |
 | `01-auth-system.md` | JWT, policy snapshots, caching strategy | 2500w |
 | `02-service-patterns.md` | Service layer, realm-agnostic design | 2000w |
-| `03-middleware-layering.md` | MVP vs enterprise middleware stacks | 1500w |
+| `03-middleware-layering.md` | MVP vs worker-instance middleware stacks | 1500w |
 | `04-routing-aggregation.md` | serverFn routing and response combining | 1500w |
 
 ### Database (Schema, models, relationships)
@@ -69,7 +69,7 @@ This memory bank documents architectural decisions, implementation patterns, val
 
 | File | Purpose | Size |
 |------|---------|------|
-| `00-mvp-vs-enterprise.md` | Feature matrix, scope, timeline | 2000w |
+| `00-mvp-vs-worker-instance.md` | Feature matrix, scope, timeline | 2000w |
 | `01-why-trpc-over-rest.md` | tRPC vs REST trade-offs | 1500w |
 | `02-why-colocate-domains.md` | Single file per domain concept | 1200w |
 | `03-why-services-are-realm-agnostic.md` | Service design principle | 1500w |

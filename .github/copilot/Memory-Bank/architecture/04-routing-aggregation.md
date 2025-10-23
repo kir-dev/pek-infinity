@@ -18,12 +18,12 @@ created: "2025-10-20"
 
 ## Overview
 
-**serverFn** (in enterprise) is the BFF. Its job:
+**serverFn** (in worker instance) is the BFF. Its job:
 1. **Route**: Determine which instances to call
 2. **Call**: Execute worker on each instance (via tRPC or DI)
 3. **Combine**: Aggregate results into meaningful response
 
-In MVP, routing is trivial (only one instance). In enterprise, routing is intelligent.
+In MVP, routing is trivial (only one instance). In worker instance, routing is intelligent.
 
 ## Stage 1: Routing (Determine Instances)
 
@@ -32,7 +32,7 @@ In MVP, routing is trivial (only one instance). In enterprise, routing is intell
 ```typescript
 // Get instances for this user
 const instances = await instanceRouter.getInstancesForUser(context.user);
-// Returns: ['cloud', 'enterprise-acme', 'enterprise-conf']
+// Returns: ['hub', 'worker-acme', 'worker-conf']
 
 // Filter by task
 const relevantInstances = instances.filter(instance => 
@@ -48,20 +48,20 @@ const relevantInstances = instances.filter(instance =>
 Option A: Federation Table (Recommended)
   Instance: user_realm mapping
   └─ Query: SELECT instance FROM user_realms WHERE userId = user
-  └─ Result: ['cloud', 'enterprise-acme']
+  └─ Result: ['hub', 'worker-acme']
 
-Option B: Policy Snapshot Cache (Enterprise Only)
+Option B: Policy Snapshot Cache (Worker Only)
   Already cached from login
   └─ Redis: session:${jwt} → { instances: [...] }
   └─ No query needed (instant)
 
 Option C: Instance Registry (Static)
-  Hardcoded or env var: ALL_INSTANCES = ['cloud', 'enterprise-acme', ...]
+  Hardcoded or env var: ALL_INSTANCES = ['hub', 'worker-acme', ...]
   └─ Try all; let each instance return 403 if user not member
   └─ Simplest but slower
 ```
 
-**MVP uses Option C** (only one instance). **Enterprise should use Option B** (cache from login).
+**MVP uses Option C** (only one instance). **Worker instance should use Option B** (cache from login).
 
 ## Stage 2: Call Worker
 
@@ -88,11 +88,11 @@ const getGroupWorker = async (instance, { data, context }) => {
 };
 ```
 
-#### Example 2: tRPC Remote Call (Enterprise)
+#### Example 2: tRPC Remote Call (Worker Instance)
 
 ```typescript
 const getGroupWorker = async (instance, { data, context }) => {
-  // Enterprise: instance is remote
+  // Worker Instance: instance is remote
   const client = getTRPCClientForInstance(instance, context.jwt);
   return client.group.findOne.query({ id: data.id });
 };
@@ -111,7 +111,7 @@ export const groupProcedures = {
     }),
 };
 
-// Worker can call procedure directly (MVP) or via tRPC (enterprise)
+// Worker can call procedure directly (MVP) or via tRPC (worker instance)
 const getGroupWorker = async (instance, { data, context }) => {
   if (instance === undefined) {
     // MVP: call procedure directly
@@ -120,7 +120,7 @@ const getGroupWorker = async (instance, { data, context }) => {
       ctx: { groupService: context.groupService }
     });
   } else {
-    // Enterprise: call via tRPC
+    // Worker instance: call via tRPC
     return instance.trpc.group.findOne.query(data);
   }
 };
@@ -179,18 +179,18 @@ const responses = {
 
 #### Strategy 3: Require All or Fail
 
-**Use case**: User profile (critical data must come from cloud)
+**Use case**: User profile (critical data must come from hub)
 
 ```typescript
 .handler(async ({ data, context: { responses } }) => {
-  const cloudResponse = responses.successResponses
-    .find(r => r.instance === 'cloud');
-  
-  if (!cloudResponse) {
-    throw new Error('Cloud instance required');
+  const hubResponse = responses.successResponses
+    .find(r => r.instance === 'hub');
+
+  if (!hubResponse) {
+    throw new Error('Hub instance required');
   }
-  
-  return cloudResponse.data;
+
+  return hubResponse.data;
 });
 ```
 
@@ -221,23 +221,23 @@ serverFn receives request
   ├─ jwtGuard: ✅ JWT valid
   └─ routingMiddleware executes:
       ├─ instanceRouter.getInstancesForUser()
-      │  └─ Returns: [cloud, enterprise-acme]
+      │  └─ Returns: [hub, worker-acme]
       │
-      ├─ Call worker on cloud:
-      │  ├─ Cloud auth guard: ✅ User has permission
-      │  ├─ Cloud service: Find groups matching "engineering"
-      │  └─ Success: [Group1 {name: "engineering", realm: cloud}]
+      ├─ Call worker on hub:
+      │  ├─ Hub auth guard: ✅ User has permission
+      │  ├─ Hub service: Find groups matching "engineering"
+      │  └─ Success: [Group1 {name: "engineering", realm: hub}]
       │
-      ├─ Call worker on enterprise-acme:
-      │  ├─ Enterprise auth guard: ✅ User has permission
-      │  ├─ Enterprise service: Find groups matching "engineering"
-      │  └─ Success: [Group2 {name: "engineering", realm: enterprise-acme}]
+      ├─ Call worker on worker-acme:
+      │  ├─ Worker instance auth guard: ✅ User has permission
+      │  ├─ Worker instance service: Find groups matching "engineering"
+      │  └─ Success: [Group2 {name: "engineering", realm: worker-acme}]
       │
       └─ Collect responses:
          responses = {
            successResponses: [
-             { instance: 'cloud', data: [Group1] },
-             { instance: 'enterprise-acme', data: [Group2] }
+             { instance: 'hub', data: [Group1] },
+             { instance: 'worker-acme', data: [Group2] }
            ],
            unauthResponses: [],
            errorResponses: []
@@ -257,14 +257,14 @@ Client receives: [Group1, Group2]
 
 ```
 serverFn calls:
-  ├─ cloud: ✅ Success [Groups...]
-  ├─ enterprise-acme: ❌ Timeout
-  └─ enterprise-conf: ✅ Success [Groups...]
+  ├─ hub: ✅ Success [Groups...]
+  ├─ worker-acme: ❌ Timeout
+  └─ worker-conf: ✅ Success [Groups...]
 
 routingMiddleware collects:
   {
-    successResponses: [cloud, enterprise-conf],
-    errorResponses: [enterprise-acme]
+    successResponses: [hub, worker-conf],
+    errorResponses: [worker-acme]
   }
 
 Handler decides:
@@ -272,7 +272,7 @@ Handler decides:
     // Merge and return what we got, maybe warn
     return {
       data: successResponses.flatMap(r => r.data),
-      warnings: ["enterprise-acme unavailable"]
+      warnings: ["worker-acme unavailable"]
     }
   }
 ```
@@ -281,14 +281,14 @@ Handler decides:
 
 ```
 serverFn calls:
-  ├─ cloud: ✅ Success
-  ├─ enterprise-acme: ❌ 403 Forbidden (user not member)
-  └─ enterprise-conf: ✅ Success
+  ├─ hub: ✅ Success
+  ├─ worker-acme: ❌ 403 Forbidden (user not member)
+  └─ worker-conf: ✅ Success
 
 routingMiddleware collects:
   {
-    successResponses: [cloud, enterprise-conf],
-    unauthResponses: [enterprise-acme]
+    successResponses: [hub, worker-conf],
+    unauthResponses: [worker-acme]
   }
 
 Handler decides:
@@ -300,9 +300,9 @@ Handler decides:
 
 ```
 serverFn calls:
-  ├─ cloud: ❌ Timeout
-  ├─ enterprise-acme: ❌ Database down
-  └─ enterprise-conf: ❌ Timeout
+  ├─ hub: ❌ Timeout
+  ├─ worker-acme: ❌ Database down
+  └─ worker-conf: ❌ Timeout
 
 routingMiddleware collects:
   {

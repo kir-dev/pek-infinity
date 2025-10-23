@@ -223,7 +223,7 @@ export const createGroupService = async (
 // ❌ BLOAT: Storing entire policy hierarchy in JWT
 const policySnapshot = {
   userId: 'u1',
-  realm: 'cloud',
+  realm: 'hub',
   policies: [
     // ... 500 policies for this user across 20+ groups
     // Each policy has: statements, permissions, scope, escalations
@@ -253,7 +253,7 @@ const token = jwt.sign(policySnapshot, secret);
 // ✅ EFFICIENT: Store snapshot hash, cache full snapshot in Redis
 const policySnapshot = {
   userId: 'u1',
-  realm: 'cloud',
+  realm: 'hub',
   policies: [...],  // Full 50KB snapshot
 };
 
@@ -262,7 +262,7 @@ const snapshotHash = sha256(JSON.stringify(policySnapshot));
 
 // JWT contains only hash
 const token = jwt.sign(
-  { userId: 'u1', realm: 'cloud', snapshotHash },
+  { userId: 'u1', realm: 'hub', snapshotHash },
   secret
 );
 // Token now 500 bytes instead of 60KB!
@@ -449,4 +449,3 @@ export DEBUG=prisma:* npm run dev
 # If you see same query repeated 100 times → N+1
 # If query takes 5s with 1000 users → missing index
 ```
-

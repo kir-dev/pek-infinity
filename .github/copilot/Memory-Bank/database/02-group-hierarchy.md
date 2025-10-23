@@ -35,7 +35,7 @@ model Group {
   description             String
   
   // Realm isolation (CRITICAL)
-  realmId                 String   @default("cloud")
+  realmId                 String   @default("hub")
   realm                   Realm    @relation(fields: [realmId], references: [id])
   
   // Hierarchy
@@ -89,7 +89,7 @@ enum GroupPurpose {
 
 **Field meanings:**
 - `name`: Human-readable group name (unique within realm)
-- `realmId`: Which realm this group belongs to (cloud vs enterprise instance)
+- `realmId`: Which realm this group belongs to (hub vs worker instance)
 - `parentId`: Reference to parent group (null = top-level)
 - `children`: Inverse relation (query children via this)
 - `purpose`: Category of the group (for UI/filtering)
@@ -106,13 +106,13 @@ enum GroupPurpose {
 ```
 
 **Why this matters:**
-- In MVP: All groups in "cloud" realm, so effectively unique globally
-- In enterprise: Each instance has its own realm, so "Engineering" can exist in cloud AND enterprise-acme
+- In MVP: All groups in "hub" realm, so effectively unique globally
+- In worker: Each instance has its own realm, so "Engineering" can exist in hub AND worker-acme
 - **Example:**
   ```
-  Group { name: "Engineering", realmId: "cloud" }      ✅ Allowed
-  Group { name: "Engineering", realmId: "enterprise-a" } ✅ Allowed (different realm)
-  Group { name: "Engineering", realmId: "cloud" }       ❌ Error (duplicate)
+  Group { name: "Engineering", realmId: "hub" }      ✅ Allowed
+  Group { name: "Engineering", realmId: "worker-a" } ✅ Allowed (different realm)
+  Group { name: "Engineering", realmId: "hub" }       ❌ Error (duplicate)
   ```
 
 ---
@@ -175,12 +175,12 @@ if (parentId && parent.realmId !== realm) {
 **Example:**
 ```typescript
 // Same realm: Error
-await createGroup("Engineering", null, "cloud");
-await createGroup("Engineering", null, "cloud");  // ❌ Unique violation
+await createGroup("Engineering", null, "hub");
+await createGroup("Engineering", null, "hub");  // ❌ Unique violation
 
 // Different realm: OK
-await createGroup("Engineering", null, "cloud");
-await createGroup("Engineering", null, "enterprise-a");  // ✅ Different realm
+await createGroup("Engineering", null, "hub");
+await createGroup("Engineering", null, "worker-a");  // ✅ Different realm
 ```
 
 ---
@@ -202,7 +202,7 @@ async function getAncestors(groupId: string, realm: string) {
 }
 
 // Usage: Find who can escalate on a subgroup
-const path = await getAncestors("subgroup-id", "cloud");
+const path = await getAncestors("subgroup-id", "hub");
 // Returns: [subgroup, parent, grandparent, ..., root]
 ```
 
@@ -227,7 +227,7 @@ async function getDescendants(groupId: string, realm: string) {
 }
 
 // Usage: Find all groups a manager oversees
-const managed = await getDescendants("engineering-group-id", "cloud");
+const managed = await getDescendants("engineering-group-id", "hub");
 ```
 
 ### Get Direct Children Only
@@ -474,14 +474,14 @@ describe("Group Hierarchy", () => {
   });
 
   it("should enforce unique names per realm", async () => {
-    await createGroup("Engineering", null, "cloud");
+    await createGroup("Engineering", null, "hub");
 
     await expect(
-      createGroup("Engineering", null, "cloud")
+      createGroup("Engineering", null, "hub")
     ).rejects.toThrow("unique");
 
     // But different realm is OK
-    await createGroup("Engineering", null, "enterprise-a");
+    await createGroup("Engineering", null, "worker-a");
   });
 });
 ```

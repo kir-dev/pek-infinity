@@ -2,7 +2,7 @@
 file: reference/03-glossary.md
 purpose: "Terminology glossary for pek-infinity architecture, policies, and system design"
 triggers: ["confused about terminology", "onboarding new developer", "architectural discussion"]
-keywords: ["glossary", "terms", "definitions", "realm", "federation", "policy", "cascade", "mvp"]
+keywords: ["glossary", "terms", "definitions", "realm", "federation", "hub", "worker-instance", "policy", "cascade", "mvp"]
 dependencies: []
 urgency: "low"
 size: "800 words"
@@ -22,9 +22,9 @@ status: "active"
 A **self-contained instance** of the application with its own data, users, and policies.
 
 **Examples:**
-- `cloud`: Central MVP instance at pek.com
-- `ent-conf-2025`: Enterprise instance for ITConf 2025 event
-- `ent-dorm-2025`: Enterprise instance for Dorm X dormitory
+- `hub`: Central MVP instance at pek.com
+- `ent-conf-2025`: Worker instance for ITConf 2025 event
+- `ent-dorm-2025`: Worker instance for Dorm X dormitory
 
 **Characteristics:**
 - Isolated data (composite keys prevent mixing)
@@ -40,16 +40,16 @@ A **self-contained instance** of the application with its own data, users, and p
 **Ability to connect multiple realms** into one logical experience.
 
 **MVP:** Single realm (no federation)  
-**Enterprise:** Cloud BFF federates access to multiple realms
+**Worker:** Hub BFF federates access to multiple realms
 
 **How it works:**
-1. User logs into cloud (realm = 'cloud')
-2. Cloud determines which realms user can access
-3. Cloud BFF proxies requests to appropriate instances
+1. User logs into hub (realm = 'hub')
+2. Hub determines which realms user can access
+3. Hub BFF proxies requests to appropriate instances
 4. User sees unified interface across realms
 
 **Example:** User sees groups from:
-- Cloud instance (realm = 'cloud')
+- Hub instance (realm = 'hub')
 - ITConf 2025 instance (realm = 'ent-conf-2025')
 - Dormitory event instance (realm = 'ent-dorm-2025')
 
@@ -58,10 +58,10 @@ A **self-contained instance** of the application with its own data, users, and p
 ---
 
 ### MVP (Minimum Viable Product)
-**Phase 1: Single cloud instance at pek.com**
+**Phase 1: Single hub instance at pek.com**
 
 **Scope:**
-- One realm (`cloud`)
+- One realm (`hub`)
 - One database
 - Schönherz college only
 - ~100-500 users
@@ -70,18 +70,18 @@ A **self-contained instance** of the application with its own data, users, and p
 
 **When:** Months 1-3
 
-**See:** `decisions/00-mvp-vs-enterprise.md`
+**See:** `decisions/00-mvp-vs-worker.md`
 
 ---
 
-### Enterprise
+### Worker
 **Phase 2+: Multiple instances deployed independently**
 
 **Scope:**
 - Multiple realms (different organizations, events)
 - Separate databases per instance
 - Own auth providers
-- Federated via cloud BFF
+- Federated via hub BFF
 
 **Examples:**
 - ITConf 2025 instance (1000s of users)
@@ -95,7 +95,7 @@ A **self-contained instance** of the application with its own data, users, and p
 ## Architecture Terms
 
 ### BFF (Backend For Frontend)
-**Cloud instance acting as proxy between frontend and enterprise instances**
+**Hub instance acting as proxy between frontend and worker instances**
 
 **Responsibilities:**
 - User authentication (central OAuth)
@@ -103,7 +103,7 @@ A **self-contained instance** of the application with its own data, users, and p
 - Federation (routing to correct realm)
 - Load balancing across instances
 
-**Request flow:** Browser → Cloud BFF → Enterprise Instance
+**Request flow:** Browser → Hub BFF → Worker Instance
 
 **See:** `architecture/01-auth-system.md`
 
@@ -347,7 +347,7 @@ const group = await findGroup(id, { include: { members: { include: { user: true 
 3. Services resolve from container, automatically get realm
 4. Services don't need realm parameter
 
-**Benefit:** Same service code for MVP (cloud) and enterprise (any realm)
+**Benefit:** Same service code for MVP (hub) and worker (any realm)
 
 **See:** `rejected/01-service-realm-awareness.md`
 
@@ -365,7 +365,7 @@ const group = await findGroup(id, { include: { members: { include: { user: true 
 ---
 
 ### Migration Blocker
-**Architectural mistake** that makes MVP→Enterprise scaling impossible
+**Architectural mistake** that makes MVP→Worker scaling impossible
 
 **Examples:**
 - Service aware of realm
@@ -382,4 +382,3 @@ const group = await findGroup(id, { include: { members: { include: { user: true 
 **Prevention:** Use `satisfies z.ZodType<Prisma.Model>`
 
 **See:** `rules/03-schema-validation.md`
-

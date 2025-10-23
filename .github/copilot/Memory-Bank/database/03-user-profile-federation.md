@@ -1,6 +1,6 @@
 ---
 file: database/03-user-profile-federation.md
-purpose: "User and Profile models; single profile in cloud across federation, privacy scope restrictions, federation awareness"
+purpose: "User and Profile models; single profile in hub across federation, privacy scope restrictions, federation awareness"
 triggers: ["implementing user queries", "designing profile access", "handling federated users", "privacy boundaries"]
 keywords: ["user", "profile", "federation", "privacy", "scope", "basic-profile", "full-profile", "external-account"]
 dependencies: ["database/00-realm-model.md", "architecture/00-federation-model.md"]
@@ -20,10 +20,10 @@ created: "2025-10-20"
 
 **Critical difference from other models:**
 
-- **Groups, Policies, Scoreboards, etc.**: Exist per instance/realm (Groups in cloud are different from groups in enterprise-acme)
-- **Users and Profiles**: **Centralized in cloud instance**—single source of truth across entire federation
+- **Groups, Policies, Scoreboards, etc.**: Exist per instance/realm (Groups in hub are different from groups in worker-acme)
+- **Users and Profiles**: **Centralized in hub instance**—single source of truth across entire federation
 
-A federated user (member of both cloud AND enterprise-acme) has ONE profile in cloud, but policies/memberships in both instances.
+A federated user (member of both hub AND worker-acme) has ONE profile in hub, but policies/memberships in both instances.
 
 ---
 
@@ -37,7 +37,7 @@ model User {
   authSchId   String     @unique  // From AuthSCH OAuth
   usernames   Username[]
 
-  // Profile (cloud only)
+  // Profile (hub only)
   profile     Profile?
 
   // Memberships across instances
@@ -81,7 +81,7 @@ model Username {
 - `permission`: Policies assigned to this user (across instances)
 
 **Note on policies in User:** Why are policies linked to User, not per-realm?
-- Users can have policies in both cloud AND enterprise-acme
+- Users can have policies in both hub AND worker-acme
 - But **querying policies must be realm-filtered**
 - See: `rules/00-realm-isolation.md` - PolicyAssignment must filter by realm
 
@@ -166,7 +166,7 @@ enum ExternalAccountProtocol {
 - `dormitory`, `gender`, `studentStatus`: Metadata
 - `externalAccounts`: Links to Twitter, Telegram, etc.
 
-**⚠️ CRITICAL:** Profile has NO `realmId` field. Profiles exist in cloud only, shared across federation.
+**⚠️ CRITICAL:** Profile has NO `realmId` field. Profiles exist in hub only, shared across federation.
 
 ---
 
@@ -274,7 +274,7 @@ async function getUserInstances(userId: string) {
 
 // Usage in BFF routing
 const userInstances = await getUserInstances(userId);
-// Returns: ["cloud", "enterprise-acme", "enterprise-xyz"]
+// Returns: ["hub", "worker-acme", "worker-xyz"]
 // BFF queries each instance for user's data
 ```
 
@@ -282,7 +282,7 @@ const userInstances = await getUserInstances(userId);
 
 ```typescript
 async function searchUsers(query: string, requesterId: string, realm: string) {
-  // 1. Search profiles in cloud (basic info)
+  // 1. Search profiles in hub (basic info)
   const baseResults = await prisma.profile.findMany({
     where: {
       OR: [
@@ -333,7 +333,7 @@ const profile = await prisma.profile.create({
   data: { userId, firstName, realmId: realm }
 });
 
-// RIGHT: Single profile in cloud
+// RIGHT: Single profile in hub
 const profile = await prisma.profile.create({
   data: { userId, firstName }
   // NO realmId - profiles are global
@@ -394,7 +394,7 @@ const fullName = profile
 
 ## Rules to Enforce
 
-### Rule 1: Profile is Cloud-Only
+### Rule 1: Profile is Hub-Only
 
 **Check:** Profile queries should NEVER include realmId
 
@@ -443,16 +443,16 @@ describe("User Profiles", () => {
     const user = await createUser(userId);
     const profile = await createProfile(userId, { firstName: "Alice" });
 
-    // Query from cloud
-    const cloudProfile = await getProfile(userId, "cloud");
-    expect(cloudProfile.firstName).toBe("Alice");
+    // Query from hub
+    const hubProfile = await getProfile(userId, "hub");
+    expect(hubProfile.firstName).toBe("Alice");
 
-    // Query from enterprise
-    const enterpriseProfile = await getProfile(userId, "enterprise-acme");
-    expect(enterpriseProfile.firstName).toBe("Alice");
+    // Query from worker instance
+    const workerProfile = await getProfile(userId, "worker-acme");
+    expect(workerProfile.firstName).toBe("Alice");
 
     // Same object
-    expect(cloudProfile.id).toBe(enterpriseProfile.id);
+    expect(hubProfile.id).toBe(workerProfile.id);
   });
 
   it("should hide full profile without permission", async () => {
@@ -462,7 +462,7 @@ describe("User Profiles", () => {
     });
 
     // Bob has no permission
-    const visible = await getProfile(alice, bob, "cloud");
+    const visible = await getProfile(alice, bob, "hub");
     expect(visible.cellPhone).toBeUndefined();
     expect(visible.firstName).toBe("Alice");
   });
@@ -471,7 +471,7 @@ describe("User Profiles", () => {
     // Grant Bob viewFullProfile on Alice
     await grantPermission(bob, "viewFullProfile", alice.id);
 
-    const visible = await getProfile(alice, bob, "cloud");
+    const visible = await getProfile(alice, bob, "hub");
     expect(visible.cellPhone).toBe("123456");
   });
 });

@@ -168,7 +168,7 @@ model Group {
 ```typescript
 // With composite keys:
 const group = await prisma.group.findUnique({
-  where: { id_realmId: { id: 'g1', realmId: 'cloud' } }
+  where: { id_realmId: { id: 'g1', realmId: 'hub' } }
 });
 // MUST specify realm → can't accidentally leak data
 
@@ -188,7 +188,7 @@ model Membership {
 await prisma.membership.create({
   data: {
     groupId: 'g1',
-    groupRealmId: 'cloud',  // ← Will validate!
+    groupRealmId: 'hub',  // ← Will validate!
     // If this realm doesn't have g1, FK constraint fails
   }
 });
@@ -305,18 +305,18 @@ Cardinality: N:M
 
 ```
 ┌─────────────────────────────────────────┐
-│         Cloud Realm: 'cloud'            │
+│         Hub Realm: 'hub'            │
 ├─────────────────────────────────────────┤
 │                                         │
-│  User (id1, realmId='cloud')            │
-│    └─ Profile (realmId='cloud')         │
-│       └─ Memberships (realmId='cloud')  │
-│          └─ Groups (realmId='cloud')    │
+│  User (id1, realmId='hub')            │
+│    └─ Profile (realmId='hub')         │
+│       └─ Memberships (realmId='hub')  │
+│          └─ Groups (realmId='hub')    │
 │                                         │
-│  User (id2, realmId='cloud')            │
-│    └─ Profile (realmId='cloud')         │
-│       └─ Memberships (realmId='cloud')  │
-│          └─ Groups (realmId='cloud')    │
+│  User (id2, realmId='hub')            │
+│    └─ Profile (realmId='hub')         │
+│       └─ Memberships (realmId='hub')  │
+│          └─ Groups (realmId='hub')    │
 │                                         │
 └─────────────────────────────────────────┘
 
@@ -324,7 +324,7 @@ Cardinality: N:M
         (FK constraints prevent mixing)
 
 ┌─────────────────────────────────────────┐
-│   Enterprise Realm: 'ent-conf-2025'     │
+│   Worker Realm: 'ent-conf-2025'     │
 ├─────────────────────────────────────────┤
 │                                         │
 │  User (id3, realmId='ent-conf-2025')    │
@@ -339,10 +339,10 @@ Cardinality: N:M
 │                                         │
 └─────────────────────────────────────────┘
 
-Only exception: Cloud → Enterprise
-- Cloud BFF reads user Profile from cloud realm
+Only exception: Hub → Worker
+- Hub BFF reads user Profile from hub realm
 - BFF queries instance API (separate database)
-- No FK between cloud and enterprise
+- No FK between hub and worker
 ```
 
 ---
@@ -355,8 +355,8 @@ Only exception: Cloud → Enterprise
 const userGroups = await prisma.membership.findMany({
   where: {
     userId: 'user1',
-    realmId: 'cloud',           // ← Explicit realm filter
-    user: { realmId: 'cloud' }  // ← Cascade check
+    realmId: 'hub',           // ← Explicit realm filter
+    user: { realmId: 'hub' }  // ← Cascade check
   },
   include: {
     group: true,
@@ -370,7 +370,7 @@ const userGroups = await prisma.membership.findMany({
 const members = await prisma.membership.findMany({
   where: {
     groupId: 'group1',
-    groupRealmId: 'cloud',      // ← Composite FK
+    groupRealmId: 'hub',      // ← Composite FK
     statuses: {
       some: {
         kind: 'ACTIVE',
@@ -389,7 +389,7 @@ const members = await prisma.membership.findMany({
 const assignees = await prisma.policyAssignment.findMany({
   where: {
     policyId: 'policy1',
-    realmId: 'cloud',
+    realmId: 'hub',
   },
   include: {
     user: { include: { profile: true } },
@@ -404,8 +404,8 @@ const assignees = await prisma.policyAssignment.findMany({
 await prisma.group.updateMany({
   where: {
     parentId: 'parent1',
-    parentRealmId: 'cloud',
-    realmId: 'cloud',
+    parentRealmId: 'hub',
+    realmId: 'hub',
   },
   data: { isArchived: true },
 });

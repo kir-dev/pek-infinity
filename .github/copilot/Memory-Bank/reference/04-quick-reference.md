@@ -58,11 +58,11 @@ created: "2025-10-20"
 
 | Question | File |
 |----------|------|
-| Why cloud + enterprise? | `architecture/00-federation-model.md` |
+| Why hub + worker? | `architecture/00-federation-model.md` |
 | How does JWT work? | `architecture/01-auth-system.md` |
 | How are services designed? | `architecture/02-service-patterns.md` |
 | What's a realm? | `database/00-realm-model.md` |
-| What's in MVP vs enterprise? | `decisions/00-mvp-vs-enterprise.md` |
+| What's in MVP vs worker? | `decisions/00-mvp-vs-worker.md` |
 | Service template? | `implementation/00-service-layer.md` |
 | Common mistakes? | `gotchas/00-common-mistakes.md` |
 
@@ -118,10 +118,10 @@ src/domains/{name}/
 |----------|----------|
 | Single resource | Return first success |
 | Search | Merge all successes |
-| Critical data | Require cloud success |
+| Critical data | Require hub success |
 | Optional data | Partial results OK |
 
-## Feature: In MVP or Enterprise?
+## Feature: In MVP or Worker?
 
 | Feature | Where |
 |---------|-------|
@@ -129,9 +129,9 @@ src/domains/{name}/
 | Policies + cascading | MVP ✅ |
 | Realm model | MVP ✅ |
 | realmId filtering | MVP ✅ |
-| Redis caching | Enterprise ✅ |
-| tRPC client | Enterprise ✅ |
-| Multi-instance routing | Enterprise ✅ |
+| Redis caching | Worker ✅ |
+| tRPC client | Worker ✅ |
+| Multi-instance routing | Worker ✅ |
 
 ## Testing Checklist
 
@@ -146,7 +146,7 @@ src/domains/{name}/
 - ❌ Service accepts `realm` parameter
 - ❌ Query without `realmId` filter
 - ❌ Auth check in handler
-- ❌ Hardcoded "cloud" realm
+- ❌ Hardcoded "hub" realm
 - ❌ Parent validation missing
 - ❌ Cascading crosses realms
 - ❌ Missing Zod validation

@@ -1,6 +1,6 @@
 ---
 file: architecture/02-service-patterns.md
-purpose: "Why services are realm-agnostic, how they fit MVP and enterprise, DI pattern"
+purpose: "Why services are realm-agnostic, how they fit MVP and worker, DI pattern"
 triggers: ["implementing service layer", "code review of services", "understanding separation of concerns"]
 keywords: ["service", "business logic", "DI", "realm-agnostic", "pure", "testable"]
 dependencies: ["architecture/00-federation-model.md", "architecture/03-middleware-layering.md"]
@@ -29,10 +29,10 @@ Services **do NOT**:
 - Know which realm they're in
 - Filter by realm (caller does)
 - Perform auth checks (middleware does)
-- Know if they're called from MVP or enterprise
+- Know if they're called from MVP or worker
 
 This separation is critical because it allows:
-- **Same service code to run in MVP and enterprise**
+- **Same service code to run in MVP and worker**
 - **Services to be tested in isolation**
 - **Easy composability (services can call services)**
 
@@ -95,7 +95,7 @@ export class GroupService {
 ```
 
 **Benefits:**
-1. **Same code in MVP and enterprise**
+1. **Same code in MVP and worker**
 2. **Easy to test** (inject Prisma mock)
 3. **Composable** (services call services naturally)
 4. **Decoupled** (service doesn't care about routing layer)
@@ -153,12 +153,12 @@ export const getGroupFn = createServerFn({ method: 'GET' })
 ```
 
 **How realm filtering works in MVP:**
-1. Middleware creates Prisma client scoped to cloud realm
+1. Middleware creates Prisma client scoped to hub realm
 2. Injects Prisma into GroupService constructor
 3. Service queries with scoped Prisma (all queries already filtered)
 4. Result: No realm leakage
 
-### Enterprise: Service Injection + tRPC
+### Worker: Service Injection + tRPC
 
 ```typescript
 // tRPC procedure (reusable)
@@ -183,7 +183,7 @@ export const getGroupFn = createServerFn({ method: 'GET' })
   });
 ```
 
-**How realm filtering works in enterprise:**
+**How realm filtering works in worker:**
 1. Routing middleware calls remote instance
 2. Remote instance's Prisma client is scoped to its realm
 3. Service queries with scoped Prisma

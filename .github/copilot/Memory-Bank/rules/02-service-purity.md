@@ -1,13 +1,13 @@
 ---
 file: rules/02-service-purity.md
-purpose: "MUST: Services don't accept realm parameter, realm-agnostic for MVP+enterprise reuse"
+purpose: "MUST: Services realm-agnostic for MVP + worker-instance reuse"
 triggers: ["implementing service", "code review for service", "adding realm parameter"]
-keywords: ["service", "purity", "realm-agnostic", "DI", "reusable", "MVP", "enterprise"]
+keywords: ["service", "purity", "realm-agnostic", "DI", "reusable", "MVP", "worker-instance"]
 dependencies: ["architecture/02-service-patterns.md", "decisions/03-why-services-are-realm-agnostic.md"]
 urgency: "critical"
 enforcement: "must-follow"
 size: "1500 words"
-sections: ["the-rule", "why-it-matters", "what-services-do", "where-realm-comes-from", "bad-examples", "good-examples", "mvp-vs-enterprise", "testing", "checklist"]
+sections: ["the-rule", "why-it-matters", "what-services-do", "where-realm-comes-from", "bad-examples", "good-examples", "mvp-vs-worker-instance", "testing", "checklist"]
 status: "active"
 
 
@@ -51,14 +51,14 @@ export class GroupService {
 
 ## Why It Matters
 
-### Reason 1: Same Code Works MVP + Enterprise
+### Reason 1: Same Code Works MVP + Worker Instance
 
 **MVP:**
 - Service called directly via DI
 - Caller (procedure) already validated user has access to this realm
 - Database query runs within that context
 
-**Enterprise:**
+**Worker Instance:**
 - Same service code
 - Called via tRPC client from BFF
 - Caller (routing middleware) determined which instance to call
@@ -66,7 +66,7 @@ export class GroupService {
 
 **If service knows realm:**
 ```typescript
-// ❌ Breaks in enterprise
+// ❌ Breaks in worker instance
 @injectable()
 export class GroupService {
   async findOne(id: string, realm: string) {
@@ -81,7 +81,7 @@ export class GroupService {
 export class GroupService {
   async findOne(id: string) {
     // No realm knowledge, just pure logic
-    // Works whether called from MVP or enterprise instance
+    // Works whether called from MVP or worker instance
   }
 }
 ```
@@ -143,7 +143,7 @@ describe('GroupService', () => {
 describe('GroupService', () => {
   it('should find group by ID in realm', async () => {
     const groupService = new GroupService(mockPrisma);
-    const result = await groupService.findOne('group-123', 'cloud');  // Extra param
+    const result = await groupService.findOne('group-123', 'hub');  // Extra param
     
     // Test now aware of realm concept
     // What if realm is wrong? Test is fragile
@@ -263,7 +263,7 @@ export class GroupService {
 }
 
 // Problem: Can't call without realm
-const group = await groupService.findOne('group-123', 'cloud');
+const group = await groupService.findOne('group-123', 'hub');
 
 // Problem: Testing needs realm setup
 // Problem: Can't reuse in different realm contexts
@@ -333,10 +333,10 @@ export const searchGroupsProcedure = procedure
 
 ---
 
-## MVP vs Enterprise: Same Service Code
+## MVP vs Worker Instance: Same Service Code
 
 ```typescript
-// Service (never changes between MVP and enterprise)
+// Service (never changes between MVP and worker instance)
 @injectable()
 export class GroupService {
   async findOne(id: string) {
@@ -359,11 +359,11 @@ export const getGroupFn = createServerFn()
 
 // ============================================
 
-// Enterprise: Called via tRPC from BFF
+// Worker Instance: Called via tRPC from BFF
 export const getGroupFn = createServerFn()
   .middleware([jwtGuard, routingMiddleware(
     async (instance, { data }) => {
-      // Enterprise: instance is remote
+      // Worker Instance: instance is remote
       const trpcClient = getTRPCClient(instance.url);
       return trpcClient.group.findOne.query(data);
     }
@@ -373,7 +373,7 @@ export const getGroupFn = createServerFn()
 // ============================================
 
 // Service code is IDENTICAL in both
-// Same GroupService used by both MVP and enterprise instances
+// Same GroupService used by both MVP and worker instance
 ```
 
 ---
@@ -430,7 +430,6 @@ When reviewing PRs:
 - [ ] Service doesn't check permissions
 - [ ] Realm filtering happens in procedure middleware, not service
 - [ ] Service can be tested with just mocked Prisma
-- [ ] Same service code would work MVP + enterprise
+- [ ] Same service code would work MVP + worker instance
 - [ ] No hardcoded realm values in service
 - [ ] Circular service dependencies avoided
-

@@ -1,9 +1,9 @@
 ---
 file: rejected/00-rest-endpoints-in-mvp.md
-purpose: "Why REST not chosen for MVP. When REST will be added (enterprise instances)"
-triggers: ["architectural discussion", "comparing REST vs tRPC", "enterprise planning"]
-keywords: ["REST", "tRPC", "API", "resource", "HTTP", "endpoint", "MVP", "enterprise"]
-dependencies: ["architecture/04-routing-aggregation.md", "decisions/00-mvp-vs-enterprise.md"]
+purpose: "Why REST not chosen for MVP. When REST will be added (worker instances)"
+triggers: ["architectural discussion", "comparing REST vs tRPC", "worker planning"]
+keywords: ["REST", "tRPC", "API", "resource", "HTTP", "endpoint", "MVP", "worker"]
+dependencies: ["architecture/04-routing-aggregation.md", "decisions/00-mvp-vs-worker.md"]
 urgency: "medium"
 size: "900 words"
 sections: ["decision-summary", "why-not-rest-for-mvp", "trpc-advantages", "when-rest-needed", "migration-plan", "comparison-table"]
@@ -20,7 +20,7 @@ status: "active"
 
 **REST endpoints are NOT used in MVP.**  
 **tRPC is used instead.**  
-**REST will be added when enterprise instances need external integrations.**
+**REST will be added when worker instances need external integrations.**
 
 ---
 
@@ -162,14 +162,14 @@ const result = await trpc.createGroupWithOwnerAndNotify({
 - ✅ tRPC for frontend → backend
 - ❌ No REST (no external integrations)
 
-### Phase 2 (Enterprise, multiple instances)
+### Phase 2 (Worker, multiple instances)
 - ✅ tRPC for frontend → backend (same instance)
-- ✅ tRPC for cloud BFF → instances (server-to-server)
+- ✅ tRPC for hub BFF → instances (server-to-server)
 - ❌ No external REST
 
 ### Phase 3 (Open API, ~year 2)
 - ✅ tRPC for frontend → backend
-- ✅ tRPC for cloud BFF → instances
+- ✅ tRPC for hub BFF → instances
 - ✅ REST for external integrations (mobil app, third-party)
 
 ### REST Use Cases (Phase 3+)
@@ -258,7 +258,7 @@ app.get('/api/v1/groups/:id', async (req, res) => {
 **Cost of choosing tRPC for MVP:**
 - **Zero cost** (same language, can add REST later)
 
-**If we need REST for enterprise:** Just add it! No refactoring needed because:
+**If we need REST for worker:** Just add it! No refactoring needed because:
 1. Services are realm-agnostic (work for both)
 2. Auth is middleware-based (can add REST middleware)
 3. Business logic in services (reusable by REST endpoints)
@@ -281,25 +281,25 @@ app.get('/api/v1/groups/:id', async (req, res) => {
 └─────────────────────────────────────┘
 
 ┌─────────────────────────────────────┐
-│   Enterprise Architecture (Year 2)  │
+│   Worker Architecture (Year 2)  │
 ├─────────────────────────────────────┤
 │ Mobile App                          │
 │   ↓ REST ← NEW LAYER                │
-│ Cloud BFF                           │
+│ Hub BFF                           │
 │   ↓ tRPC + REST ← EXPANDED          │
 │ Service Layer (shared)              │
 │   ↓ Prisma                          │
-│ PostgreSQL (cloud)                  │
+│ PostgreSQL (hub)                  │
 └─────────────────────────────────────┘
 
-Enterprise instances:
+Worker instances:
 │ Mobile App (offline first)          │
 │   ↓ REST                            │
-│ Enterprise Server                   │
+│ Worker Server                   │
 │   ↓ tRPC (internal only)            │
 │ Service Layer (same code)           │
 │   ↓ Prisma                          │
-│ PostgreSQL (enterprise)             │
+│ PostgreSQL (worker)             │
 └─────────────────────────────────────┘
 ```
 

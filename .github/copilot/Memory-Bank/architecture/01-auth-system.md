@@ -1,7 +1,7 @@
 ---
 file: architecture/01-auth-system.md
-purpose: "Complete JWT flow, policy snapshots, Redis caching strategy; how MVP and enterprise auth differs"
-triggers: ["implementing auth", "designing login flow", "debugging permissions", "scaling to enterprise"]
+purpose: "Complete JWT flow, policy snapshots, Redis caching strategy; how MVP and worker-instance auth differs"
+triggers: ["implementing auth", "designing login flow", "debugging permissions", "scaling to worker-instance"]
 keywords: ["JWT", "auth", "policy", "snapshot", "caching", "x-policy-hint", "redis", "mfa", "oauth"]
 dependencies: ["architecture/00-federation-model.md", "database/01-policy-system.md"]
 urgency: "critical"
@@ -21,14 +21,14 @@ updated: "2025-10-20"
 
 Authentication in pek-infinity works in layers:
 
-1. **Global JWT**: httpOnly cookie, issued by cloud on login, valid everywhere
+1. **Global JWT**: httpOnly cookie, issued by hub on login, valid everywhere
 2. **Policy Snapshot**: Cached list of user's permissions per instance
 3. **x-policy-hint header**: Optimization hint when calling instance APIs
 4. **Auth Guard**: Per-instance validation against policies
 
 This design allows:
 - **MVP**: Fast, simple, all local
-- **Enterprise**: Scales to multiple instances with minimal auth overhead
+- **Worker**: Scales to multiple instances with minimal auth overhead
 
 ## Step 1: Login Flow
 
@@ -38,11 +38,11 @@ This design allows:
 1. Frontend redirects to AuthSCH (OAuth provider)
    GET https://auth.sch.bme.hu/oauth/...
 
-2. AuthSCH redirects back to cloud BFF with code
+2. AuthSCH redirects back to hub BFF with code
    GET https://pek.com/callback?code=xxx
 
 3. BFF exchanges code for user info
-   - Create/update User profile in cloud database
+   - Create/update User profile in hub database
    - Generate long-lived JWT (24h or configurable)
    - Set JWT as httpOnly cookie
    
@@ -63,12 +63,12 @@ This design allows:
    Value: {
      userId: "alice",
      instances: {
-       "cloud": {
+       "hub": {
          jwt: "...",
          policies: [...],
          statements: [...]
        },
-       "enterprise-acme": {
+       "worker-acme": {
          jwt: "...",
          policies: [...],
          statements: [...]
@@ -83,10 +83,10 @@ This design allows:
 ### MVP Login (Single Instance)
 
 ```
-1. Frontend → AuthSCH → Callback to cloud
-2. Cloud validates code, creates user profile
-3. Cloud generates JWT (not short-lived yet)
-4. Cloud SKIPS calling other instances (doesn't exist)
+1. Frontend → AuthSCH → Callback to hub
+2. Hub validates code, creates user profile
+3. Hub generates JWT (not short-lived yet)
+4. Hub SKIPS calling other instances (doesn't exist)
 5. JWT cached in-memory or Redis
 6. Frontend redirected to dashboard
 ```
@@ -112,7 +112,7 @@ This design allows:
    
 3. For each instance:
    - BFF needs to call instance.getGroup({ id: "abc" })
-   - BFF looks up instance JWT from cache: "enterprise-acme:jwt"
+   - BFF looks up instance JWT from cache: "worker-acme:jwt"
    - BFF gets policy hints from cache: ["GOD in engineering"]
    - BFF calls instance API with:
      {
@@ -129,7 +129,7 @@ This design allows:
    - If yes, call service; if no, return 403
 
 5. BFF combines responses
-   - Collects results: [success from enterprise-acme, 403 from enterprise-conference]
+   - Collects results: [success from worker-acme, 403 from worker-conference]
    - Returns first successful result (or error if all fail)
 
 6. Frontend receives response
@@ -140,13 +140,13 @@ This design allows:
 ```
 1. Frontend calls serverFn with JWT
 2. BFF jwtGuard extracts JWT
-3. routingMiddleware finds zero other instances (only cloud)
+3. routingMiddleware finds zero other instances (only hub)
 4. BFF calls local service (no network, DI injection)
 5. Service queries local Prisma database
 6. Response returned
 ```
 
-**Key**: Same middleware stack. Enterprise just has network calls; MVP has DI calls.
+**Key**: Same middleware stack. Worker just has network calls; MVP has DI calls.
 
 ## Step 3: Policy Snapshot Details
 
@@ -188,11 +188,11 @@ interface Statement {
 3. **Delegation**: Instance issues snapshot; instance validates signature later
 4. **Eventual consistency**: Policy changes take effect on snapshot expiry (acceptable)
 
-## Step 4: MVP vs Enterprise Differences
+## Step 4: MVP vs Worker Differences
 
 ### Cache Location
 
-| Aspect | MVP | Enterprise |
+| Aspect | MVP | Worker |
 |--------|-----|-----------|
 | Cache backend | In-memory (Node.js) | Redis (shared across BFF instances) |
 | Cache key | `session:${jwt}` | `session:${jwt}` (same) |
@@ -200,7 +200,7 @@ interface Statement {
 
 ### Instance Calls
 
-| Aspect | MVP | Enterprise |
+| Aspect | MVP | Worker |
 |--------|-----|-----------|
 | How BFF calls instance | DI injection to local service | tRPC HTTP call |
 | x-policy-hint sent? | No (local call) | Yes (optimization) |
@@ -209,13 +209,13 @@ interface Statement {
 
 ### Auth Guard Behavior
 
-| Aspect | MVP | Enterprise |
+| Aspect | MVP | Worker |
 |--------|-----|-----------|
 | Where it runs | BFF middleware | Instance middleware + BFF |
 | JWT validation | Local secret | Shared secret (BFF public key) |
 | Policy validation | Local database query | Snapshot + hint lookup |
 
-## Step 5: Redis Caching Strategy (Enterprise)
+## Step 5: Redis Caching Strategy (Worker)
 
 ### Cache Structure
 
@@ -241,13 +241,13 @@ TTL: 5 minutes (or custom per instance)
 
 ```
 User logs in:
-1. Cloud generates global JWT
+1. Hub generates global JWT
 2. BFF calls all instances in parallel:
    - Instance A: /auth/issue → returns snapshot A
    - Instance B: /auth/issue → returns snapshot B
 3. BFF caches both:
-   - "pek:session:${jwt}:cloud" → snapshot for cloud
-   - "pek:session:${jwt}:enterprise-acme" → snapshot for enterprise-acme
+   - "pek:session:${jwt}:hub" → snapshot for hub
+   - "pek:session:${jwt}:worker-acme" → snapshot for worker-acme
 4. User makes request to both instances:
    - Redis fetch: ~1ms per snapshot
    - No /auth/issue call needed until expiry
@@ -261,9 +261,9 @@ User logs in:
 Request: getGroup({ id: "engineering" })
 BFF Flow:
   1. jwtGuard: ✅ JWT valid
-  2. routingMiddleware: Find enterprise-acme has this group
+  2. routingMiddleware: Find worker-acme has this group
   3. Fetch cache: policies = ["Manager in ml-team"]
-  4. Call enterprise-acme with hint: x-policy-hint: Manager in ml-team
+  4. Call worker-acme with hint: x-policy-hint: Manager in ml-team
 Instance Flow:
   5. Auth guard: ✅ JWT signed by BFF, valid
   6. Parse hint: Manager in ml-team
@@ -281,9 +281,9 @@ Response:
 Request: updateGroup({ id: "conference", data: {...} })
 BFF Flow:
   1. jwtGuard: ✅ JWT valid
-  2. routingMiddleware: Find enterprise-conference has this group
+  2. routingMiddleware: Find worker-conference has this group
   3. Fetch cache: policies = ["Participant"]
-  4. Call enterprise-conference with hint: x-policy-hint: Participant
+  4. Call worker-conference with hint: x-policy-hint: Participant
 Instance Flow:
   5. Auth guard: ✅ JWT valid
   6. Parse hint: Participant
@@ -300,12 +300,12 @@ Response:
 Request: searchGroups("engineering")
 BFF Flow:
   1. jwtGuard: ✅ JWT valid
-  2. routingMiddleware: User has access to [cloud, enterprise-acme, enterprise-conference]
+  2. routingMiddleware: User has access to [hub, worker-acme, worker-conference]
   3. Call all three in parallel with hints
 Responses:
-  - cloud: [Group1, Group2] (user can view)
-  - enterprise-acme: [Group3, Group4, Group5] (user can view)
-  - enterprise-conference: [] (user has no groups)
+  - hub: [Group1, Group2] (user can view)
+  - worker-acme: [Group3, Group4, Group5] (user can view)
+  - worker-conference: [] (user has no groups)
   - [error: 403] from some other instance (user not member)
 BFF Combining:
   4. Filter successful responses: [Group1, Group2, Group3, Group4, Group5]

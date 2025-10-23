@@ -39,18 +39,18 @@ const groups = await prisma.group.findMany({
 **Data leakage = security bug.**
 
 If queries cross realms:
-1. Cloud data leaks to enterprises
-2. Enterprise A sees Enterprise B's data
+1. Hub data leaks to workers
+2. Worker A sees Worker B's data
 3. Users see data they shouldn't
 4. Compliance violation (GDPR, etc.)
 
-In MVP, consequences are limited (one realm). But code is tested in MVP, deployed in enterprise.
+In MVP, consequences are limited (one realm). But code is tested in MVP, deployed in worker.
 
 ### Consequences of Violation
 
 | Violation | Impact |
 |-----------|--------|
-| User in enterprise-acme sees groups from cloud | Data leakage |
+| User in worker-acme sees groups from hub | Data leakage |
 | Policy query returns policies from all realms | Permission bypass |
 | Membership query crosses realms | User sees memberships they don't have |
 | Scoreboard query returns all realms | Evaluation data leakage |
@@ -114,15 +114,15 @@ const memberships = await prisma.membership.findMany({
 ### ✅ GOOD: Realm Filtered
 
 ```typescript
-// Query: Find groups in cloud realm
+// Query: Find groups in hub realm
 const groups = await prisma.group.findMany({
-  where: { realmId: 'cloud' }
+  where: { realmId: 'hub' }
 });
-// Result: Only cloud groups ✓
+// Result: Only hub groups ✓
 
-// Query: Find group by ID in cloud realm
+// Query: Find group by ID in hub realm
 const group = await prisma.group.findUnique({
-  where: { id_realmId: { id: 'group-123', realmId: 'cloud' } }
+  where: { id_realmId: { id: 'group-123', realmId: 'hub' } }
 });
 // Result: Specific group in specific realm ✓
 
@@ -130,10 +130,10 @@ const group = await prisma.group.findUnique({
 const memberships = await prisma.membership.findMany({
   where: { 
     userId: 'alice',
-    realmId: 'cloud'  // ← Added
+    realmId: 'hub'  // ← Added
   }
 });
-// Result: Alice's memberships in cloud realm only ✓
+// Result: Alice's memberships in hub realm only ✓
 ```
 
 ### ✅ GOOD: Complex Queries With Realm
@@ -142,7 +142,7 @@ const memberships = await prisma.membership.findMany({
 // Query: Find top-level groups in realm
 const groups = await prisma.group.findMany({
   where: { 
-    realmId: 'cloud',  // ← Realm filter
+    realmId: 'hub',  // ← Realm filter
     parentId: null
   }
 });
@@ -150,7 +150,7 @@ const groups = await prisma.group.findMany({
 // Query: Find groups owned by user in realm
 const groups = await prisma.group.findMany({
   where: {
-    realmId: 'cloud',  // ← Realm filter
+    realmId: 'hub',  // ← Realm filter
     memberships: {
       some: {
         userId: 'alice',
@@ -165,7 +165,7 @@ const groups = await prisma.group.findMany({
 // Query: Find scoreboards with evaluations in realm
 const scoreboards = await prisma.scoreboard.findMany({
   where: {
-    realmId: 'cloud',  // ← Realm filter
+    realmId: 'hub',  // ← Realm filter
     status: 'SUBMITTED',
     evaluation: {
       isNot: null
@@ -186,25 +186,25 @@ const scoreboards = await prisma.scoreboard.findMany({
 describe('Realm isolation: single realm query', () => {
   it('should return only groups from specified realm', async () => {
     // Setup
-    await prisma.realm.create({ data: { id: 'cloud', name: 'Cloud' } });
-    await prisma.realm.create({ data: { id: 'enterprise-a', name: 'Enterprise A' } });
+    await prisma.realm.create({ data: { id: 'hub', name: 'Hub' } });
+    await prisma.realm.create({ data: { id: 'worker-a', name: 'Worker A' } });
     
     await prisma.group.create({
-      data: { id: 'g1', name: 'Cloud Group', realmId: 'cloud' }
+      data: { id: 'g1', name: 'Hub Group', realmId: 'hub' }
     });
     await prisma.group.create({
-      data: { id: 'g2', name: 'Enterprise Group', realmId: 'enterprise-a' }
+      data: { id: 'g2', name: 'Worker Group', realmId: 'worker-a' }
     });
     
-    // Query: Find groups in cloud
+    // Query: Find groups in hub
     const groups = await prisma.group.findMany({
-      where: { realmId: 'cloud' }
+      where: { realmId: 'hub' }
     });
     
-    // Assert: Only cloud group returned
+    // Assert: Only hub group returned
     expect(groups).toHaveLength(1);
     expect(groups[0].id).toBe('g1');
-    expect(groups[0].realmId).toBe('cloud');
+    expect(groups[0].realmId).toBe('hub');
   });
 });
 ```
@@ -216,23 +216,23 @@ describe('Realm isolation: composite key', () => {
   it('should use composite key for unique lookups', async () => {
     // Setup: Same group name in two realms
     await prisma.group.create({
-      data: { id: 'g1', name: 'engineering', realmId: 'cloud' }
+      data: { id: 'g1', name: 'engineering', realmId: 'hub' }
     });
     await prisma.group.create({
-      data: { id: 'g2', name: 'engineering', realmId: 'enterprise-a' }
+      data: { id: 'g2', name: 'engineering', realmId: 'worker-a' }
     });
     
-    // Query: Find 'engineering' in cloud
+    // Query: Find 'engineering' in hub
     const group = await prisma.group.findUnique({
       where: { 
         id_realmId: {  // ← Composite key
           id: 'g1',
-          realmId: 'cloud'
+          realmId: 'hub'
         }
       }
     });
     
-    // Assert: Got cloud group, not enterprise
+    // Assert: Got hub group, not worker
     expect(group.id).toBe('g1');
   });
 });
@@ -322,7 +322,7 @@ const groups = await prisma.group.findMany({
   where: {
     parentId: 'parent-group-id'
     // ❌ No explicit realmId filter
-    // Hope: Parent is in cloud realm
+    // Hope: Parent is in hub realm
     // Reality: Parent could be in any realm
   }
 });
@@ -330,7 +330,7 @@ const groups = await prisma.group.findMany({
 // ✅ GOOD: Explicit realm + parent
 const groups = await prisma.group.findMany({
   where: {
-    realmId: 'cloud',
+    realmId: 'hub',
     parentId: 'parent-group-id'
   }
 });

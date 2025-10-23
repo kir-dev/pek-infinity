@@ -153,17 +153,17 @@ describe('GroupService', () => {
 ### 3. Can't Reuse Service Across Realms Easily
 
 ```typescript
-// ❌ Problem: Cloud and enterprise need same service, different realms
-// Cloud implementation:
-const cloudModule = {
+// ❌ Problem: Hub and worker need same service, different realms
+// Hub implementation:
+const hubModule = {
   providers: [
     GroupService,  // ← Same service
     // But how to inject realm?
   ],
 };
 
-// Enterprise implementation:
-const enterpriseModule = {
+// Worker implementation:
+const workerModule = {
   providers: [
     GroupService,  // ← Same service, different realm needed
     // But service takes realmId parameter, not configurable
@@ -280,19 +280,19 @@ export const getGroupsProcedure = t.procedure
   });
 
 // Module configuration:
-// MVP: Cloud realm
-const cloudModule = {
+// MVP: Hub realm
+const hubModule = {
   providers: [
     GroupService,
-    { provide: 'REALM_ID', useValue: 'cloud' },
+    { provide: 'REALM_ID', useValue: 'hub' },
   ],
 };
 
-// Enterprise: Enterprise realm
-const enterpriseModule = {
+// Worker: Worker realm
+const workerModule = {
   providers: [
     GroupService,
-    { provide: 'REALM_ID', useValue: enterpriseRealmId },  // Different value
+    { provide: 'REALM_ID', useValue: workerRealmId },  // Different value
   ],
 };
 
@@ -311,7 +311,7 @@ const enterpriseModule = {
 | **Realm enforcement** | Scattered (service, caller, guard) | Centralized (DI) |
 | **Test setup** | `beforeEach() { realm = 'test' }` | `@inject` handles it |
 | **Realm mixin risk** | High (easy to forget) | Low (can't happen) |
-| **MVP→Enterprise** | Must refactor callers | Just swap DI module |
+| **MVP→Worker** | Must refactor callers | Just swap DI module |
 | **Number of changes for scale** | 50+ files | 1 config file |
 
 ---
