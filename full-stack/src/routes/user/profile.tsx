@@ -1,31 +1,7 @@
 import 'reflect-metadata';
 import { createFileRoute } from '@tanstack/react-router';
-import { json } from '@tanstack/react-start';
-import { UserService } from '@/domains/user';
-import { authGuard, injectService, SCOPE } from '../../middleware';
 
 export const Route = createFileRoute('/user/profile')({
-  server: {
-    middleware: [
-      injectService(UserService),
-      authGuard([SCOPE.USER_EDIT_PROFILE]),
-    ],
-    handlers: {
-      GET: async ({ context }) => {
-        const result = await context.service.findAll();
-
-        return json(result);
-      },
-      POST: async ({ request, context }) => {
-        const body = await request.json();
-
-        // Type-safe service access
-        const result = await context.service.update(123, body);
-
-        return json(result);
-      },
-    },
-  },
   component: UserProfileComponent,
 });
 

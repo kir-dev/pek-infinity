@@ -218,10 +218,10 @@ export const GroupSchema = z.object({
 // src/domains/group/backend/group.service.ts
 export const GroupService = {
   findById: createServerFn({ method: 'GET' })
-    .inputValidator(GroupFindOneSchema)
+    .inputValidator(httpSchema({ params: GroupFindOneSchema }))
     .middleware([authGuard([SCOPE.GROUP_VIEW])])  // ✅ Auth at service entry
-    .handler(async ({ context: { prisma }, data: { id } }) => {
-      return prisma.group.findUnique({ where: { id } });
+    .handler(async ({ context: { prisma }, data }) => {
+      return prisma.group.findUnique({ where: { id: data.params.id } });
     }),
 };
 
@@ -229,17 +229,8 @@ export const GroupService = {
 export function useGroup(id: string) {
   return useQuery({
     queryFn: async () => 
-      await useServerFn(GroupService.findById)({ data: { id } }),
+      await useServerFn(GroupService.findById)({ data: { params: { id } } }),
   });
-}
-
-// src/domains/group/components/group-card.tsx
-export function GroupCard({ id }: { id: string }) {
-  const { data, isLoading, error } = useGroup(id);
-  
-  if (error) return <Error message="Permission denied" />;  // ✅ Component handles result
-  if (isLoading) return <Skeleton />;
-  return <Card>{data?.displayName}</Card>;
 }
 ```
 
@@ -311,7 +302,7 @@ group-test.ts               (wrong test suffix)
 4. **Add hook** (queryOptions + useQuery with select for formatting)
 5. **Add components** (consume formatted hook data)
 6. **Add tests** in `__test__/`
-7. **Export from index.ts**
+7. **Export from index.ts`
 
 ### Modifying an Existing Service
 

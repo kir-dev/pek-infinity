@@ -1,1 +1,1 @@
-export * from './backend/group.service';
+export * from './api/group.service';

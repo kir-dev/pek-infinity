@@ -20,3 +20,5 @@ cat >> copilot-instructions.md << 'EOF'
 EOF
 
 cat .copilot-instructions.template.md >> copilot-instructions.md
+
+cp copilot-instructions.md ../.clinerules

@@ -1,14 +1,15 @@
 ---
 file: implementation/04-domain-structure.md
-purpose: "File organization within domain, index.ts public API exports, naming conventions, colocalization rationale"
-triggers: ["creating new domain", "organizing domain files", "code review for structure"]
-keywords: ["domain", "folder", "index.ts", "exports", "organization", "colocalization", "naming"]
+purpose: "File organization within domain, index.ts public API exports, naming conventions, colocalization rationale, new /api/ structure"
+triggers: ["creating new domain", "organizing domain files", "code review for structure", "setting up /api/ folder"]
+keywords: ["domain", "folder", "index.ts", "exports", "organization", "colocalization", "naming", "/api/", "schema", "service", "controller"]
 dependencies: ["decisions/02-why-colocate-domains.md", "architecture/02-service-patterns.md"]
-urgency: "medium"
-size: "1200 words"
+urgency: "high"
+size: "1400 words"
 template: true
-sections: ["structure", "file-organization", "index-exports", "naming-conventions", "colocalization", "real-example", "anti-patterns", "checklist"]
+sections: ["structure", "api-structure", "file-organization", "index-exports", "naming-conventions", "colocalization", "real-example", "anti-patterns", "checklist"]
 status: "active"
+updated: "2025-10-24"
 
 
 
@@ -20,6 +21,46 @@ status: "active"
 ## Expected Folder Layout
 
 Domains are organized around business concepts, not technology layers.
+
+### New /api/ Structure (2025-10-24)
+
+**Full-stack domains** now use `/api/` subfolder for clean separation:
+
+```
+src/domains/
+├── group/                                  # Domain: Group management
+│   ├── api/                               # 🆕 API layer (server-side)
+│   │   ├── index.ts                       # Barrel exports
+│   │   ├── group.schema.ts                # Zod schemas & types
+│   │   ├── group.service.ts               # Business logic
+│   │   └── group.controller.ts            # serverFn + React Query
+│   ├── __tests__/
+│   │   ├── group.service.spec.ts
+│   │   └── group.controller.spec.ts
+│   └── README.md
+│
+├── user/
+│   ├── api/
+│   │   ├── index.ts
+│   │   ├── user.schema.ts
+│   │   ├── user.service.ts
+│   │   └── user.controller.ts
+│   ├── __tests__/
+│   └── README.md
+│
+└── prisma/                               # Special domain for DB access
+    ├── prisma.ts
+    ├── index.ts
+    └── README.md
+```
+
+**Why `/api/` subfolder?**
+- Clear separation between API logic and domain concerns
+- Easier navigation in large domains
+- Consistent with backend patterns
+- Room for future UI components in domain root
+
+### Legacy Structure (Pre-2025-10-24)
 
 ```
 src/domains/
@@ -33,30 +74,6 @@ src/domains/
 │   │   ├── group.procedures.spec.ts
 │   │   └── group.integration.spec.ts
 │   └── README.md                         # Domain documentation (optional)
-│
-├── user/
-│   ├── user.ts                           # Service + procedures + serverFn
-│   ├── types/
-│   │   └── user.schema.ts
-│   ├── index.ts
-│   ├── __tests__/
-│   │   ├── user.service.spec.ts
-│   │   └── user.procedures.spec.ts
-│   └── README.md
-│
-├── policy/
-│   ├── policy.ts
-│   ├── types/
-│   │   └── policy.schema.ts
-│   ├── index.ts
-│   ├── __tests__/
-│   │   └── policy.service.spec.ts
-│   └── README.md
-│
-└── prisma/                               # Special domain for DB access
-    ├── prisma.ts
-    ├── index.ts
-    └── README.md
 ```
 
 **NOT like this:**
@@ -449,4 +466,3 @@ group/
 - [ ] README.md documents domain purpose (optional but nice)
 - [ ] __tests__/ has setup mirroring structure
 - [ ] No circular imports (check with import-sort)
-

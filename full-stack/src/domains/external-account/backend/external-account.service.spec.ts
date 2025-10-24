@@ -1,4 +1,4 @@
-import { ExternalAccountProtocol } from '@prisma/browser';
+import { ExternalAccountProtocol } from '@prisma/client';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { PrismaService } from '@/domains/prisma';
 import { MockPrismaService } from '@/domains/prisma/__test__/prisma.service.mock';

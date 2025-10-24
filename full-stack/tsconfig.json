@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "../generated/prisma/**/*.ts"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
@@ -29,7 +29,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@test/*": ["./test/*"],
-      "@prisma/*": ["../generated/prisma/*"]
+      "@prisma/*": ["./src/generated/prisma/*"]
     }
   }
 }

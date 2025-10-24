@@ -1,4 +1,4 @@
-import type * as Prisma from '@prisma/browser';
+import type * as Prisma from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
 import { PrismaService } from '@/domains/prisma';
 

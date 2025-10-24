@@ -1,13 +1,12 @@
 ---
 file: README.md
-purpose: "Memory bank navigation hub and index for all agent knowledge"
-triggers: ["starting new session", "unsure where to find information"]
-keywords: ["index", "navigation", "guide", "memory"]
+purpose: "Memory bank navigation hub, index for all agent knowledge, and agent workflow instructions"
+triggers: ["starting new session", "unsure where to find information", "implementing features", "updating memory"]
+keywords: ["index", "navigation", "guide", "memory", "agent workflow", "memory updates"]
 status: "active"
 version: "1.0"
-
-
-
+created: 2025-10-22
+updated: 2025-10-24
 
 ---
 
@@ -161,15 +160,49 @@ Fields with extra blank lines below them are extensible for agent customization.
    - Agents can reference files by `file:` path
    - Later sessions load same structure
 
+## Agent Workflow & Memory Updates
+
+### When to Update Memory
+
+**IMMEDIATELY after implementing a feature and all tests pass:**
+
+1. **✅ Feature Implementation Complete**
+   - Code is written and working
+   - All tests pass (`npm test` or equivalent)
+   - No linting errors
+   - Feature is ready for PR
+
+2. **✅ Update Memory Bank**
+   - Add new patterns to `implementation/` files
+   - Document gotchas in `gotchas/` files  
+   - Update examples in existing files
+   - Add cross-references between related files
+
+3. **✅ Update Frontmatters**
+   - Add new `keywords:` for discoverability
+   - Update `updated:` timestamp
+   - Add new `triggers:` if applicable
+   - Update `dependencies:` if new relationships exist
+
+**Why update immediately?**
+- **Memory updates are NOT a side task** - they are as or more important than the user task itself
+- **Future agents get accurate information** - prevents repeating mistakes
+- **Knowledge compounds** - each implementation builds on previous ones
+- **Prevents drift** - keeps documentation in sync with code
+- **Enables consistency** - all agents follow the same patterns
+
+### Memory Update Checklist
+
+Before submitting PR with new feature:
+- [ ] All tests pass
+- [ ] Memory bank updated with new patterns
+- [ ] Examples in memory bank match implementation
+- [ ] Frontmatters updated with new keywords/triggers
+- [ ] Cross-references added to related files
+
 ## Maintenance
 
 - **Update frequency**: High. As new patterns emerge, add to `gotchas/00-common-mistakes.md`
 - **Archival**: When a decision is reversed, mark file `status: archived` with rejection reason
 - **Cross-references**: Always update related files when major changes occur
 - **Size targets**: Keep individual files under 3000 words for readability
-
----
-
-**Last updated**: 2025-10-20
-**Version**: 1.0
-**Maintained by**: Architecture team

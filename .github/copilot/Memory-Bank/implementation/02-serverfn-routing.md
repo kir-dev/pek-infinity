@@ -1,17 +1,16 @@
 ---
 file: implementation/02-serverfn-routing.md
-purpose: "serverFn as BFF routing layer, jwtGuard, routingMiddleware pattern, response combining, MVP vs worker-instance"
-triggers: ["implementing serverFn endpoint", "designing routing layer", "combining multi-instance responses"]
-keywords: ["serverFn", "routing", "BFF", "jwtGuard", "routingMiddleware", "response-combining", "aggregation"]
+purpose: "serverFn as BFF routing layer, jwtGuard, routingMiddleware pattern, response combining, standardized httpSchema input validation, MVP vs worker-instance"
+triggers: ["implementing serverFn endpoint", "designing routing layer", "combining multi-instance responses", "setting up input validation"]
+keywords: ["serverFn", "routing", "BFF", "jwtGuard", "routingMiddleware", "response-combining", "aggregation", "httpSchema", "input validation"]
 dependencies: ["architecture/04-routing-aggregation.md", "architecture/01-auth-system.md", "implementation/01-trpc-procedures.md"]
 urgency: "critical"
 size: "2000 words"
 template: true
-sections: ["core-pattern", "jwt-guard", "routing-middleware", "response-combining", "mvp-vs-worker-instance", "real-examples", "error-handling", "performance", "gotchas", "checklist"]
+sections: ["core-pattern", "input-validation", "jwt-guard", "routing-middleware", "response-combining", "mvp-vs-worker-instance", "real-examples", "error-handling", "performance", "gotchas", "checklist"]
 status: "active"
-
-
-
+created: "2025-10-20"
+updated: "2025-10-24"
 
 ---
 
@@ -27,24 +26,25 @@ serverFn is the BFF (Backend-for-Frontend) layer. It:
 ```typescript
 import { createServerFn } from '@tanstack/react-start';
 import { z } from 'zod';
+import { httpSchema } from '@/utils/zod-extra';
 import { jwtGuard } from '@/middleware/jwt.guard';
 import { routingMiddleware } from '@/middleware/routing.middleware';
 import { groupProcedures } from '@/domains/group/group.procedures';
 
-// ✅ PATTERN: serverFn with routing
+// ✅ PATTERN: serverFn with standardized httpSchema input validation
 export const getGroupFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ id: z.cuid() }))
+  .inputValidator(httpSchema({ params: { id: z.cuid() } }))
   .middleware([
     jwtGuard,  // Validates JWT, injects user
     routingMiddleware(
       // Worker function: what to call on each instance
       async (instance, { data, context }) => {
-        return instance.call('group.findOne', data);
+        return instance.call('group.findOne', data.params);
       }
     ),
   ])
   .handler(async ({ data, context: { responses } }) => {
-    // responses = { allResponses, successResponses, unauthResponses, errorResponses }
+    // data = { params: { id: '123' }, body: {...}, page: {...} }
     
     if (responses.successResponses.length > 0) {
       return responses.successResponses[0].data;
@@ -61,9 +61,54 @@ export const getGroupFn = createServerFn({ method: 'GET' })
 **Client usage:**
 ```typescript
 const { data } = useQuery({
-  queryFn: async () => await useServerFn(getGroupFn)({ data: { id: '123' } }),
+  queryFn: async () => await useServerFn(getGroupFn)({ data: { params: { id: '123' } } }),
 });
 ```
+
+---
+
+## Input Validation: Standardized httpSchema
+
+**ALWAYS use `httpSchema` for serverFn inputValidators** - never direct Zod objects.
+
+`httpSchema` provides consistent HTTP structure with optional `body`, `params`, and `pagination`:
+
+```typescript
+import { httpSchema } from '@/utils/zod-extra';
+
+// ✅ Simple params
+.inputValidator(httpSchema({ params: { id: z.cuid() } }))
+
+// ✅ Body + params  
+.inputValidator(httpSchema({ 
+  params: { userId: z.cuid() },
+  body: { name: z.string(), email: z.string().email() }
+}))
+
+// ✅ With pagination
+.inputValidator(httpSchema({ 
+  params: { groupId: z.cuid() },
+  pagination: true 
+}))
+
+// ✅ Body only
+.inputValidator(httpSchema({ body: UserCreateSchema }))
+```
+
+**Handler receives structured data:**
+```typescript
+.handler(async ({ data }) => {
+  // data.params.id - URL parameters
+  // data.body.name - Request body  
+  // data.page.skip/take - Pagination (if enabled)
+})
+```
+
+**Why httpSchema?**
+- **Consistency**: All endpoints follow HTTP conventions
+- **Future-proof**: Easy to add pagination, query params, headers
+- **Type safety**: Structured access prevents typos
+- **Extensible**: Can add new HTTP properties without breaking existing code
 
 ---
 
@@ -230,19 +275,25 @@ export const getGroupFn = createServerFn({ method: 'GET' })
 
 ```typescript
 export const searchGroupsFn = createServerFn({ method: 'GET' })
-  .inputValidator(SearchSchema)
-  .middleware([jwtGuard, routingMiddleware(searchWorker)])
-  .handler(async ({ context: { responses } }) => {
-    // Merge results from all instances
+  .inputValidator(httpSchema({ params: { q: z.string() } }))
+  .middleware([
+    jwtGuard,
+    routingMiddleware(async (instance, { data }) => {
+      return instance.call('group.search', data.params);
+    }),
+  ])
+  .handler(async ({ data, context: { responses } }) => {
     const allResults = responses.successResponses
-      .flatMap(r => r.data.results)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 20);  // Top 20
+      .flatMap(r => r.data.results || [])
+      .filter(r => r !== null);
+    
+    // Deduplicate if same group exists on multiple instances
+    const unique = Array.from(new Map(allResults.map(r => [r.id, r])).values());
     
     return {
-      results: allResults,
-      count: allResults.length,
-      instancesQueried: responses.successResponses.length,
+      results: unique.slice(0, 20),
+      total: unique.length,
+      queriedInstances: responses.successResponses.length,
     };
   });
 ```
@@ -371,11 +422,11 @@ export const robustFn = createServerFn()
 
 ```typescript
 export const getGroupFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ id: z.cuid() }))
+  .inputValidator(httpSchema({ params: { id: z.cuid() } }))
   .middleware([
     jwtGuard,
     routingMiddleware(async (instance, { data }) => {
-      return instance.call('group.findOne', data);
+      return instance.call('group.findOne', data.params);
     }),
   ])
   .handler(async ({ context: { responses } }) => {
@@ -390,11 +441,11 @@ export const getGroupFn = createServerFn({ method: 'GET' })
 
 ```typescript
 export const searchGroupsFn = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ q: z.string() }))
+  .inputValidator(httpSchema({ params: { q: z.string() } }))
   .middleware([
     jwtGuard,
     routingMiddleware(async (instance, { data }) => {
-      return instance.call('group.search', data);
+      return instance.call('group.search', data.params);
     }),
   ])
   .handler(async ({ data, context: { responses } }) => {
@@ -417,13 +468,13 @@ export const searchGroupsFn = createServerFn({ method: 'GET' })
 
 ```typescript
 export const createGroupFn = createServerFn({ method: 'POST' })
-  .inputValidator(GroupCreateSchema)
+  .inputValidator(httpSchema({ body: GroupCreateSchema }))
   .middleware([
     jwtGuard,
     routingMiddleware(async (instance, { data, context }) => {
       // Determine which instance to create on
       // (user selects instance in UI, or default to first)
-      return instance.call('group.create', data);
+      return instance.call('group.create', data.body);
     }),
   ])
   .handler(async ({ data, context: { responses, user } }) => {
