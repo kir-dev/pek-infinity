@@ -10,7 +10,7 @@ export class UserService {
     return await this.prisma.user.findUnique({ where: { id: authSchId } });
   }
 
-  create(_createUserDto: {}) {
+  create(_createUserDto: unknown) {
     return 'This action adds a new user';
   }
 
@@ -22,7 +22,7 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, _updateUserDto: {}) {
+  update(id: number, _updateUserDto: unknown) {
     return `This action updates a #${id} user`;
   }
 

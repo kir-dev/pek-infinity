@@ -17,7 +17,6 @@ export function authGuard(requiredScopes: string[]) {
     if (!hasAllScopes) {
       throw new Error('Forbidden: insufficient scopes');
     }
-    throw new Error('Forbidden: insufficient scopes');
 
     // 3. Create and register PrismaService per request
     const prisma = new PrismaService();

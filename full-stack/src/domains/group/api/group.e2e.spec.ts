@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createMiddleware, useServerFn } from '@tanstack/react-start';
+import { createMiddleware } from '@tanstack/react-start';
 import { container } from 'tsyringe';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '@/domains/prisma';
