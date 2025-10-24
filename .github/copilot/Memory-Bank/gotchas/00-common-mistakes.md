@@ -6,8 +6,9 @@ keywords: ["mistake", "bug", "gotcha", "leakage", "bypass", "debug", "common", "
 dependencies: ["rules/00-realm-isolation.md", "rules/01-auth-enforcement.md", "rules/02-service-purity.md"]
 urgency: "critical"
 size: "2000 words"
-sections: ["intro", "mistake-1-service-realm-param", "mistake-2-missing-realmid-filter", "mistake-3-auth-in-handler", "mistake-4-middleware-order", "mistake-5-hardcoded-hub", "mistake-6-type-drift", "debug-checklist"]
+sections: ["intro", "mistake-1-service-realm-param", "mistake-2-missing-realmid-filter", "mistake-3-auth-in-handler", "mistake-4-middleware-order", "mistake-5-hardcoded-hub", "mistake-6-type-drift", "mistake-7-serverfn-json-response", "debug-checklist"]
 status: "active"
+updated: "2025-10-24"
 
 
 
@@ -436,6 +437,51 @@ export const GroupSchema = z.object({
 
 ---
 
+## Mistake 7: serverFn Handler Returns Plain Object Instead of json()
+
+### The Mistake
+
+```typescript
+// ❌ WRONG: Returns plain object
+export const findById = createServerFn({ method: 'GET' })
+  .middleware([authGuard([SCOPE.GROUP_VIEW]), injectService(GroupService)])
+  .handler(async ({ context, data }) => {
+    return context.service.findOne(data.params.id);  // ← Plain object!
+  });
+
+// In tests: undefined result, middleware chain broken
+const result = await useServerFn(findById)({ data: { params: { id: '123' } } });
+console.log(result);  // undefined!
+```
+
+### Why It's Wrong
+
+TanStack Start's `createServerFn` expects handlers to return `Response` objects (via `json()`) for proper serialization and middleware chaining. Plain objects break the middleware chain and cause undefined results in tests and client calls.
+
+### The Right Way
+
+```typescript
+// ✅ CORRECT: Always wrap with json()
+export const findById = createServerFn({ method: 'GET' })
+  .middleware([authGuard([SCOPE.GROUP_VIEW]), injectService(GroupService)])
+  .handler(async ({ context, data }) => {
+    return json(context.service.findOne(data.params.id));  // ← Response object!
+  });
+
+// Tests pass, middleware chain works
+const result = await useServerFn(findById)({ data: { params: { id: '123' } } });
+console.log(result);  // { data: {...} } ✅
+```
+
+### How to Debug
+
+If e2e tests return `undefined` instead of expected data:
+1. Check that ALL handlers return `json(result)` not just `result`
+2. Verify middleware mocking includes both client and server definitions
+3. Confirm service injection is working in test context
+
+---
+
 ## Debug Checklist
 
 When something looks wrong, check these in order:
@@ -475,6 +521,13 @@ When something looks wrong, check these in order:
 - [ ] Is cascading policy update O(n) or O(n²)?
 - [ ] Are tRPC calls serial or parallel?
 - [ ] Is Redis caching policy snapshots?
+
+### 🧪 API/Testing (Middleware Chain)
+
+- [ ] Do ALL serverFn handlers return `json(result)` not plain objects?
+- [ ] Are middleware mocks complete (client + server definitions)?
+- [ ] Is service injection working in test context?
+- [ ] Do e2e tests call controllers, not just services?
 
 ---
 

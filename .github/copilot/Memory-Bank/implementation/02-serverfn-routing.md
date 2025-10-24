@@ -567,6 +567,22 @@ const unique = Array.from(new Map(
 ).values());
 ```
 
+**❌ Mistake 4: Returning plain objects instead of json() responses**
+```typescript
+.handler(async ({ context, data }) => {
+  return context.service.findOne(data.params.id);  // Wrong! Returns plain object
+})
+```
+
+**✅ Fix:** Always wrap responses with json()
+```typescript
+.handler(async ({ context, data }) => {
+  return json(context.service.findOne(data.params.id));  // Correct! Returns Response object
+})
+```
+
+**Why this matters:** TanStack Start's createServerFn expects Response objects for proper serialization and middleware chaining. Plain objects break the middleware chain and cause undefined results in tests.
+
 ---
 
 ## PR Checklist
@@ -583,3 +599,4 @@ const unique = Array.from(new Map(
 - [ ] Tests cover: success, partial success, total failure
 - [ ] Comment explains combining strategy
 - [ ] Same code works MVP → Worker Instance (confirmed mentally or in tests)
+- [ ] **All handlers return json() wrapped responses (not plain objects)**
