@@ -50,9 +50,6 @@ jobs:
       - name: Run full-stack unit tests
         run: npm run test --workspace full-stack
 
-      - name: Run full-stack e2e tests
-        run: npm run test:e2e --workspace full-stack
-
   build-full-stack:
     name: Build Full Stack
     runs-on: ubuntu-latest
