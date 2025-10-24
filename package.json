@@ -8,9 +8,9 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
-    "prisma": "^6.17.1"
+    "prisma": "^6.18.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.17.1"
+    "@prisma/client": "^6.18.0"
   }
 }
