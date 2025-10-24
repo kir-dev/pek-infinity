@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-export default function Header() {
+export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [groupedExpanded, setGroupedExpanded] = useState<
     Record<string, boolean>

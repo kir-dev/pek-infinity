@@ -1,16 +1,21 @@
 model Group {
-  id                      String                @id @default(cuid())
+  id                      String                @id
   name                    String                @unique
   description             String
   parentId                String?
   purpose                 GroupPurpose
+  foundationDate          DateTime              @default(now())
+  webpage                 String?
+  mail                    String?
   parent                  Group?                @relation("ParentGroup", fields: [parentId], references: [id])
   children                Group[]               @relation("ParentGroup")
   isCommunity             Boolean // kor-e
   isResort                Boolean // reszort-e
   isTaskForce             Boolean // task force-e
   hasTransitiveMembership Boolean // osszeszedi-e az alatta levo csoportok tagjait
-  isArchived              Boolean
+  isArchived              Boolean               @default(false)
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
   memberships             Membership[]
   guidelines              GuidelineCollection[]
   scoreboards             Scoreboard[]

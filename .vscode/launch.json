@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch backend",
       "preLaunchTask": "npm: build - backend",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/backend/src/main.prod.ts",

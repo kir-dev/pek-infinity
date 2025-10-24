@@ -10,8 +10,13 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
+
+    /* Decorator support for tsyringe */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
 
     /* Linting */
     "skipLibCheck": true,
@@ -22,7 +27,9 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@test/*": ["./test/*"],
+      "@prisma/*": ["./src/generated/prisma/*"]
     }
   }
 }

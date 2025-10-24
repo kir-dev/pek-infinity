@@ -9,7 +9,9 @@
       "**/.vscode/**/*",
       "**/index.html",
       "**/vite.config.js",
-      "!**/src/routeTree.gen.ts"
+      "!**/src/routeTree.gen.ts",
+      "!**/src/generated/**/*",
+      "!**/src/components/ui/**/*"
     ]
   },
   "overrides": [
