@@ -32,8 +32,8 @@ jobs:
           POSTGRES_PRISMA_URL: "postgresql://fake:fake@example.com:5432/fake"
         run: npx prisma validate
 
-  backend-unit-test:
-    name: Unit Test Backend
+  full-stack-unit-test:
+    name: Unit Test Full Stack
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -47,14 +47,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run backend unit tests
-        run: npm run test --workspace backend
+      - name: Run full-stack unit tests
+        run: npm run test --workspace full-stack
 
-      - name: Run backend e2e tests
-        run: npm run test:e2e --workspace backend
+      - name: Run full-stack e2e tests
+        run: npm run test:e2e --workspace full-stack
 
-  build-backend:
-    name: Build Backend
+  build-full-stack:
+    name: Build Full Stack
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -68,5 +68,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build backend
-        run: npm run build --workspace backend
+      - name: Build full-stack
+        run: npm run build --workspace full-stack

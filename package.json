@@ -3,6 +3,9 @@
     "generate:prisma": "prisma generate --require-models --no-hints",
     "postinstall": "npm run generate:prisma"
   },
+  "workspaces": [
+    "full-stack"
+  ],
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
     "prisma": "^6.17.1"
