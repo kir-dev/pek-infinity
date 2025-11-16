@@ -1,14 +1,12 @@
 {
   "root": true,
-  "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
     "useIgnoreFile": true
   },
-  "files": {
-    "includes": ["**", ".*/**", "!**/generated/**/*", "!**/openapi.json"]
-  },
+  "files": {},
   "formatter": {
     "indentStyle": "space"
   },

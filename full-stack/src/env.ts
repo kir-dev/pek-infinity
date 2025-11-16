@@ -4,8 +4,8 @@ import { z } from 'zod';
 export const env = createEnv({
   server: {
     SERVER_URL: z.url().optional(),
-    JWT_SECRET: z.string().min(32),
-    POSTGRES_PRISMA_URL: z.url(),
+    JWT_SECRET: z.string().min(32, 'Must be at least 32 characters long'),
+    POSTGRES_PRISMA_URL: z.url().startsWith('p'),
   },
 
   /**
