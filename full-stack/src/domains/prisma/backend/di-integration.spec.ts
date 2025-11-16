@@ -38,7 +38,8 @@ describe('Dependency Injection Integration', () => {
 
     expect(result).toEqual(mockUser);
     expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-      where: { id: 'test-id' },
+      where: { authSchId: 'test-id' },
+      include: { usernames: true },
     });
   });
 

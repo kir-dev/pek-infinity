@@ -21,17 +21,20 @@ export class AuthService {
     try {
       const user = await this.usersService.findByAuthSchId(oAuthUser.authSchId);
       if (user) {
+        // Update last login timestamp
+        await this.usersService.recordLogin({
+          userId: user.id,
+          timestamp: new Date(),
+        });
         return user.id;
       }
 
-      const newUser = await this.usersService.create({
+      // Create new system user
+      const newUser = await this.usersService.createSystemUser({
         authSchId: oAuthUser.authSchId,
-        firstName: oAuthUser.firstName,
-        fullName: oAuthUser.fullName,
-        email: oAuthUser.email,
       });
 
-      return newUser;
+      return newUser.id;
     } catch (e) {
       console.error(e);
       throw new InternalServerError(
