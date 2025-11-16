@@ -40,7 +40,7 @@ store.subscribe(() => {
   });
 });
 
-function DevtoolPanel() {
+export function StoreDevtoolPanel() {
   const [state, setState] = useState<EventMap['store-devtools:state']>(() => ({
     firstName: store.state.firstName,
     lastName: store.state.lastName,
@@ -68,8 +68,3 @@ function DevtoolPanel() {
     </div>
   );
 }
-
-export default {
-  name: 'TanStack Store',
-  render: <DevtoolPanel />,
-};

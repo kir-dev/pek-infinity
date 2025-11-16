@@ -6,9 +6,7 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
-  "files": {
-    "includes": ["**", ".*/**", "!**/generated/**/*", "!**/openapi.json"]
-  },
+  "files": {},
   "formatter": {
     "indentStyle": "space"
   },

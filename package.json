@@ -1,16 +1,11 @@
 {
-  "scripts": {
-    "generate:prisma": "prisma generate --require-models --no-hints",
-    "postinstall": "npm run generate:prisma"
+  "name": "@workspace/root",
+  "private": true,
+  "dependencies": {
+    "@prisma/client": "^6.19.0"
   },
   "workspaces": [
-    "full-stack"
-  ],
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.6",
-    "prisma": "^6.18.0"
-  },
-  "dependencies": {
-    "@prisma/client": "^6.18.0"
-  }
+    "full-stack",
+    "prisma"
+  ]
 }

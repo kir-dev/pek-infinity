@@ -1,25 +1,16 @@
-import { TanStackDevtools } from '@tanstack/react-devtools';
 import type { QueryClient } from '@tanstack/react-query';
 import {
   createRootRouteWithContext,
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
-import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query';
-import type { TRPCRouter } from '@/integrations/trpc/router';
+import { Devtools } from '@/devtools';
 import { Header } from '../components/header';
-import TanStackQueryDevtools from '../devtools/tanstack-query.devtools';
-import TanStackRouterDevTools from '../devtools/tanstack-router.devtools';
-import StoreDevtools from '../devtools/tanstack-store.devtools';
 import appCss from '../styles.css?url';
 
-interface MyRouterContext {
+export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-
-  trpc: TRPCOptionsProxy<TRPCRouter>;
-}
-
-export const Route = createRootRouteWithContext<MyRouterContext>()({
+}>()({
   head: () => ({
     meta: [
       {
@@ -30,7 +21,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Profilok és Körök',
       },
     ],
     links: [
@@ -42,28 +33,21 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   }),
 
   shellComponent: RootDocument,
+  notFoundComponent: () => <div>404 - Not Found</div>,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
+    <html lang='hu'>
       <head>
         <HeadContent />
       </head>
       <body>
         <Header />
         {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            TanStackRouterDevTools,
-            StoreDevtools,
-            TanStackQueryDevtools,
-          ]}
-        />
+
         <Scripts />
+        <Devtools />
       </body>
     </html>
   );

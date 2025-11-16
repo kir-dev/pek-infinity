@@ -28,8 +28,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@test/*": ["./test/*"],
-      "@prisma/*": ["./src/generated/prisma/*"]
+      "@test/*": ["./test/*"]
     }
   }
 }
