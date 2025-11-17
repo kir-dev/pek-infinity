@@ -1,12 +1,12 @@
 ---
 file: README.md
-purpose: "Memory bank navigation hub, index for all agent knowledge, and agent workflow instructions"
-triggers: ["starting new session", "unsure where to find information", "implementing features", "updating memory"]
-keywords: ["index", "navigation", "guide", "memory", "agent workflow", "memory updates"]
+purpose: "Memory bank navigation hub, index for all agent knowledge, agent workflow instructions, future-plans directory"
+triggers: ["starting new session", "unsure where to find information", "implementing features", "updating memory", "looking for future patterns"]
+keywords: ["index", "navigation", "guide", "memory", "agent workflow", "memory updates", "future-plans"]
 status: "active"
-version: "1.0"
+version: "1.1"
 created: 2025-10-22
-updated: 2025-10-24
+updated: 2025-11-17
 
 ---
 
@@ -40,8 +40,15 @@ This memory bank documents architectural decisions, implementation patterns, val
 4. `reference/00-request-flows.md` (visual flows)
 
 **I'm questioning a design decision:**
-1. `decisions/` (why we chose this)
-2. `rejected/` (alternatives and why they were rejected)
+1. `decisions/00-mvp-vs-worker-instance.md` (scope summary)
+2. `future-plans/big-picture-index.md` (comprehensive architectural overview)
+3. `rejected/` (alternatives and why they were rejected)
+
+**I need to understand future worker-instance patterns:**
+1. `future-plans/big-picture-index.md` (comprehensive overview, tradeoffs, migration timeline)
+2. `future-plans/trpc.md` (complete tRPC patterns for Year 2+)
+3. `future-plans/worker-instances.md` (multi-instance routing and aggregation)
+4. `future-plans/federation.md` (hub/worker relationships and coordination)
 
 ## File Index with Summaries
 
@@ -49,11 +56,11 @@ This memory bank documents architectural decisions, implementation patterns, val
 
 | File | Purpose | Size |
 |------|---------|------|
-| `00-federation-model.md` | Hub + worker instances, BFF routing | 1500w |
+| `00-federation-model.md` | Stub → see future-plans/federation.md | 100w |
 | `01-auth-system.md` | JWT, policy snapshots, caching strategy | 2500w |
 | `02-service-patterns.md` | Service layer, realm-agnostic design | 2000w |
 | `03-middleware-layering.md` | MVP vs worker-instance middleware stacks | 1500w |
-| `04-routing-aggregation.md` | serverFn routing and response combining | 1500w |
+| `04-routing-aggregation.md` | Stub → see future-plans/worker-instances.md | 100w |
 
 ### Database (Schema, models, relationships)
 
@@ -68,20 +75,26 @@ This memory bank documents architectural decisions, implementation patterns, val
 
 | File | Purpose | Size |
 |------|---------|------|
-| `00-mvp-vs-worker-instance.md` | Feature matrix, scope, timeline | 2000w |
-| `01-why-trpc-over-rest.md` | tRPC vs REST trade-offs | 1500w |
-| `02-why-colocate-domains.md` | Single file per domain concept | 1200w |
-| `03-why-services-are-realm-agnostic.md` | Service design principle | 1500w |
+| `00-mvp-vs-worker-instance.md` | Scope summary → see future-plans/big-picture-index.md | 300w |
 
 ### Implementation (Copy-paste templates and patterns)
 
 | File | Purpose | Size |
 |------|---------|------|
 | `00-service-layer.md` | Service template, DI pattern | 1500w |
-| `01-trpc-procedures.md` | Procedure template, validation | 2000w |
+| `01-trpc-procedures.md` | Stub → see future-plans/trpc.md | 100w |
 | `02-serverfn-routing.md` | serverFn + routing pattern | 2000w |
 | `03-auth-guards.md` | Auth middleware implementations | 1500w |
 | `04-domain-structure.md` | File organization and exports | 1000w |
+
+### Future Plans (Year 2+ worker-instance patterns)
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| `big-picture-index.md` | Comprehensive architectural overview, decisions, tradeoffs | Humans, architects |
+| `trpc.md` | Complete tRPC patterns, procedures, middleware, testing | Engineers |
+| `worker-instances.md` | Multi-instance routing, BFF, aggregation, partial failures | Engineers |
+| `federation.md` | Hub/worker relationships, realm coordination, security | Engineers |
 
 ### Rules (Must-follow enforcement rules)
 
