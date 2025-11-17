@@ -29,9 +29,6 @@ export class UserService {
     const where: any = {};
 
     if (filters) {
-      if (filters.authSchId) {
-        where.authSchId = filters.authSchId;
-      }
       if (filters.humanId) {
         where.usernames = {
           some: {
@@ -67,19 +64,21 @@ export class UserService {
       },
     });
 
-    // Map to return only primary (first) username
-    return users.map((user) => ({
-      ...user,
-      primaryUsername: user.usernames[0] || undefined,
-      usernames: undefined,
-    }));
+    // Map to return only primary (first) username and exclude authSchId
+    return users.map((user) => {
+      const { authSchId: _authSchId, usernames, ...safeUser } = user;
+      return {
+        ...safeUser,
+        primaryUsername: usernames[0] || undefined,
+      };
+    });
   }
 
   /**
    * Find a single user by ID
    */
   async findById(id: string) {
-    return await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
       include: {
         usernames: true,
@@ -90,6 +89,14 @@ export class UserService {
         },
       },
     });
+
+    if (!user) {
+      return null;
+    }
+
+    // Exclude authSchId from response
+    const { authSchId: _authSchId, ...safeUser } = user;
+    return safeUser;
   }
 
   /**
@@ -128,7 +135,7 @@ export class UserService {
 
   /**
    * Create a new user
-   * Returns the created user object
+   * Returns the created user object (without authSchId)
    */
   async create(data: z.infer<typeof UserCreateDto>) {
     // Check if user already exists
@@ -140,7 +147,7 @@ export class UserService {
       throw new Error('User with this authSchId already exists');
     }
 
-    return await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         authSchId: data.authSchId,
         createdAt: new Date(),
@@ -151,6 +158,10 @@ export class UserService {
         usernames: true,
       },
     });
+
+    // Exclude authSchId from response
+    const { authSchId: _authSchId, ...safeUser } = user;
+    return safeUser;
   }
 
   /**
@@ -201,7 +212,7 @@ export class UserService {
 
     // For MVP, we'll just disconnect the profile (soft delete)
     // The profile field is nullable, so setting to null effectively soft-deletes
-    return await this.prisma.user.update({
+    const deletedUser = await this.prisma.user.update({
       where: { id },
       data: {
         profile: {
@@ -212,5 +223,9 @@ export class UserService {
         usernames: true,
       },
     });
+
+    // Exclude authSchId from response
+    const { authSchId: _authSchId, ...safeUser } = deletedUser;
+    return safeUser;
   }
 }

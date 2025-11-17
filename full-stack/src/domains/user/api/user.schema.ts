@@ -6,7 +6,8 @@ import { zDate } from '@/utils/zod-extra';
 
 export const UserIdSchema = z.string().cuid();
 
-export const UserSchema = z.object({
+// Internal schema with authSchId (for auth service use only)
+const UserSchemaInternal = z.object({
   id: UserIdSchema,
   authSchId: z.string().nonempty(),
   createdAt: z.date().nullable(),
@@ -15,6 +16,9 @@ export const UserSchema = z.object({
 }) satisfies z.ZodType<
   Pick<P.User, 'id' | 'authSchId' | 'createdAt' | 'updatedAt' | 'lastLogin'>
 >;
+
+// Public schema without authSchId
+export const UserSchema = UserSchemaInternal.omit({ authSchId: true });
 
 // ===== Username Schemas =====
 
@@ -30,22 +34,18 @@ export const UserFindDto = z.object({
   id: UserIdSchema,
 }) satisfies z.ZodType<P.UserWhereUniqueInput>;
 
-export const UserFindByAuthSchIdDto = z.object({
+// Internal DTO for auth service only
+export const UserCreateDto = z.object({
   authSchId: z.string().nonempty(),
-}) satisfies z.ZodType<P.UserWhereUniqueInput>;
+});
 
 export const UserFilterDto = z
   .object({
-    authSchId: z.string().optional(),
     humanId: z.string().optional(),
     createdAtFrom: zDate.optional(),
     createdAtTo: zDate.optional(),
   })
   .optional();
-
-export const UserCreateDto = z.object({
-  authSchId: z.string().nonempty(),
-});
 
 export const UserAttachUsernameDto = z.object({
   userId: UserIdSchema,

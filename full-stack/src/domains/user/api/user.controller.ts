@@ -18,7 +18,7 @@ import {
 import { UserService } from './user.service';
 
 export const UserController = {
-  // GET /users?skip={skip}&take={take}&authSchId={authSchId}&humanId={humanId}
+  // GET /users?skip={skip}&take={take}&humanId={humanId}&createdAtFrom={date}&createdAtTo={date}
   findMany: createServerFn({ method: 'GET' })
     .inputValidator(httpSchema({ body: UserFilterDto, pagination: true }))
     .middleware([

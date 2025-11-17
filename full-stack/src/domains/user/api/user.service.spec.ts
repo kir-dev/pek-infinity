@@ -40,7 +40,12 @@ describe('UserService', () => {
 
     const result = await userService.findById('123');
 
-    expect(result).toEqual(mockUser);
+    // authSchId should be excluded from response
+    expect(result).toEqual({
+      id: '123',
+      usernames: [],
+      profile: null,
+    });
     expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
       where: { id: '123' },
       include: {
@@ -61,6 +66,9 @@ describe('UserService', () => {
       id: '123',
       authSchId: 'auth123',
       usernames: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastLogin: new Date(),
     };
     mockPrisma.user.create.mockResolvedValue(mockUser as any);
 
@@ -68,7 +76,9 @@ describe('UserService', () => {
       authSchId: 'auth123',
     });
 
-    expect(result).toEqual(mockUser);
+    // authSchId should be excluded from response
+    expect(result).not.toHaveProperty('authSchId');
+    expect(result).toHaveProperty('id', '123');
     expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
       where: { authSchId: 'auth123' },
     });
@@ -142,6 +152,8 @@ describe('UserService', () => {
     const result = await userService.findMany(undefined, { skip: 0, take: 20 });
 
     expect(result).toHaveLength(2);
+    // authSchId should be excluded from response
+    expect(result[0]).not.toHaveProperty('authSchId');
     expect(result[0].primaryUsername).toEqual({ humanId: 'user1' });
     expect(result[1].primaryUsername).toBeUndefined();
     expect(mockPrisma.user.findMany).toHaveBeenCalled();
@@ -149,13 +161,20 @@ describe('UserService', () => {
 
   it('should delete user (soft delete)', async () => {
     const userService = container.resolve(UserService);
-    const mockUser = { id: '123', profile: null };
+    const mockUser = {
+      id: '123',
+      authSchId: 'auth123',
+      usernames: [],
+      profile: null,
+    };
     mockPrisma.user.findUnique.mockResolvedValue({ id: '123' } as any);
     mockPrisma.user.update.mockResolvedValue(mockUser as any);
 
     const result = await userService.deleteUser('123');
 
-    expect(result).toEqual(mockUser);
+    // authSchId should be excluded from response
+    expect(result).not.toHaveProperty('authSchId');
+    expect(result).toHaveProperty('id', '123');
     expect(mockPrisma.user.update).toHaveBeenCalledWith({
       where: { id: '123' },
       data: {
