@@ -10,10 +10,10 @@ reversibility: "high"
 decision-date: "2025-10-20"
 status: "active"
 created: "2025-10-20"
-
-
-
-
+mvp-scope: "future"
+phase: "Phase 1+ (Q2 2026+)"
+created: "2025-10-20"
+updated: "2025-11-17"
 ---
 
 # Decision: MVP vs Worker Instance Features

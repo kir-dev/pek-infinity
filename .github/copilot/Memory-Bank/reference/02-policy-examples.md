@@ -8,10 +8,10 @@ urgency: "low"
 size: "1000 words"
 sections: ["schönherz-hierarchy", "conference-hierarchy", "deep-nesting", "cascading-examples", "permission-matrix"]
 status: "active"
-
-
-
-
+mvp-scope: "future"
+phase: "Phase 1+ (Q2 2026+)"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Reference: Real-World Policy Examples

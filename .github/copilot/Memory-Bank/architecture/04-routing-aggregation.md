@@ -7,11 +7,10 @@ dependencies: ["architecture/00-federation-model.md", "architecture/03-middlewar
 urgency: "high"
 size: "1500 words"
 status: "active"
+mvp-scope: "future"
+phase: "Phase 2+ (Q3 2026+)"
 created: "2025-10-20"
-
-
-
-
+updated: "2025-11-17"
 ---
 
 # Routing & Aggregation: serverFn Combines Results

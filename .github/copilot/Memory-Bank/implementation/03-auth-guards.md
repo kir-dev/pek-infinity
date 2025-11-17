@@ -9,10 +9,10 @@ size: "1800 words"
 template: true
 sections: ["jwt-guard", "auth-guard", "policy-validation", "statement-scoping", "error-responses", "caching", "real-examples", "testing", "gotchas", "checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-10-20"
+updated: "2025-11-17"
 ---
 
 # Auth Guards: Implementation Template

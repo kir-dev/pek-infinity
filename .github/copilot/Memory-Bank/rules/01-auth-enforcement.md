@@ -9,10 +9,10 @@ enforcement: "must-follow"
 size: "1500 words"
 sections: ["the-rule", "why-it-matters", "middleware-order", "error-codes", "bad-examples", "good-examples", "testing", "checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Rule: Auth Checks in Middleware, Not Handlers

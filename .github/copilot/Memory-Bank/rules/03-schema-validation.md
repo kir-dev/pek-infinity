@@ -9,10 +9,10 @@ enforcement: "must-follow"
 size: "1000 words"
 sections: ["the-rule", "why-it-matters", "how-to-use", "bad-examples", "good-examples", "checking-alignment", "testing", "checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Rule: Zod Schemas Must Satisfy Prisma Types

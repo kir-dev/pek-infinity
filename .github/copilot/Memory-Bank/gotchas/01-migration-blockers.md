@@ -8,10 +8,10 @@ urgency: "high"
 size: "1500 words"
 sections: ["intro", "blocker-1-service-realm-aware", "blocker-2-data-leakage", "blocker-3-auth-in-handler", "blocker-4-hardcoded-endpoints", "blocker-5-monolithic-policy", "blocker-6-circular-deps", "prevention-checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Migration Blockers: MVP→Worker Instance

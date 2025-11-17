@@ -9,11 +9,10 @@ enforcement: "must-follow"
 size: "2000 words"
 check-command: "grep -r 'findMany\\|findUnique\\|findFirst' src/domains/ | grep -v realmId"
 status: "active"
+mvp-scope: "current"
+phase: "MVP 1.0"
 created: "2025-10-20"
-
-
-
-
+updated: "2025-11-17"
 ---
 
 # Rule: Every Query Filters by realmId

@@ -7,12 +7,10 @@ dependencies: []
 urgency: "critical"
 size: "1500 words"
 status: "active"
+mvp-scope: "future"
+phase: "Phase 1+ (Q2 2026+)"
 created: "2025-10-20"
-updated: "2025-10-20"
-
-
-
-
+updated: "2025-11-17"
 ---
 
 # Federation Model: Hub + Worker Instances

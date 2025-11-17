@@ -9,9 +9,10 @@ size: "2000 words"
 template: true
 sections: ["core-pattern", "input-validation", "jwt-guard", "routing-middleware", "response-combining", "mvp-vs-worker-instance", "real-examples", "error-handling", "performance", "gotchas", "checklist"]
 status: "active"
+mvp-scope: "current"
+phase: "MVP 1.0 (simplified), Phase 2+ (full BFF routing)"
 created: "2025-10-20"
-updated: "2025-10-24"
-
+updated: "2025-11-17"
 ---
 
 # serverFn Routing: Implementation Template

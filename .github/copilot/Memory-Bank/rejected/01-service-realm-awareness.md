@@ -8,10 +8,10 @@ urgency: "high"
 size: "1000 words"
 sections: ["decision", "rejected-approach", "why-rejected", "correct-approach", "comparison", "consequences"]
 status: "active"
-
-
-
-
+mvp-scope: "future"
+phase: "Phase 1+ (Q2 2026+)"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Rejected: Services With Realm Awareness

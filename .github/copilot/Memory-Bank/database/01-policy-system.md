@@ -8,10 +8,10 @@ urgency: "critical"
 size: "2000 words"
 status: "active"
 created: "2025-10-20"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-10-20"
+updated: "2025-11-17"
 ---
 
 # Policy System: Hierarchy, Delegation, and Resource Scoping

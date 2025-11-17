@@ -9,10 +9,10 @@ enforcement: "must-follow"
 size: "1500 words"
 sections: ["the-rule", "why-it-matters", "what-services-do", "where-realm-comes-from", "bad-examples", "good-examples", "mvp-vs-worker-instance", "testing", "checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Rule: Services are Realm-Agnostic

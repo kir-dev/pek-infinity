@@ -8,11 +8,10 @@ urgency: "high"
 size: "1500 words"
 template: true
 status: "active"
+mvp-scope: "current"
+phase: "MVP 1.0"
 created: "2025-10-20"
-
-
-
-
+updated: "2025-11-17"
 ---
 
 # Service Layer Template

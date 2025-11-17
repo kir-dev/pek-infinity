@@ -8,10 +8,10 @@ urgency: "medium"
 size: "1200 words"
 sections: ["intro", "gotcha-1-n-plus-one", "gotcha-2-cascading-queries", "gotcha-3-policy-snapshot-size", "gotcha-4-serial-trpc", "gotcha-5-redis-invalidation", "profiling-checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Performance Gotchas: N+1, Cascading, Caching

@@ -6,21 +6,30 @@ keywords: ["index", "navigation", "guide", "memory", "agent workflow", "memory u
 status: "active"
 version: "1.0"
 created: 2025-10-22
-updated: 2025-10-24
-
+mvp-scope: "reference"
+phase: "All phases"
+updated: "2025-11-17"
 ---
 
 # PÉK Infinity Memory Bank
 
 This memory bank documents architectural decisions, implementation patterns, validation rules, and gotchas for the pek-infinity full-stack application. It's designed for intelligent lazy-loading by agents: only frontmatters are loaded initially; content is loaded on-demand based on task context.
 
+## 🚀 Start Here
+
+**New to this codebase?** → Read `00-SYNTHETIC-MEMORY.md` first for the big picture (5-minute read)
+
+**Working on MVP tasks?** → Look for files marked `mvp-scope: "current"` in frontmatter
+**Planning future features?** → Look for files marked `mvp-scope: "future"` in frontmatter
+
 ## Quick Start by Task
 
-**I'm implementing a new domain feature:**
-1. `implementation/00-service-layer.md` (template)
-2. `implementation/01-trpc-procedures.md` (template)
-3. `implementation/02-serverfn-routing.md` (template)
-4. `rules/` (validation checks before PR)
+**I'm implementing a new domain feature (MVP):**
+1. `00-SYNTHETIC-MEMORY.md` (big picture overview)
+2. `implementation/00-service-layer.md` (service template)
+3. `implementation/02-serverfn-routing.md` (MVP routing pattern) ⭐
+4. `implementation/04-domain-structure.md` (file organization)
+5. `rules/` (validation checks before PR)
 
 **I'm debugging permissions or auth:**
 1. `architecture/01-auth-system.md` (understand the flow)
@@ -34,90 +43,99 @@ This memory bank documents architectural decisions, implementation patterns, val
 3. `gotchas/00-common-mistakes.md` (what breaks)
 
 **I need to understand the big picture:**
-1. `architecture/00-federation-model.md` (why hub + worker-instance)
-2. `architecture/01-auth-system.md` (auth flow)
+1. `00-SYNTHETIC-MEMORY.md` (⭐ START HERE - ultra-concise overview)
+2. `architecture/00-federation-model.md` (why hub + worker-instance)
 3. `decisions/00-mvp-vs-worker-instance.md` (what's in MVP vs later)
-4. `reference/00-request-flows.md` (visual flows)
+4. `decisions/01-future-roadmap.md` (detailed future plans)
 
 **I'm questioning a design decision:**
 1. `decisions/` (why we chose this)
 2. `rejected/` (alternatives and why they were rejected)
 
+**I'm planning future federation work:**
+1. `decisions/01-future-roadmap.md` (detailed timeline and phases)
+2. `architecture/00-federation-model.md` (federation architecture)
+3. `implementation/01-trpc-procedures.md` (future tRPC patterns)
+
 ## File Index with Summaries
+
+### Core Documents
+
+| File | Purpose | MVP Scope | Size |
+|------|---------|-----------|------|
+| `00-SYNTHETIC-MEMORY.md` | ⭐ Ultra-concise big picture overview | Reference | 500w |
+| `README.md` | This file - navigation and index | Reference | - |
 
 ### Architecture (Why things are designed this way)
 
-| File | Purpose | Size |
-|------|---------|------|
-| `00-federation-model.md` | Hub + worker instances, BFF routing | 1500w |
-| `01-auth-system.md` | JWT, policy snapshots, caching strategy | 2500w |
-| `02-service-patterns.md` | Service layer, realm-agnostic design | 2000w |
-| `03-middleware-layering.md` | MVP vs worker-instance middleware stacks | 1500w |
-| `04-routing-aggregation.md` | serverFn routing and response combining | 1500w |
+| File | Purpose | MVP Scope | Size |
+|------|---------|-----------|------|
+| `00-federation-model.md` | Hub + worker instances, BFF routing | Future | 1500w |
+| `01-auth-system.md` | JWT, policy snapshots, caching strategy | Current | 2500w |
+| `02-service-patterns.md` | Service layer, realm-agnostic design | Current | 2000w |
+| `03-middleware-layering.md` | MVP vs worker-instance middleware stacks | Future | 1500w |
+| `04-routing-aggregation.md` | serverFn routing and response combining | Future | 1500w |
 
 ### Database (Schema, models, relationships)
 
-| File | Purpose | Size |
-|------|---------|------|
-| `00-realm-model.md` | Realm concept, realmId fields, constraints | 1500w |
-| `01-policy-system.md` | Policy hierarchy, statements, audit trail | 2000w |
-| `02-group-hierarchy.md` | Group structure, cascading escalation | 1500w |
-| `03-user-profile-federation.md` | User profiles, federation considerations | 1200w |
+| File | Purpose | MVP Scope | Size |
+|------|---------|-----------|------|
+| `00-realm-model.md` | Realm concept, realmId fields, constraints | Current | 1500w |
+| `01-policy-system.md` | Policy hierarchy, statements, audit trail | Current | 2000w |
+| `02-group-hierarchy.md` | Group structure, cascading escalation | Current | 1500w |
+| `03-user-profile-federation.md` | User profiles, federation considerations | Future | 1200w |
 
 ### Decisions (What we chose and why)
 
-| File | Purpose | Size |
-|------|---------|------|
-| `00-mvp-vs-worker-instance.md` | Feature matrix, scope, timeline | 2000w |
-| `01-why-trpc-over-rest.md` | tRPC vs REST trade-offs | 1500w |
-| `02-why-colocate-domains.md` | Single file per domain concept | 1200w |
-| `03-why-services-are-realm-agnostic.md` | Service design principle | 1500w |
+| File | Purpose | MVP Scope | Size |
+|------|---------|-----------|------|
+| `00-mvp-vs-worker-instance.md` | Feature matrix, scope, timeline | Future | 2000w |
+| `01-future-roadmap.md` | ⭐ Detailed future plans and timeline | Future | 2500w |
 
 ### Implementation (Copy-paste templates and patterns)
 
-| File | Purpose | Size |
-|------|---------|------|
-| `00-service-layer.md` | Service template, DI pattern | 1500w |
-| `01-trpc-procedures.md` | Procedure template, validation | 2000w |
-| `02-serverfn-routing.md` | serverFn + routing pattern | 2000w |
-| `03-auth-guards.md` | Auth middleware implementations | 1500w |
-| `04-domain-structure.md` | File organization and exports | 1000w |
+| File | Purpose | MVP Scope | Size |
+|------|---------|-----------|------|
+| `00-service-layer.md` | Service template, DI pattern | Current | 1500w |
+| `01-trpc-procedures.md` | ⚠️ Future: Procedure template, validation | Future | 2000w |
+| `02-serverfn-routing.md` | ⭐ MVP: serverFn + routing pattern | Current | 2000w |
+| `03-auth-guards.md` | Auth middleware implementations | Current | 1500w |
+| `04-domain-structure.md` | File organization and exports | Current | 1000w |
 
 ### Rules (Must-follow enforcement rules)
 
-| File | Purpose | Enforcement |
-|------|---------|-------------|
-| `00-realm-isolation.md` | Filter all queries by realmId | MUST |
-| `01-auth-enforcement.md` | Auth in middleware, not handler | MUST |
-| `02-service-layer-purity.md` | Services don't know realm | MUST |
-| `03-schema-validation.md` | Zod schemas satisfy Prisma | MUST |
-| `04-parent-group-validation.md` | Parent can't be archived | MUST |
+| File | Purpose | MVP Scope | Enforcement |
+|------|---------|-----------|-------------|
+| `00-realm-isolation.md` | Filter all queries by realmId | Current | MUST |
+| `01-auth-enforcement.md` | Auth in middleware, not handler | Current | MUST |
+| `02-service-purity.md` | Services don't know realm | Current | MUST |
+| `03-schema-validation.md` | Zod schemas satisfy Prisma | Current | MUST |
+| `04-parent-validation.md` | Parent can't be archived | Current | MUST |
 
 ### Gotchas (What can go wrong and why)
 
-| File | Purpose | Severity |
-|------|---------|----------|
-| `00-common-mistakes.md` | Patterns agents often violate | HIGH |
-| `01-migration-blockers.md` | What breaks if rules violated | CRITICAL |
-| `02-performance-gotchas.md` | Optimization warnings | MEDIUM |
+| File | Purpose | MVP Scope | Severity |
+|------|---------|-----------|----------|
+| `00-common-mistakes.md` | Patterns agents often violate | Current | HIGH |
+| `01-migration-blockers.md` | What breaks if rules violated | Current | CRITICAL |
+| `02-performance-gotchas.md` | Optimization warnings | Current | MEDIUM |
 
 ### Rejected (Patterns we considered and rejected)
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `00-rest-endpoints-in-mvp.md` | Why tRPC not REST now | Archived |
-| `01-service-realm-awareness.md` | Why services don't know realm | Archived |
-| `02-auth-in-handler.md` | Why middleware not handler | Archived |
+| File | Purpose | MVP Scope | Status |
+|------|---------|-----------|--------|
+| `00-rest-endpoints-in-mvp.md` | Why tRPC not REST now | Future | Archived |
+| `01-service-realm-awareness.md` | Why services don't know realm | Future | Archived |
 
 ### Reference (Visual guides, examples, glossary)
 
-| File | Purpose | Type |
-|------|---------|------|
-| `00-request-flows.md` | ASCII diagrams of request paths | Diagrams |
-| `01-er-diagram.md` | Database entity relationships | Diagrams |
-| `02-policy-examples.md` | Real-world policy hierarchies | Examples |
-| `03-glossary.md` | Terminology and definitions | Reference |
-| `04-quick-reference.md` | One-page summary and checklist | Cheat sheet |
+| File | Purpose | MVP Scope | Type |
+|------|---------|-----------|------|
+| `00-request-flows.md` | ASCII diagrams of request paths | Future | Diagrams |
+| `01-er-diagram.md` | Database entity relationships | Future | Diagrams |
+| `02-policy-examples.md` | Real-world policy hierarchies | Future | Examples |
+| `03-glossary.md` | Terminology and definitions | Current | Reference |
+| `04-quick-reference.md` | One-page summary and checklist | Current | Cheat sheet |
 
 ## Frontmatter Format
 
@@ -132,15 +150,23 @@ keywords: ["searchable", "terms", "here"]
 dependencies: ["other/files/to/read/first.md"]
 urgency: "critical|high|medium|low"
 size: "word count"
-status: "active|archived"
-
-
-
-
+status: "active|archived|deprecated"
+mvp-scope: "current|future|mixed|reference"
+phase: "MVP 1.0|Phase 1|Phase 2+|All phases"
+created: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
 ---
 ```
 
-Fields with extra blank lines below them are extensible for agent customization.
+**New in v1.1:**
+- `mvp-scope`: Indicates whether content is relevant for current MVP work (`current`), future federation (`future`), both (`mixed`), or always relevant (`reference`)
+- `phase`: Maps to roadmap phases (see `decisions/01-future-roadmap.md`)
+
+**Fields with special meaning:**
+- `mvp-scope: "current"` → Implement these patterns NOW for MVP
+- `mvp-scope: "future"` → Reference for understanding, implement in Phase 1+
+- `mvp-scope: "mixed"` → Parts relevant now, parts for later (read carefully)
+- `phase` → Aligns with `decisions/01-future-roadmap.md` timeline
 
 ## Loading Strategy for Agents
 

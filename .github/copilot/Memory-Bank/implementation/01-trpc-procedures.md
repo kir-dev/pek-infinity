@@ -9,10 +9,11 @@ size: "2000 words"
 template: true
 sections: ["core-pattern", "input-validation", "middleware-order", "context-injection", "query-vs-mutation", "error-handling", "real-examples", "router-aggregation", "testing", "gotchas", "checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "future"
+mvp-alternative: "implementation/02-serverfn-routing.md"
+phase: "Phase 2 (Q3-Q4 2026)"
+created: "2025-10-20"
+updated: "2025-11-17"
 ---
 
 # tRPC Procedures: Implementation Template

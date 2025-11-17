@@ -7,11 +7,10 @@ dependencies: ["architecture/00-federation-model.md"]
 urgency: "critical"
 size: "1500 words"
 status: "active"
+mvp-scope: "current"
+phase: "MVP 1.0 (preparation for future federation)"
 created: "2025-10-20"
-
-
-
-
+updated: "2025-11-17"
 ---
 
 # Realm Model: Multi-Tenancy via realmId

@@ -8,11 +8,10 @@ urgency: "critical"
 size: "2000 words"
 sections: ["intro", "mistake-1-service-realm-param", "mistake-2-missing-realmid-filter", "mistake-3-auth-in-handler", "mistake-4-middleware-order", "mistake-5-hardcoded-hub", "mistake-6-type-drift", "mistake-7-serverfn-json-response", "debug-checklist"]
 status: "active"
-updated: "2025-10-24"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-10-20"
+updated: "2025-11-17"
 ---
 
 # Common Mistakes: Gotchas & How to Avoid Them

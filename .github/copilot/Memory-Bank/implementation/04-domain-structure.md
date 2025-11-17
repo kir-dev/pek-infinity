@@ -9,11 +9,10 @@ size: "1400 words"
 template: true
 sections: ["structure", "api-structure", "file-organization", "index-exports", "naming-conventions", "colocalization", "real-example", "anti-patterns", "checklist"]
 status: "active"
-updated: "2025-10-24"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-10-20"
+updated: "2025-11-17"
 ---
 
 # Domain Structure: Organization & Exports

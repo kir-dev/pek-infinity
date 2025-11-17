@@ -9,10 +9,10 @@ enforcement: "must-follow"
 size: "800 words"
 sections: ["the-rule", "why-it-matters", "implementation", "bad-examples", "good-examples", "testing", "checklist"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Rule: Parent Group Must Exist and Not Be Archived

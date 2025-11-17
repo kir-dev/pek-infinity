@@ -8,10 +8,10 @@ urgency: "low"
 size: "800 words"
 sections: ["core-concepts", "architecture-terms", "policy-terms", "database-terms", "performance-terms"]
 status: "active"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Reference: Glossary of Terms

@@ -8,10 +8,10 @@ urgency: "medium"
 size: "1200 words"
 sections: ["mvp-request-flow", "worker-instance-request-flow", "auth-flow", "policy-cascade-flow", "error-handling"]
 status: "active"
-
-
-
-
+mvp-scope: "future"
+phase: "Phase 1+ (Q2 2026+)"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Reference: Request Flows & Diagrams

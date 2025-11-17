@@ -8,10 +8,10 @@ urgency: "medium"
 size: "900 words"
 sections: ["decision-summary", "why-not-rest-for-mvp", "trpc-advantages", "when-rest-needed", "migration-plan", "comparison-table"]
 status: "active"
-
-
-
-
+mvp-scope: "future"
+phase: "Phase 1+ (Q2 2026+)"
+created: "2025-11-17"
+updated: "2025-11-17"
 ---
 
 # Rejected: REST Endpoints in MVP

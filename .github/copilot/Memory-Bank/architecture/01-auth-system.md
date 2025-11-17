@@ -8,11 +8,9 @@ urgency: "critical"
 size: "2500 words"
 status: "active"
 created: "2025-10-20"
-updated: "2025-10-20"
-
-
-
-
+mvp-scope: "current"
+phase: "MVP 1.0"
+updated: "2025-11-17"
 ---
 
 # Auth System: JWT, Policy Snapshots, Caching
