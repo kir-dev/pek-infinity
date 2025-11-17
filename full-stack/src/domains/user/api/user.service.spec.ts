@@ -28,24 +28,6 @@ describe('UserService', () => {
     expect(userService).toBeInstanceOf(UserService);
   });
 
-  it('should find user by authSchId', async () => {
-    const userService = container.resolve(UserService);
-    const mockUser = {
-      id: '123',
-      authSchId: 'auth123',
-      usernames: [],
-    };
-    mockPrisma.user.findUnique.mockResolvedValue(mockUser as any);
-
-    const result = await userService.findByAuthSchId('auth123');
-
-    expect(result).toEqual(mockUser);
-    expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-      where: { authSchId: 'auth123' },
-      include: { usernames: true },
-    });
-  });
-
   it('should find user by id', async () => {
     const userService = container.resolve(UserService);
     const mockUser = {
@@ -72,7 +54,7 @@ describe('UserService', () => {
     });
   });
 
-  it('should create system user', async () => {
+  it('should create user', async () => {
     const userService = container.resolve(UserService);
     mockPrisma.user.findUnique.mockResolvedValue(null);
     const mockUser = {
@@ -82,7 +64,7 @@ describe('UserService', () => {
     };
     mockPrisma.user.create.mockResolvedValue(mockUser as any);
 
-    const result = await userService.createSystemUser({
+    const result = await userService.create({
       authSchId: 'auth123',
     });
 
@@ -91,6 +73,41 @@ describe('UserService', () => {
       where: { authSchId: 'auth123' },
     });
     expect(mockPrisma.user.create).toHaveBeenCalled();
+  });
+
+  it('should login by authSchId - create new user', async () => {
+    const userService = container.resolve(UserService);
+    mockPrisma.user.findUnique.mockResolvedValue(null);
+    const mockUser = {
+      id: '123',
+      authSchId: 'auth123',
+    };
+    mockPrisma.user.create.mockResolvedValue(mockUser as any);
+
+    const result = await userService.loginByAuthSchId('auth123');
+
+    expect(result).toEqual('123');
+    expect(mockPrisma.user.create).toHaveBeenCalled();
+  });
+
+  it('should login by authSchId - update existing user', async () => {
+    const userService = container.resolve(UserService);
+    const existingUser = {
+      id: '123',
+      authSchId: 'auth123',
+    };
+    const updatedUser = {
+      id: '123',
+      authSchId: 'auth123',
+      lastLogin: new Date(),
+    };
+    mockPrisma.user.findUnique.mockResolvedValue(existingUser as any);
+    mockPrisma.user.update.mockResolvedValue(updatedUser as any);
+
+    const result = await userService.loginByAuthSchId('auth123');
+
+    expect(result).toEqual('123');
+    expect(mockPrisma.user.update).toHaveBeenCalled();
   });
 
   it('should attach username to user', async () => {
@@ -114,39 +131,19 @@ describe('UserService', () => {
     expect(mockPrisma.username.create).toHaveBeenCalled();
   });
 
-  it('should record login', async () => {
-    const userService = container.resolve(UserService);
-    const mockUser = {
-      id: '123',
-      lastLogin: new Date(),
-    };
-    mockPrisma.user.update.mockResolvedValue(mockUser as any);
-
-    const result = await userService.recordLogin({
-      userId: '123',
-    });
-
-    expect(result).toEqual(mockUser);
-    expect(mockPrisma.user.update).toHaveBeenCalledWith({
-      where: { id: '123' },
-      data: expect.objectContaining({
-        lastLogin: expect.any(Date),
-        updatedAt: expect.any(Date),
-      }),
-    });
-  });
-
   it('should find many users with pagination', async () => {
     const userService = container.resolve(UserService);
     const mockUsers = [
-      { id: '1', authSchId: 'auth1', usernames: [] },
+      { id: '1', authSchId: 'auth1', usernames: [{ humanId: 'user1' }] },
       { id: '2', authSchId: 'auth2', usernames: [] },
     ];
     mockPrisma.user.findMany.mockResolvedValue(mockUsers as any);
 
     const result = await userService.findMany(undefined, { skip: 0, take: 20 });
 
-    expect(result).toEqual(mockUsers);
+    expect(result).toHaveLength(2);
+    expect(result[0].primaryUsername).toEqual({ humanId: 'user1' });
+    expect(result[1].primaryUsername).toBeUndefined();
     expect(mockPrisma.user.findMany).toHaveBeenCalled();
   });
 

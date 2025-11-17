@@ -19,22 +19,7 @@ export class AuthService {
 
   async findOrCreateUser(oAuthUser: AuthSchProfile): Promise<string> {
     try {
-      const user = await this.usersService.findByAuthSchId(oAuthUser.authSchId);
-      if (user) {
-        // Update last login timestamp
-        await this.usersService.recordLogin({
-          userId: user.id,
-          timestamp: new Date(),
-        });
-        return user.id;
-      }
-
-      // Create new system user
-      const newUser = await this.usersService.createSystemUser({
-        authSchId: oAuthUser.authSchId,
-      });
-
-      return newUser.id;
+      return await this.usersService.loginByAuthSchId(oAuthUser.authSchId);
     } catch (e) {
       console.error(e);
       throw new InternalServerError(

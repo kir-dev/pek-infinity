@@ -34,12 +34,19 @@ describe('Dependency Injection Integration', () => {
     const mockUser = { id: 'test-id', name: 'Test User' };
     mockPrisma.user.findUnique.mockResolvedValue(mockUser as any);
 
-    const result = await userService.findByAuthSchId('test-id');
+    const result = await userService.findById('test-id');
 
     expect(result).toEqual(mockUser);
     expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-      where: { authSchId: 'test-id' },
-      include: { usernames: true },
+      where: { id: 'test-id' },
+      include: {
+        usernames: true,
+        profile: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
   });
 

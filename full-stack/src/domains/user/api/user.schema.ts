@@ -43,7 +43,7 @@ export const UserFilterDto = z
   })
   .optional();
 
-export const UserCreateSystemDto = z.object({
+export const UserCreateDto = z.object({
   authSchId: z.string().nonempty(),
 });
 
@@ -55,20 +55,15 @@ export const UserAttachUsernameDto = z.object({
     .regex(/^[a-zA-Z0-9_-]+$/),
 });
 
-export const UserRecordLoginDto = z.object({
-  userId: UserIdSchema,
-  timestamp: zDate.optional(),
-});
-
 export const UserDeleteDto = z.object({
   id: UserIdSchema,
 });
 
 // ===== Output DTOs =====
 
-// Safe projection for list responses
+// Safe projection for list responses - only primary username
 export const UserListItemSchema = UserSchema.extend({
-  usernames: z.array(UsernameSchema).optional(),
+  primaryUsername: UsernameSchema.optional(),
 });
 
 // Safe projection for detail responses
@@ -88,9 +83,8 @@ export type User = z.infer<typeof UserSchema>;
 export type Username = z.infer<typeof UsernameSchema>;
 export type UserFindDto = z.infer<typeof UserFindDto>;
 export type UserFilterDto = z.infer<typeof UserFilterDto>;
-export type UserCreateSystemDto = z.infer<typeof UserCreateSystemDto>;
+export type UserCreateDto = z.infer<typeof UserCreateDto>;
 export type UserAttachUsernameDto = z.infer<typeof UserAttachUsernameDto>;
-export type UserRecordLoginDto = z.infer<typeof UserRecordLoginDto>;
 export type UserDeleteDto = z.infer<typeof UserDeleteDto>;
 export type UserListItem = z.infer<typeof UserListItemSchema>;
 export type UserDetail = z.infer<typeof UserDetailSchema>;

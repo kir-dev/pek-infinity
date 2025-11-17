@@ -5,9 +5,8 @@ import { PrismaService } from '@/domains/prisma';
 import { PAGE_OFFSET_DEFAULT, PAGE_SIZE_DEFAULT } from '@/utils/zod-extra';
 import type {
   UserAttachUsernameDto,
-  UserCreateSystemDto,
+  UserCreateDto,
   UserFilterDto,
-  UserRecordLoginDto,
 } from './user.schema';
 
 @injectable()
@@ -51,17 +50,29 @@ export class UserService {
       }
     }
 
-    return await this.prisma.user.findMany({
+    const users = await this.prisma.user.findMany({
       where,
       skip,
       take,
       include: {
-        usernames: true,
+        usernames: {
+          take: 1,
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
       },
       orderBy: {
         createdAt: 'desc',
       },
     });
+
+    // Map to return only primary (first) username
+    return users.map((user) => ({
+      ...user,
+      primaryUsername: user.usernames[0] || undefined,
+      usernames: undefined,
+    }));
   }
 
   /**
@@ -82,22 +93,44 @@ export class UserService {
   }
 
   /**
-   * Find a user by AuthSch ID (external authentication ID)
+   * Login by AuthSch ID - find or create user and record login
+   * Returns the user ID
    */
-  async findByAuthSchId(authSchId: string) {
-    return await this.prisma.user.findUnique({
+  async loginByAuthSchId(authSchId: string): Promise<string> {
+    // Try to find existing user
+    let user = await this.prisma.user.findUnique({
       where: { authSchId },
-      include: {
-        usernames: true,
-      },
     });
+
+    // Create new user if doesn't exist
+    if (user) {
+      // Update last login for existing user
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastLogin: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+    } else {
+      user = await this.prisma.user.create({
+        data: {
+          authSchId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          lastLogin: new Date(),
+        },
+      });
+    }
+
+    return user.id;
   }
 
   /**
-   * Create a new system user (used during authentication)
+   * Create a new user
    * Returns the created user object
    */
-  async createSystemUser(data: z.infer<typeof UserCreateSystemDto>) {
+  async create(data: z.infer<typeof UserCreateDto>) {
     // Check if user already exists
     const existing = await this.prisma.user.findUnique({
       where: { authSchId: data.authSchId },
@@ -148,21 +181,6 @@ export class UserService {
         humanId: data.humanId,
         userId: data.userId,
         createdAt: new Date(),
-      },
-    });
-  }
-
-  /**
-   * Record a user login timestamp
-   */
-  async recordLogin(data: z.infer<typeof UserRecordLoginDto>) {
-    const timestamp = data.timestamp ?? new Date();
-
-    return await this.prisma.user.update({
-      where: { id: data.userId },
-      data: {
-        lastLogin: timestamp,
-        updatedAt: new Date(),
       },
     });
   }

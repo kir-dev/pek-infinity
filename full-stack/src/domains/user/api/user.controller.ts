@@ -10,11 +10,10 @@ import { authGuard, injectService, SCOPE } from '@/middleware';
 import { httpSchema } from '@/utils/zod-extra';
 import {
   UserAttachUsernameDto,
-  UserCreateSystemDto,
+  UserCreateDto,
   UserDeleteDto,
   UserFilterDto,
   UserFindDto,
-  UserRecordLoginDto,
 } from './user.schema';
 import { UserService } from './user.service';
 
@@ -41,12 +40,12 @@ export const UserController = {
       return json(await context.service.findById(data.params.id));
     }),
 
-  // POST /users/system
-  createSystemUser: createServerFn({ method: 'POST' })
-    .inputValidator(httpSchema({ body: UserCreateSystemDto }))
+  // POST /users
+  create: createServerFn({ method: 'POST' })
+    .inputValidator(httpSchema({ body: UserCreateDto }))
     .middleware([authGuard([SCOPE.USER_EDIT]), injectService(UserService)])
     .handler(async ({ context, data }) => {
-      return json(await context.service.createSystemUser(data.body));
+      return json(await context.service.create(data.body));
     }),
 
   // POST /users/username
@@ -55,14 +54,6 @@ export const UserController = {
     .middleware([authGuard([SCOPE.USER_EDIT]), injectService(UserService)])
     .handler(async ({ context, data }) => {
       return json(await context.service.attachUsername(data.body));
-    }),
-
-  // POST /users/login
-  recordLogin: createServerFn({ method: 'POST' })
-    .inputValidator(httpSchema({ body: UserRecordLoginDto }))
-    .middleware([authGuard([SCOPE.USER_EDIT]), injectService(UserService)])
-    .handler(async ({ context, data }) => {
-      return json(await context.service.recordLogin(data.body));
     }),
 
   // DELETE /users/:id
@@ -106,10 +97,10 @@ export const UserQueryOptions = {
         }),
     }),
 
-  createSystemUser: (data: z.infer<typeof UserCreateSystemDto>) =>
+  create: (data: z.infer<typeof UserCreateDto>) =>
     mutationOptions({
       mutationFn: async () =>
-        await useServerFn(UserController.createSystemUser)({
+        await useServerFn(UserController.create)({
           data: { body: data, params: undefined, page: undefined },
         }),
     }),
@@ -118,14 +109,6 @@ export const UserQueryOptions = {
     mutationOptions({
       mutationFn: async () =>
         await useServerFn(UserController.attachUsername)({
-          data: { body: data, params: undefined, page: undefined },
-        }),
-    }),
-
-  recordLogin: (data: z.infer<typeof UserRecordLoginDto>) =>
-    mutationOptions({
-      mutationFn: async () =>
-        await useServerFn(UserController.recordLogin)({
           data: { body: data, params: undefined, page: undefined },
         }),
     }),
