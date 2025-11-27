@@ -1,284 +1,398 @@
 <!-- this is auto generated, do not edit manually -->
 <memory-bank>
-==> copilot/Memory-Bank/architecture/00-federation-model.md <==
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/data-flow.md <==
 ---
-file: architecture/00-federation-model.md
-purpose: "Explain why hub + worker-instance architecture exists, how instances relate, why BFF is needed"
-triggers: ["designing multi-instance features", "debugging federation logic", "adding realm support"]
-keywords: ["federation", "hub", "worker-instance", "instance", "BFF", "multi-tenancy", "realm"]
-dependencies: []
-urgency: "critical"
-size: "1500 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/architecture/01-auth-system.md <==
----
-file: architecture/01-auth-system.md
-purpose: "Complete JWT flow, policy snapshots, Redis caching strategy; how MVP and worker-instance auth differs"
-triggers: ["implementing auth", "designing login flow", "debugging permissions", "scaling to worker-instance"]
-keywords: ["JWT", "auth", "policy", "snapshot", "caching", "x-policy-hint", "redis", "mfa", "oauth"]
-dependencies: ["architecture/00-federation-model.md", "database/01-policy-system.md"]
-urgency: "critical"
-size: "2500 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/architecture/02-service-patterns.md <==
----
-file: architecture/02-service-patterns.md
-purpose: "Why services are realm-agnostic, how they fit MVP and worker, DI pattern"
-triggers: ["implementing service layer", "code review of services", "understanding separation of concerns"]
-keywords: ["service", "business logic", "DI", "realm-agnostic", "pure", "testable"]
-dependencies: ["architecture/00-federation-model.md", "architecture/03-middleware-layering.md"]
-urgency: "critical"
-size: "2000 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/architecture/03-middleware-layering.md <==
----
-file: architecture/03-middleware-layering.md
-purpose: "Middleware stack differences between MVP and worker-instance; order matters, guard responsibilities"
-triggers: ["implementing middleware", "debugging auth failures", "adding new guard", "scaling to worker-instance"]
-keywords: ["middleware", "guard", "stack", "order", "jwtGuard", "authGuard", "routing"]
-dependencies: ["architecture/01-auth-system.md", "architecture/02-service-patterns.md"]
-urgency: "critical"
-size: "1500 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/architecture/04-routing-aggregation.md <==
----
-file: architecture/04-routing-aggregation.md
-purpose: "How serverFn routing determines instances and combines responses; handling partial failures"
-triggers: ["implementing serverFn", "designing aggregation logic", "handling cross-instance searches"]
-keywords: ["routing", "aggregation", "combining", "partial-failure", "federation", "multi-instance"]
-dependencies: ["architecture/00-federation-model.md", "architecture/03-middleware-layering.md"]
-urgency: "high"
-size: "1500 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/database/00-realm-model.md <==
----
-file: database/00-realm-model.md
-purpose: "Realm concept, why realmId exists, which models need it, how queries must filter"
-triggers: ["creating new domain", "querying database", "enforcing data isolation", "adding schema field"]
-keywords: ["realm", "realmId", "isolation", "constraint", "filter", "data-leakage", "multi-tenancy"]
-dependencies: ["architecture/00-federation-model.md"]
-urgency: "critical"
-size: "1500 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/database/01-policy-system.md <==
----
-file: database/01-policy-system.md
-purpose: "Policy, Statement, PolicyAssignment models; hierarchy with delegation, cascading escalation, permission grants"
-triggers: ["implementing auth system", "designing policies", "debugging permission", "cascading on subgroup creation"]
-keywords: ["policy", "statement", "assignment", "hierarchy", "delegation", "cascading", "permission", "resource"]
-dependencies: ["database/00-realm-model.md", "architecture/01-auth-system.md"]
-urgency: "critical"
-size: "2000 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/database/02-group-hierarchy.md <==
----
-file: database/02-group-hierarchy.md
-purpose: "Group model with parent-child hierarchy, realmId isolation, composite constraints, cascading on creation"
-triggers: ["creating groups", "querying group hierarchy", "designing group operations", "validating group constraints"]
-keywords: ["group", "hierarchy", "parent", "children", "composite-key", "archived", "cascade"]
-dependencies: ["database/00-realm-model.md", "database/01-policy-system.md"]
-urgency: "critical"
-size: "1500 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/database/03-user-profile-federation.md <==
----
-file: database/03-user-profile-federation.md
-purpose: "User and Profile models; single profile in hub across federation, privacy scope restrictions, federation awareness"
-triggers: ["implementing user queries", "designing profile access", "handling federated users", "privacy boundaries"]
-keywords: ["user", "profile", "federation", "privacy", "scope", "basic-profile", "full-profile", "external-account"]
-dependencies: ["database/00-realm-model.md", "architecture/00-federation-model.md"]
-urgency: "high"
-size: "1200 words"
-status: "active"
-created: "2025-10-20"
-
-==> copilot/Memory-Bank/decisions/00-mvp-vs-worker-instance.md <==
----
-file: decisions/00-mvp-vs-worker-instance.md
-purpose: "Feature-by-feature breakdown of MVP vs worker-instance; scope, timeline, reversibility"
-triggers: ["planning sprint", "estimating PR scope", "questioning feature scope"]
-keywords: ["MVP", "worker-instance", "scope", "timeline", "feature", "rollout"]
-dependencies: []
-urgency: "high"
-size: "2000 words"
-reversibility: "high"
-decision-date: "2025-10-20"
-
-==> copilot/Memory-Bank/gotchas/00-common-mistakes.md <==
----
-file: gotchas/00-common-mistakes.md
-purpose: "Learn from mistakes: data leakage, permission bypass, orphaned objects, type mismatches"
-triggers: ["code review", "debugging auth issues", "strange behavior after deploy"]
-keywords: ["mistake", "bug", "gotcha", "leakage", "bypass", "debug", "common", "trap"]
-dependencies: ["rules/00-realm-isolation.md", "rules/01-auth-enforcement.md", "rules/02-service-purity.md"]
-urgency: "critical"
-size: "2000 words"
-sections: ["intro", "mistake-1-service-realm-param", "mistake-2-missing-realmid-filter", "mistake-3-auth-in-handler", "mistake-4-middleware-order", "mistake-5-hardcoded-hub", "mistake-6-type-drift", "debug-checklist"]
-status: "active"
-
-==> copilot/Memory-Bank/gotchas/01-migration-blockers.md <==
----
-file: gotchas/01-migration-blockers.md
-purpose: "Understand what breaks MVP→Worker Instance migration if done wrong"
-triggers: ["scaling planning", "code review before release", "architectural decision"]
-keywords: ["migration", "blocker", "scale", "worker-instance", "impossible", "refactor", "debt"]
-dependencies: ["gotchas/00-common-mistakes.md", "decisions/00-mvp-vs-worker-instance.md"]
-urgency: "high"
-size: "1500 words"
-sections: ["intro", "blocker-1-service-realm-aware", "blocker-2-data-leakage", "blocker-3-auth-in-handler", "blocker-4-hardcoded-endpoints", "blocker-5-monolithic-policy", "blocker-6-circular-deps", "prevention-checklist"]
-status: "active"
-
-==> copilot/Memory-Bank/gotchas/02-performance-gotchas.md <==
----
-file: gotchas/02-performance-gotchas.md
-purpose: "Understand performance traps at scale: N+1 queries, cascading O(n²), caching issues"
-triggers: ["performance review", "database profiling", "scaling to 1000+ users"]
-keywords: ["performance", "N+1", "query", "cascading", "O(n)", "slow", "bottleneck", "scale"]
-dependencies: ["implementation/03-auth-guards.md", "reference/01-er-diagram.md"]
-urgency: "medium"
-size: "1200 words"
-sections: ["intro", "gotcha-1-n-plus-one", "gotcha-2-cascading-queries", "gotcha-3-policy-snapshot-size", "gotcha-4-serial-trpc", "gotcha-5-redis-invalidation", "profiling-checklist"]
-status: "active"
-
-==> copilot/Memory-Bank/implementation/00-service-layer.md <==
----
-file: implementation/00-service-layer.md
-purpose: "Copy-paste service template with DI pattern; what goes in service, what doesn't, testing in isolation"
-triggers: ["implementing new domain", "code review for service layer", "understanding DI pattern"]
-keywords: ["service", "dependency-injection", "tsyringe", "injectable", "template", "testing"]
-dependencies: ["architecture/02-service-patterns.md", "rules/02-service-purity.md"]
-urgency: "high"
-size: "1500 words"
-template: true
-status: "active"
-
-==> copilot/Memory-Bank/implementation/01-trpc-procedures.md <==
----
-file: implementation/01-trpc-procedures.md
-purpose: "tRPC procedure structure, input validation, middleware order, context injection, error handling with real examples"
-triggers: ["implementing new domain", "adding new procedure", "code review for procedures"]
-keywords: ["tRPC", "procedure", "validation", "middleware", "context", "query", "mutation", "router"]
-dependencies: ["architecture/02-service-patterns.md", "rules/01-auth-enforcement.md", "rules/03-schema-validation.md"]
-urgency: "high"
-size: "2000 words"
-template: true
-sections: ["core-pattern", "input-validation", "middleware-order", "context-injection", "query-vs-mutation", "error-handling", "real-examples", "router-aggregation", "testing", "gotchas", "checklist"]
-
-==> copilot/Memory-Bank/implementation/02-serverfn-routing.md <==
----
-file: implementation/02-serverfn-routing.md
-purpose: "serverFn as BFF routing layer, jwtGuard, routingMiddleware pattern, response combining, standardized httpSchema input validation, MVP vs worker-instance"
-triggers: ["implementing serverFn endpoint", "designing routing layer", "combining multi-instance responses", "setting up input validation"]
-keywords: ["serverFn", "routing", "BFF", "jwtGuard", "routingMiddleware", "response-combining", "aggregation", "httpSchema", "input validation"]
-dependencies: ["architecture/04-routing-aggregation.md", "architecture/01-auth-system.md", "implementation/01-trpc-procedures.md"]
-urgency: "critical"
-size: "2000 words"
-template: true
-sections: ["core-pattern", "input-validation", "jwt-guard", "routing-middleware", "response-combining", "mvp-vs-worker-instance", "real-examples", "error-handling", "performance", "gotchas", "checklist"]
-
-==> copilot/Memory-Bank/implementation/03-auth-guards.md <==
----
-file: implementation/03-auth-guards.md
-purpose: "jwtGuard and authGuard implementation, policy validation, statement scoping, error responses, testing"
-triggers: ["implementing auth middleware", "debugging permission issues", "code review for auth"]
-keywords: ["auth", "guard", "middleware", "JWT", "policy", "scope", "permission", "error"]
-dependencies: ["architecture/01-auth-system.md", "database/01-policy-system.md", "rules/01-auth-enforcement.md"]
-urgency: "critical"
-size: "1800 words"
-template: true
-sections: ["jwt-guard", "auth-guard", "policy-validation", "statement-scoping", "error-responses", "caching", "real-examples", "testing", "gotchas", "checklist"]
-
-==> copilot/Memory-Bank/implementation/04-domain-structure.md <==
----
-file: implementation/04-domain-structure.md
-purpose: "File organization within domain, index.ts public API exports, naming conventions, colocalization rationale"
-triggers: ["creating new domain", "organizing domain files", "code review for structure"]
-keywords: ["domain", "folder", "index.ts", "exports", "organization", "colocalization", "naming"]
-dependencies: ["decisions/02-why-colocate-domains.md", "architecture/02-service-patterns.md"]
-urgency: "medium"
-size: "1200 words"
-template: true
-sections: ["structure", "file-organization", "index-exports", "naming-conventions", "colocalization", "real-example", "anti-patterns", "checklist"]
-
-==> copilot/Memory-Bank/reference/00-request-flows.md <==
----
-file: reference/00-request-flows.md
 purpose: "Visual reference: request flows, auth flows, policy cascade, error handling paths"
 triggers: ["understanding request lifecycle", "tracing bug through system", "architectural review"]
 keywords: ["flow", "diagram", "sequence", "request", "auth", "policy", "cascade", "response"]
-dependencies: ["architecture/01-auth-system.md", "architecture/02-service-patterns.md"]
-urgency: "medium"
+importance: "medium"
 size: "1200 words"
-sections: ["mvp-request-flow", "worker-instance-request-flow", "auth-flow", "policy-cascade-flow", "error-handling"]
 status: "active"
+created: "2025-10-20"
+updated: "2025-11-27"
 
-==> copilot/Memory-Bank/reference/01-er-diagram.md <==
+
+
+
+
 ---
-file: reference/01-er-diagram.md
-purpose: "Database entity relationships, cardinality, composite keys, realm boundaries"
-triggers: ["understanding database schema", "designing new features", "migration planning"]
-keywords: ["ER", "diagram", "entity", "relationship", "schema", "cardinality", "foreign key", "realm"]
-dependencies: ["database/00-realm-model.md", "database/01-policy-system.md"]
-urgency: "medium"
-size: "1000 words"
-sections: ["entity-relationship-diagram", "key-relationships", "composite-keys", "realm-boundaries", "cardinality-notes"]
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/data-modeling.md <==
+---
+purpose: "Guide on mapping Database Tables to Zod Schemas and DTOs"
+triggers: ["creating new domain", "adding database fields"]
+keywords: ["prisma", "zod", "dto", "schema", "modeling"]
+importance: "high"
+size: "400 tokens"
 status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
 
-==> copilot/Memory-Bank/reference/02-policy-examples.md <==
+
+
+
+
 ---
-file: reference/02-policy-examples.md
-purpose: "Real-world policy hierarchy examples: Schönherz, conference, deep nesting"
-triggers: ["designing policy structure", "understanding escalation", "testing policy system"]
-keywords: ["policy", "example", "hierarchy", "escalation", "schönherz", "conference", "real-world"]
-dependencies: ["database/01-policy-system.md", "database/02-group-hierarchy.md"]
-urgency: "low"
-size: "1000 words"
-sections: ["schönherz-hierarchy", "conference-hierarchy", "deep-nesting", "cascading-examples", "permission-matrix"]
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/middleware.md <==
+---
+purpose: "Middleware stack order and guard responsibilities"
+triggers: ["implementing middleware", "debugging auth failures", "adding new guard"]
+keywords: ["middleware", "guard", "stack", "order", "jwtGuard", "authGuard"]
+importance: "critical"
+size: "800 tokens"
 status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
 
-==> copilot/Memory-Bank/reference/03-glossary.md <==
+
+
+
+
 ---
-file: reference/03-glossary.md
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/service-layer.md <==
+---
+purpose: "Copy-paste service template with DI pattern; what goes in service, what doesn't, testing in isolation"
+triggers: ["implementing new domain", "code review for service layer", "understanding DI pattern"]
+keywords: ["service", "dependency-injection", "tsyringe", "injectable", "template", "testing"]
+importance: "critical"
+size: "1500 words"
+status: "active"
+created: "2025-10-20"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/testing.md <==
+---
+purpose: "Canonical guide for testing strategies and patterns"
+triggers: ["writing tests", "debugging tests"]
+keywords: ["testing", "vitest", "mocking", "unit test", "integration test"]
+importance: "high"
+size: "1300 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/auth/login-flow.md <==
+---
+purpose: "Complete JWT flow, auth guards, and permission system"
+triggers: ["implementing auth", "designing login flow", "debugging permissions"]
+keywords: ["JWT", "auth", "policy", "guard", "cookie", "oauth"]
+importance: "critical"
+size: "700 tokens"
+status: "active"
+created: "2025-10-20"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/auth/permissions.md <==
+---
+purpose: "Policy, Statement, PolicyAssignment models; hierarchy with delegation, cascading escalation, permission grants"
+triggers: ["adding permissions", "debugging access denied", "cascading on subgroup creation"]
+keywords: ["policy", "statement", "assignment", "hierarchy", "delegation", "cascading", "permission", "resource"]
+importance: "high"
+size: "2000 tokens"
+status: "active"
+created: "2025-10-20"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/auth/session.md <==
+---
+purpose: "Explain session management and cookies"
+triggers: ["debugging session", "security audit"]
+keywords: ["auth", "session", "cookie", "jwt"]
+importance: "medium"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/evaluation/guidelines.md <==
+---
+purpose: "Rules for what counts as points"
+triggers: ["creating guidelines", "disputing points"]
+keywords: ["evaluation", "guidelines", "rules"]
+importance: "nice to know"
+size: "150 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/evaluation/scoring.md <==
+---
+purpose: "Define how points are calculated"
+triggers: ["evaluating members", "setting up semester"]
+keywords: ["evaluation", "scoring", "points", "ranking"]
+importance: "must know"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/evaluation/sheets-integration.md <==
+---
+purpose: "Explain the sync with Google Sheets"
+triggers: ["configuring sheets", "debugging sync"]
+keywords: ["evaluation", "sheets", "google", "sync"]
+importance: "probably needed"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/prisma.md <==
+---
+purpose: "Guide for Prisma usage"
+triggers: ["database migration", "querying"]
+keywords: ["prisma", "database", "orm"]
+importance: "probably needed"
+size: "0 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/tanstack-form.md <==
+---
+purpose: "Guide for TanStack Form usage"
+triggers: ["building forms"]
+keywords: ["form", "tanstack", "validation"]
+importance: "probably needed"
+size: "0 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/tanstack-query.md <==
+---
+purpose: "Guide for TanStack Query usage"
+triggers: ["fetching data", "caching"]
+keywords: ["query", "tanstack", "cache"]
+importance: "probably needed"
+size: "0 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/tanstack-start.md <==
+---
+purpose: "Guide for TanStack Start usage"
+triggers: ["routing", "server actions"]
+keywords: ["start", "tanstack", "framework"]
+importance: "probably needed"
+size: "0 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/zod.md <==
+---
+purpose: "Guide for Zod usage"
+triggers: ["validation", "schema definition"]
+keywords: ["zod", "validation", "schema"]
+importance: "probably needed"
+size: "0 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/gotchas/serverfn-responses.md <==
+---
+purpose: "GOTCHA: serverFn handlers must return json() wrapped responses"
+triggers: ["serverFn returns undefined", "middleware chain breaks", "test failures"]
+keywords: ["serverFn", "json", "Response", "TanStack", "handler"]
+importance: "high"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/creation.md <==
+---
+purpose: "Rules for creating organizations and subgroups"
+triggers: ["creating group", "onboarding organization"]
+keywords: ["group", "creation", "organization", "subgroup"]
+importance: "probably needed"
+size: "400 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/hierarchy.md <==
+---
+purpose: "Group model with parent-child hierarchy, realmId isolation, composite constraints, cascading on creation"
+triggers: ["creating groups", "querying group hierarchy", "designing group operations", "validating group constraints"]
+keywords: ["group", "hierarchy", "parent", "children", "composite-key", "archived", "cascade"]
+importance: "critical"
+size: "400 tokens"
+status: "active"
+created: "2025-10-20"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/roles.md <==
+---
+purpose: "Define roles and permission inheritance"
+triggers: ["assigning roles", "checking permissions"]
+keywords: ["group", "roles", "permissions", "inheritance"]
+importance: "must know"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/structure.md <==
+---
+purpose: "Define the Group data model and hierarchy"
+triggers: ["schema changes", "understanding groups"]
+keywords: ["group", "structure", "hierarchy", "organization"]
+importance: "high"
+size: "500 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/membership/management.md <==
+---
+purpose: "Manage group memberships"
+triggers: ["joining group", "leaving group", "approving members"]
+keywords: ["membership", "join", "leave", "approval"]
+importance: "must know"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/reference/glossary.md <==
+---
 purpose: "Terminology glossary for pek-infinity architecture, policies, and system design"
 triggers: ["confused about terminology", "onboarding new developer", "architectural discussion"]
 keywords: ["glossary", "terms", "definitions", "realm", "federation", "hub", "worker-instance", "policy", "cascade", "mvp"]
-dependencies: []
-urgency: "low"
+importance: "low"
 size: "800 words"
-sections: ["core-concepts", "architecture-terms", "policy-terms", "database-terms", "performance-terms"]
 status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
 
-==> copilot/Memory-Bank/reference/04-quick-reference.md <==
----
-file: reference/04-quick-reference.md
-purpose: "One-page summary, key commands, PR checklist, critical rules"
-triggers: ["before submitting PR", "quick lookup", "first-time context"]
-keywords: ["checklist", "summary", "reference", "quick", "rules"]
-dependencies: ["all architecture/*", "all rules/*"]
-urgency: "high"
-size: "500 words"
-status: "active"
-created: "2025-10-20"
 
-==> copilot/Memory-Bank/rejected/00-rest-endpoints-in-mvp.md <==
+
+
+
 ---
-file: rejected/00-rest-endpoints-in-mvp.md
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rejected/00-rest-endpoints-in-mvp.md <==
+---
 purpose: "Why REST not chosen for MVP. When REST will be added (worker instances)"
 triggers: ["architectural discussion", "comparing REST vs tRPC", "worker planning"]
 keywords: ["REST", "tRPC", "API", "resource", "HTTP", "endpoint", "MVP", "worker"]
@@ -288,77 +402,164 @@ size: "900 words"
 sections: ["decision-summary", "why-not-rest-for-mvp", "trpc-advantages", "when-rest-needed", "migration-plan", "comparison-table"]
 status: "active"
 
-==> copilot/Memory-Bank/rejected/01-service-realm-awareness.md <==
----
-file: rejected/01-service-realm-awareness.md
-purpose: "Why services DON'T know realm (detailed rejection with consequences)"
-triggers: ["service design decision", "code review", "scalability question"]
-keywords: ["service", "realm", "parameter", "awareness", "injection", "DI", "coupling"]
-dependencies: ["rules/02-service-purity.md", "gotchas/01-migration-blockers.md"]
-urgency: "high"
-size: "1000 words"
-sections: ["decision", "rejected-approach", "why-rejected", "correct-approach", "comparison", "consequences"]
-status: "active"
 
-==> copilot/Memory-Bank/rules/00-realm-isolation.md <==
----
-file: rules/00-realm-isolation.md
-purpose: "MUST: Every query filters by realmId. Verification method, examples, test cases"
-triggers: ["code review", "writing database query", "debugging data leakage"]
-keywords: ["realm", "isolation", "filter", "query", "data-leakage", "must-follow"]
-dependencies: ["database/00-realm-model.md", "architecture/00-federation-model.md"]
-urgency: "critical"
-enforcement: "must-follow"
-size: "2000 words"
-check-command: "grep -r 'findMany\\|findUnique\\|findFirst' src/domains/ | grep -v realmId"
 
-==> copilot/Memory-Bank/rules/01-auth-enforcement.md <==
+
 ---
-file: rules/01-auth-enforcement.md
+
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/auth-enforcement.md <==
+---
 purpose: "MUST: Auth checks in middleware, not handlers. Error handling, response codes, middleware order critical"
 triggers: ["code review for auth", "implementing permission check", "debugging permission bypass"]
 keywords: ["auth", "middleware", "enforcement", "handler", "layer", "401", "403"]
-dependencies: ["implementation/03-auth-guards.md", "architecture/01-auth-system.md"]
-urgency: "critical"
-enforcement: "must-follow"
-size: "1500 words"
-sections: ["the-rule", "why-it-matters", "middleware-order", "error-codes", "bad-examples", "good-examples", "testing", "checklist"]
+importance: "critical"
+size: "600 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
 
-==> copilot/Memory-Bank/rules/02-service-purity.md <==
----
-file: rules/02-service-purity.md
-purpose: "MUST: Services realm-agnostic for MVP + worker-instance reuse"
-triggers: ["implementing service", "code review for service", "adding realm parameter"]
-keywords: ["service", "purity", "realm-agnostic", "DI", "reusable", "MVP", "worker-instance"]
-dependencies: ["architecture/02-service-patterns.md", "decisions/03-why-services-are-realm-agnostic.md"]
-urgency: "critical"
-enforcement: "must-follow"
-size: "1500 words"
-sections: ["the-rule", "why-it-matters", "what-services-do", "where-realm-comes-from", "bad-examples", "good-examples", "mvp-vs-worker-instance", "testing", "checklist"]
 
-==> copilot/Memory-Bank/rules/03-schema-validation.md <==
----
-file: rules/03-schema-validation.md
-purpose: "MUST: Zod schemas satisfy Prisma types. Type safety, prevention of silent bugs"
-triggers: ["creating schema", "code review for types", "debugging type mismatch"]
-keywords: ["Zod", "schema", "Prisma", "type", "satisfy", "validation", "safety"]
-dependencies: ["implementation/04-domain-structure.md", "gotchas/00-common-mistakes.md"]
-urgency: "high"
-enforcement: "must-follow"
-size: "1000 words"
-sections: ["the-rule", "why-it-matters", "how-to-use", "bad-examples", "good-examples", "checking-alignment", "testing", "checklist"]
 
-==> copilot/Memory-Bank/rules/04-parent-validation.md <==
+
+
 ---
-file: rules/04-parent-validation.md
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/domain-structure.md <==
+---
+purpose: "MUST: Organize code by domain, not technology layer"
+triggers: ["creating new feature", "organizing code", "file structure"]
+keywords: ["domain", "DDD", "structure", "organization", "colocation"]
+importance: "high"
+size: "300 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/frontmatter.md <==
+---
+purpose: "Enforce frontmatter format"
+triggers: ["creating documentation", "updating docs"]
+keywords: ["frontmatter", "format", "rules"]
+importance: "must know"
+size: "100 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/group-validation.md <==
+---
 purpose: "MUST: Validate parent group exists and is not archived. Prevent orphaned groups"
 triggers: ["group creation", "group update", "parentId assignment"]
 keywords: ["parent", "validation", "archived", "orphan", "hierarchy", "constraint"]
-dependencies: ["implementation/03-auth-guards.md", "gotchas/01-migration-blockers.md"]
-urgency: "high"
-enforcement: "must-follow"
+importance: "high"
 size: "800 words"
-sections: ["the-rule", "why-it-matters", "implementation", "bad-examples", "good-examples", "testing", "checklist"]
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/naming.md <==
+---
+purpose: "Enforce naming conventions"
+triggers: ["naming file", "naming variable"]
+keywords: ["naming", "convention", "rules"]
+importance: "must know"
+size: "100 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/performance.md <==
+---
+purpose: "MUST: Prevent N+1, cascading queries, and serial awaits. Performance is a feature."
+triggers: ["code review", "database design", "implementing list endpoint", "policy logic"]
+keywords: ["performance", "N+1", "query", "cascade", "optimization", "redis", "caching"]
+importance: "critical"
+size: "1500 words"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/schema-validation.md <==
+---
+purpose: "MUST: Zod schemas satisfy Prisma types. Type safety, prevention of silent bugs"
+triggers: ["creating schema", "code review for types", "debugging type mismatch"]
+keywords: ["Zod", "schema", "Prisma", "type", "satisfy", "validation", "safety"]
+importance: "high"
+size: "200 tokens"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/service-purity.md <==
+---
+purpose: "MUST: Services realm-agnostic for MVP + worker-instance reuse"
+triggers: ["implementing service", "code review for service", "adding realm parameter"]
+keywords: ["service", "purity", "realm-agnostic", "DI", "reusable", "MVP", "worker-instance"]
+importance: "critical"
+size: "200 words"
+status: "active"
+created: "2025-11-27"
+updated: "2025-11-27"
+
+
+
+
+
+---
+
+==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/user/profile.md <==
+---
+purpose: "User and Profile models; single profile in hub across federation, privacy scope restrictions"
+triggers: ["implementing user queries", "designing profile access", "handling federated users", "privacy boundaries"]
+keywords: ["user", "profile", "federation", "privacy", "scope", "basic-profile", "full-profile", "external-account"]
+importance: "high"
+size: "500 tokens"
+status: "active"
+created: "2025-10-20"
+updated: "2025-11-27"
+
+
+
+
+
+---
 </memory-bank>
 # GitHub Copilot Instructions
 
@@ -438,21 +639,7 @@ If you didn't receive this, then real all frontmatters using `head -n 10 .github
 
 This maximizes context efficiency: you work with the "index" of knowledge immediately available, then drill into specifics as needed.
 
-### 6.1 Memory Bank Structure
-
-The memory bank is organized into:
-
-- **README.md** - Navigation hub and quick-start by task
-- **Architecture/** - System design patterns and federation model
-- **Database/** - Schema, realm isolation, policy system
-- **Decisions/** - Architectural choices and rationale
-- **Implementation/** - Templates and code patterns
-- **Rules/** - **MUST FOLLOW BEFORE ANY PR**
-- **Gotchas/** - Learn from past mistakes
-- **Rejected/** - Why certain approaches weren't chosen
-- **Reference/** - Glossary, diagrams, and quick reference
-
-### 6.2 How to Use the Memory Bank
+### 6.1 How to Use the Memory Bank
 
 **Your workflow:**
 
@@ -461,7 +648,7 @@ The memory bank is organized into:
 3. **Lazily load full files** only when frontmatter indicates relevance to your task
 4. **Never assume** architecture, patterns, or decisions without consulting memory first
 
-### 6.3 Common Patterns (Copy From Memory Bank)
+### 6.2 Common Patterns (Copy From Memory Bank)
 
 **Never write patterns from scratch.** Reference and adapt from:
 
