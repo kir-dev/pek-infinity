@@ -13,7 +13,7 @@ cat > copilot-instructions.md << 'EOF'
 <memory-bank>
 EOF
 
-head -n 10 copilot/Memory-Bank/**/*.md >> copilot-instructions.md
+head -n 15 "$SCRIPT_DIR"/../memory-bank/**/*.md >> copilot-instructions.md
 
 cat >> copilot-instructions.md << 'EOF'
 </memory-bank>
@@ -21,4 +21,3 @@ EOF
 
 cat .copilot-instructions.template.md >> copilot-instructions.md
 
-cp copilot-instructions.md ../.clinerules
