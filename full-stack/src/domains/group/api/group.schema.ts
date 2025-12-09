@@ -1,5 +1,6 @@
-import { $Enums, type Prisma as P } from '@prisma/client';
 import z from 'zod/v4';
+import { GroupPurpose } from '@/_generated/prisma/enums';
+import type * as P from '@/_generated/prisma/models/Group';
 import { zDate } from '@/utils/zod-extra';
 
 const BaseGroupId = z.string().nonempty();
@@ -15,7 +16,7 @@ export const GroupProfile = z.object({
   webpage: z.url().nullable(),
   mail: z.email().nullable(),
   parentId: GroupId.nullable(),
-  purpose: z.enum($Enums.GroupPurpose),
+  purpose: z.enum(GroupPurpose),
 });
 
 export const GroupConfig = z.object({

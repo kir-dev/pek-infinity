@@ -1,3 +1,5 @@
+'use client';
+
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import type * as React from 'react';
 

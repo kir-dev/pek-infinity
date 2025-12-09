@@ -1,12 +1,12 @@
-import type * as Prisma from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
+import type { User as PrismaUser } from '@/_generated/prisma/browser';
 import { PrismaService } from '@/domains/prisma';
 
 @injectable()
 export class UserService {
   constructor(@inject(PrismaService) private prisma: PrismaService) {}
 
-  async findByAuthSchId(authSchId: string): Promise<Prisma.User | null> {
+  async findByAuthSchId(authSchId: string): Promise<PrismaUser | null> {
     return await this.prisma.user.findUnique({ where: { id: authSchId } });
   }
 

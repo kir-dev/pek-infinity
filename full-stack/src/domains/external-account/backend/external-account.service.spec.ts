@@ -1,5 +1,5 @@
-import Prisma, { ExternalAccountProtocol } from '@prisma/client';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { ExternalAccountProtocol } from '@/_generated/prisma/browser';
 import type { PrismaService } from '@/domains/prisma';
 import { MockPrismaService } from '@/domains/prisma/__test__/prisma.service.mock';
 import { ExternalAccountService } from './external-account.service';
@@ -23,7 +23,7 @@ describe('ExternalAccountService', () => {
       const accounts = [
         {
           id: '1',
-          protocol: Prisma.ExternalAccountProtocol.X_FORMERLY_TWITTER,
+          protocol: ExternalAccountProtocol.X_FORMERLY_TWITTER,
           accountName: '@testuser',
           ownerId,
         },

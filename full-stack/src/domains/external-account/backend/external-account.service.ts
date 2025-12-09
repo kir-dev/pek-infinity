@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import type * as Prisma from '@prisma/client';
 import { inject, injectable } from 'tsyringe';
+import type * as Prisma from '@/_generated/prisma/browser';
 import { PrismaService } from '@/domains/prisma';
 
 type ExternalAccountDto = {

@@ -17,6 +17,6 @@ services:
       context: .
       dockerfile: prisma.Dockerfile
 
-    command: migrate dev
+    command: migrate deploy
     environment:
       - POSTGRES_PRISMA_URL=postgres://postgres:dev@postgres:5432/dev
