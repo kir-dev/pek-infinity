@@ -15,11 +15,12 @@ export const PaginationQuery = z
   .default({ skip: PAGE_OFFSET_DEFAULT, take: PAGE_SIZE_DEFAULT });
 type ObjectLike = ZodRawShape | ZodObject<any> | undefined;
 
-type ToZodObject<T extends ObjectLike> = T extends ZodObject<any>
-  ? T
-  : T extends ZodRawShape
-    ? ZodObject<T>
-    : undefined;
+type ToZodObject<T extends ObjectLike> =
+  T extends ZodObject<any>
+    ? T
+    : T extends ZodRawShape
+      ? ZodObject<T>
+      : undefined;
 
 type InputConfig = {
   body?: ObjectLike;

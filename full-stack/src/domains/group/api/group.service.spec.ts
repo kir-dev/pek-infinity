@@ -80,7 +80,7 @@ describe('GroupService', () => {
     };
     mockPrisma.group.create.mockResolvedValue(createdOrg as any);
 
-    const result = await groupService.createOrganization(newOrg);
+    const result = await groupService.createOrganization(newOrg as any);
 
     expect(result).toEqual(createdOrg);
     expect(mockPrisma.group.create).toHaveBeenCalledWith({
