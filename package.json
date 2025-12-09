@@ -1,14 +1,19 @@
 {
   "name": "@workspace/root",
   "private": true,
-  "dependencies": {
-    "@prisma/client": "^6.19.0"
-  },
   "workspaces": [
-    "full-stack",
-    "prisma"
+    "full-stack"
   ],
+  "scripts": {
+    "generate": "npx prisma generate --no-hints --require-models"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0"
+  },
   "devDependencies": {
-    "@biomejs/biome": "2.3.5"
+    "@biomejs/biome": "2.3.8",
+    "dotenv": "^17.2.3",
+    "prisma": "^7.1.0"
   }
 }
