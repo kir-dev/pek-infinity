@@ -25,6 +25,8 @@ jobs:
         run: npx biome check .
 
       - name: Prisma format --check
+        env:
+          POSTGRES_PRISMA_URL: "postgresql://fake:fake@example.com:5432/fake"
         run: npx prisma format --check
 
       - name: Prisma validate
