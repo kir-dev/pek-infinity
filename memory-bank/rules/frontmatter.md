@@ -26,7 +26,7 @@ purpose: "Short description of the file"
 triggers: ["when to read this"]
 keywords: ["keywords", "for", "search"]
 importance: "must know" | "probably needed" | "nice to know" | "archive" | "deprecated" | "something else, freetext"
-size: "approx tokens or words. Round to nearest 100 or 1000."
+size: "approx tokens or words. Round to nearest 100."
 status: "active"
 created: "YYYY-MM-DD"
 updated: "YYYY-MM-DD"

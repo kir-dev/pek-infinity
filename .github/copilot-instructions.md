@@ -1,6 +1,6 @@
 <!-- this is auto generated, do not edit manually -->
 <memory-bank>
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/data-flow.md <==
+==> memory-bank/architecture/data-flow.md <==
 ---
 purpose: "Visual reference: request flows, auth flows, policy cascade, error handling paths"
 triggers: ["understanding request lifecycle", "tracing bug through system", "architectural review"]
@@ -17,7 +17,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/data-modeling.md <==
+==> memory-bank/architecture/data-modeling.md <==
 ---
 purpose: "Guide on mapping Database Tables to Zod Schemas and DTOs"
 triggers: ["creating new domain", "adding database fields"]
@@ -34,7 +34,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/middleware.md <==
+==> memory-bank/architecture/middleware.md <==
 ---
 purpose: "Middleware stack order and guard responsibilities"
 triggers: ["implementing middleware", "debugging auth failures", "adding new guard"]
@@ -51,7 +51,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/service-layer.md <==
+==> memory-bank/architecture/service-layer.md <==
 ---
 purpose: "Copy-paste service template with DI pattern; what goes in service, what doesn't, testing in isolation"
 triggers: ["implementing new domain", "code review for service layer", "understanding DI pattern"]
@@ -68,7 +68,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/architecture/testing.md <==
+==> memory-bank/architecture/testing.md <==
 ---
 purpose: "Canonical guide for testing strategies and patterns"
 triggers: ["writing tests", "debugging tests"]
@@ -85,7 +85,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/auth/login-flow.md <==
+==> memory-bank/auth/login-flow.md <==
 ---
 purpose: "Complete JWT flow, auth guards, and permission system"
 triggers: ["implementing auth", "designing login flow", "debugging permissions"]
@@ -102,7 +102,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/auth/permissions.md <==
+==> memory-bank/auth/permissions.md <==
 ---
 purpose: "Policy, Statement, PolicyAssignment models; hierarchy with delegation, cascading escalation, permission grants"
 triggers: ["adding permissions", "debugging access denied", "cascading on subgroup creation"]
@@ -119,7 +119,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/auth/session.md <==
+==> memory-bank/auth/session.md <==
 ---
 purpose: "Explain session management and cookies"
 triggers: ["debugging session", "security audit"]
@@ -136,7 +136,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/evaluation/guidelines.md <==
+==> memory-bank/evaluation/guidelines.md <==
 ---
 purpose: "Rules for what counts as points"
 triggers: ["creating guidelines", "disputing points"]
@@ -153,7 +153,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/evaluation/scoring.md <==
+==> memory-bank/evaluation/scoring.md <==
 ---
 purpose: "Define how points are calculated"
 triggers: ["evaluating members", "setting up semester"]
@@ -170,7 +170,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/evaluation/sheets-integration.md <==
+==> memory-bank/evaluation/sheets-integration.md <==
 ---
 purpose: "Explain the sync with Google Sheets"
 triggers: ["configuring sheets", "debugging sync"]
@@ -187,7 +187,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/prisma.md <==
+==> memory-bank/external/prisma.md <==
 ---
 purpose: "Guide for Prisma usage"
 triggers: ["database migration", "querying"]
@@ -204,7 +204,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/tanstack-form.md <==
+==> memory-bank/external/tanstack-form.md <==
 ---
 purpose: "Guide for TanStack Form usage"
 triggers: ["building forms"]
@@ -221,7 +221,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/tanstack-query.md <==
+==> memory-bank/external/tanstack-query.md <==
 ---
 purpose: "Guide for TanStack Query usage"
 triggers: ["fetching data", "caching"]
@@ -238,7 +238,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/tanstack-start.md <==
+==> memory-bank/external/tanstack-start.md <==
 ---
 purpose: "Guide for TanStack Start usage"
 triggers: ["routing", "server actions"]
@@ -255,7 +255,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/external/zod.md <==
+==> memory-bank/external/zod.md <==
 ---
 purpose: "Guide for Zod usage"
 triggers: ["validation", "schema definition"]
@@ -272,7 +272,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/gotchas/serverfn-responses.md <==
+==> memory-bank/gotchas/serverfn-responses.md <==
 ---
 purpose: "GOTCHA: serverFn handlers must return json() wrapped responses"
 triggers: ["serverFn returns undefined", "middleware chain breaks", "test failures"]
@@ -289,7 +289,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/creation.md <==
+==> memory-bank/group/creation.md <==
 ---
 purpose: "Rules for creating organizations and subgroups"
 triggers: ["creating group", "onboarding organization"]
@@ -306,7 +306,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/hierarchy.md <==
+==> memory-bank/group/hierarchy.md <==
 ---
 purpose: "Group model with parent-child hierarchy, realmId isolation, composite constraints, cascading on creation"
 triggers: ["creating groups", "querying group hierarchy", "designing group operations", "validating group constraints"]
@@ -323,7 +323,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/roles.md <==
+==> memory-bank/group/roles.md <==
 ---
 purpose: "Define roles and permission inheritance"
 triggers: ["assigning roles", "checking permissions"]
@@ -340,7 +340,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/group/structure.md <==
+==> memory-bank/group/structure.md <==
 ---
 purpose: "Define the Group data model and hierarchy"
 triggers: ["schema changes", "understanding groups"]
@@ -357,7 +357,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/membership/management.md <==
+==> memory-bank/membership/management.md <==
 ---
 purpose: "Manage group memberships"
 triggers: ["joining group", "leaving group", "approving members"]
@@ -374,7 +374,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/reference/glossary.md <==
+==> memory-bank/reference/glossary.md <==
 ---
 purpose: "Terminology glossary for pek-infinity architecture, policies, and system design"
 triggers: ["confused about terminology", "onboarding new developer", "architectural discussion"]
@@ -391,7 +391,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rejected/00-rest-endpoints-in-mvp.md <==
+==> memory-bank/rejected/00-rest-endpoints-in-mvp.md <==
 ---
 purpose: "Why REST not chosen for MVP. When REST will be added (worker instances)"
 triggers: ["architectural discussion", "comparing REST vs tRPC", "worker planning"]
@@ -408,7 +408,7 @@ status: "active"
 ---
 
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/auth-enforcement.md <==
+==> memory-bank/rules/auth-enforcement.md <==
 ---
 purpose: "MUST: Auth checks in middleware, not handlers. Error handling, response codes, middleware order critical"
 triggers: ["code review for auth", "implementing permission check", "debugging permission bypass"]
@@ -425,7 +425,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/domain-structure.md <==
+==> memory-bank/rules/domain-structure.md <==
 ---
 purpose: "MUST: Organize code by domain, not technology layer"
 triggers: ["creating new feature", "organizing code", "file structure"]
@@ -442,7 +442,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/frontmatter.md <==
+==> memory-bank/rules/frontmatter.md <==
 ---
 purpose: "Enforce frontmatter format"
 triggers: ["creating documentation", "updating docs"]
@@ -459,7 +459,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/group-validation.md <==
+==> memory-bank/rules/group-validation.md <==
 ---
 purpose: "MUST: Validate parent group exists and is not archived. Prevent orphaned groups"
 triggers: ["group creation", "group update", "parentId assignment"]
@@ -476,7 +476,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/naming.md <==
+==> memory-bank/rules/naming.md <==
 ---
 purpose: "Enforce naming conventions"
 triggers: ["naming file", "naming variable"]
@@ -493,7 +493,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/performance.md <==
+==> memory-bank/rules/performance.md <==
 ---
 purpose: "MUST: Prevent N+1, cascading queries, and serial awaits. Performance is a feature."
 triggers: ["code review", "database design", "implementing list endpoint", "policy logic"]
@@ -510,7 +510,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/schema-validation.md <==
+==> memory-bank/rules/schema-validation.md <==
 ---
 purpose: "MUST: Zod schemas satisfy Prisma types. Type safety, prevention of silent bugs"
 triggers: ["creating schema", "code review for types", "debugging type mismatch"]
@@ -527,7 +527,7 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/rules/service-purity.md <==
+==> memory-bank/rules/service-purity.md <==
 ---
 purpose: "MUST: Services realm-agnostic for MVP + worker-instance reuse"
 triggers: ["implementing service", "code review for service", "adding realm parameter"]
@@ -544,7 +544,109 @@ updated: "2025-11-27"
 
 ---
 
-==> /home/sudta/projects/kir-dev/pek-infinity/copilot/refactor-memory-bank-docs/.github/../memory-bank/user/profile.md <==
+==> memory-bank/ui-native-design/activity-sheets.md <==
+---
+purpose: "Specify the activity heatmap sheet design and behavior"
+triggers: ["activity sheet", "heatmap", "user activity"]
+keywords: ["heatmap", "sheet", "activity", "semester", "sticky"]
+importance: "high"
+size: "600 words"
+status: "active"
+created: "2025-12-10"
+updated: "2025-12-10"
+
+
+
+
+
+---
+
+==> memory-bank/ui-native-design/group-profile.md <==
+---
+purpose: "Document the Group Profile layout and interactions"
+triggers: ["group profile", "ui design", "member list"]
+keywords: ["group", "profile", "layout", "members", "hierarchy"]
+importance: "critical"
+size: "1000 words"
+status: "active"
+created: "2025-12-10"
+updated: "2025-12-10"
+
+
+
+
+
+---
+
+==> memory-bank/ui-native-design/members-and-actions.md <==
+---
+purpose: "Define member list filtering, sorting, and quick actions"
+triggers: ["member list", "filter", "actions"]
+keywords: ["members", "filter", "role", "state", "optimistic"]
+importance: "high"
+size: "800 words"
+status: "active"
+created: "2025-12-10"
+updated: "2025-12-10"
+
+
+
+
+
+---
+
+==> memory-bank/ui-native-design/shell-navigation.md <==
+---
+purpose: "Define the app shell and navigation patterns for the native design"
+triggers: ["navigation design", "bottom bar", "sheet stack"]
+keywords: ["shell", "navigation", "bottom bar", "sheets"]
+importance: "critical"
+size: "800 words"
+status: "active"
+created: "2025-12-10"
+updated: "2025-12-10"
+
+
+
+
+
+---
+
+==> memory-bank/ui-native-design/ui-vision.md <==
+---
+purpose: "Define the design philosophy shift from Bootstrap Admin to Native/Linear"
+triggers: ["UI refactor", "design review", "component updates"]
+keywords: ["design", "native", "linear", "phonebook", "search-first"]
+importance: "critical"
+size: "1000 tokens"
+status: "active"
+created: "2025-12-10"
+updated: "2025-12-10"
+
+
+
+
+
+---
+
+==> memory-bank/ui-native-design/user-profile.md <==
+---
+purpose: "Document the User Profile layout and interactions"
+triggers: ["user profile", "ui design", "contact icons"]
+keywords: ["user", "profile", "layout", "contacts", "heatmap"]
+importance: "critical"
+size: "900 words"
+status: "active"
+created: "2025-12-10"
+updated: "2025-12-10"
+
+
+
+
+
+---
+
+==> memory-bank/user/profile.md <==
 ---
 purpose: "User and Profile models; single profile in hub across federation, privacy scope restrictions"
 triggers: ["implementing user queries", "designing profile access", "handling federated users", "privacy boundaries"]
