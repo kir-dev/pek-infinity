@@ -3,7 +3,7 @@ purpose: "Complete federation model - hub/worker relationships, realm concept, i
 triggers: ["planning future", "scaling", "understanding federation"]
 keywords: ["federation", "vision", "scaling", "hub", "worker", "realm"]
 importance: "future"
-size: "1500 words"
+size: "1000 tokens"
 status: "active"
 created: "2025-11-27"
 updated: "2025-11-27"

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -exuo pipefail
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,7 +13,9 @@ cat > copilot-instructions.md << 'EOF'
 <memory-bank>
 EOF
 
-head -n 15 "$SCRIPT_DIR"/../memory-bank/**/*.md >> copilot-instructions.md
+pushd "$SCRIPT_DIR/../"
+head -n 15 memory-bank/**/*.md >> "$SCRIPT_DIR/copilot-instructions.md"
+popd
 
 cat >> copilot-instructions.md << 'EOF'
 </memory-bank>

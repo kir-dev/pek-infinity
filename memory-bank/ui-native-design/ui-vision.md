@@ -3,10 +3,15 @@ purpose: "Define the design philosophy shift from Bootstrap Admin to Native/Line
 triggers: ["UI refactor", "design review", "component updates"]
 keywords: ["design", "native", "linear", "phonebook", "search-first"]
 importance: "critical"
-size: "1200 words"
+size: "1000 tokens"
 status: "active"
 created: "2025-12-10"
 updated: "2025-12-10"
+
+
+
+
+
 ---
 
 # Design Vision: Bootstrap Admin → Native/Linear
@@ -86,13 +91,6 @@ This is a **fundamental architecture change**, not cosmetic.
 - Search is a **core navigation element**, not a buried feature
 - User & Group profiles are equally important
 - Membership is an **entity** (not just a join table)
-
-## Memory Bank Structure
-
-This folder contains:
-- `design-vision.md` (this file) — Philosophy & principles
-- `shell-architecture.md` — App shell, bottom nav, sheet stack
-- `patterns.md` — Reusable interaction patterns
 
 ## Conversion Rules: From Bootstrap → Native
 

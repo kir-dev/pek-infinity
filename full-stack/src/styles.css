@@ -62,7 +62,15 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-:root {
+@theme {
+  --transition-duration-instant: 50ms;
+  --transition-duration-quick: 150ms;
+  --transition-duration-snap: 250ms;
+  --transition-duration-fluid: 350ms;
+  --transition-duration-deliberate: 500ms;
+}
+
+.light, :root {
   /* 
     LIGHT MODE: "Tactile Professionalism"
     Concept: A sheet of high-quality paper. Invisible cards.
@@ -134,7 +142,7 @@ code {
 .dark {
   /* 
     DARK MODE: "The Void"
-    Concept: Premium OLED. Deep violet tint, no grey wash.
+    Concept: Premium OLED. Deep violet tint, no gray wash.
   */
   --background: oklch(0.10 0.02 280); /* Deep rich violet-black */
   --foreground: oklch(0.98 0.01 280);
