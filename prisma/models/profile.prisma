@@ -1,15 +1,16 @@
 model Profile {
   userId           String                @id @unique
-  user             User                  @relation(fields: [userId], references: [id])
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName        String?
   lastName         String?
   nickname         String?
-  cellPhone        String?
+  avatar           String?               // Derived from username or nickname (emoji/initials/avatar URL)
   room             String?
   dormitory        Dormitory?            @default(UNKNOWN)
   gender           Gender?               @default(UNKNOWN)
   studentStatus    StudentStatus?        @default(UNKNOWN)
-  externalAccounts ExternalAccountLink[]
+  contacts         Contact[]
+  updatedAt        DateTime              @updatedAt
 }
 
 enum Dormitory {
@@ -37,15 +38,15 @@ enum StudentStatus {
   UNKNOWN
 }
 
-model ExternalAccountLink {
-  id          String                  @id @default(cuid())
-  protocol    ExternalAccountProtocol
-  accountName String
+model Contact {
+  id          String          @id @default(cuid())
+  protocol    ContactProtocol
+  value       String
   ownerId     String
-  owner       Profile                 @relation(fields: [ownerId], references: [userId])
+  owner       Profile         @relation(fields: [ownerId], references: [userId])
 }
 
-enum ExternalAccountProtocol {
+enum ContactProtocol {
   X_FORMERLY_TWITTER     @map("twitter")
   SKYPE                  @map("skype")
   CALL_SIGN              @map("call_sign")
@@ -53,9 +54,20 @@ enum ExternalAccountProtocol {
   GTALK                  @map("gtalk")
   JABBER                 @map("jabber")
   META_FORMERLY_FACEBOOK @map("facebook")
-  TELEGRAM               @map("Telegram")
+  TELEGRAM               @map("telegram")
   SCH_MAIL               @map("sch_mail")
   HIMZO                  @map("Hímzek")
   GMAIL                  @map("gmail")
   EASTER_EGG             @map("🍆")
+  WHATSAPP               @map("whatsapp")
+  CELL_PHONE             @map("cell_phone")
+  DISCORD                @map("discord")
+  INSTAGRAM              @map("instagram")
+  LINKEDIN               @map("linkedin")
+  GITHUB                 @map("github")
+  STEAM                  @map("steam")
+  VIBER                  @map("viber")
+  SIGNAL                 @map("signal")
+  WEBPAGE                @map("webpage")
+  EMAIL                  @map("email")
 }

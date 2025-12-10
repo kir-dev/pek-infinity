@@ -4,10 +4,12 @@
     "**/routeTree.gen.ts": true
   },
   "search.exclude": {
-    "**/routeTree.gen.ts": true
+    "**/routeTree.gen.ts": true,
+    "**/_generated/**": true
   },
   "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true
+    "**/routeTree.gen.ts": true,
+    "**/_generated/**": true
   },
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
