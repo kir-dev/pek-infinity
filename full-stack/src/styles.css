@@ -70,7 +70,8 @@ code {
   --transition-duration-deliberate: 500ms;
 }
 
-.light, :root {
+.light,
+:root {
   /* 
     LIGHT MODE: "Tactile Professionalism"
     Concept: A sheet of high-quality paper. Invisible cards.
@@ -83,7 +84,7 @@ code {
   --card: oklch(0.99 0.002 285);
   --card-foreground: oklch(0.13 0.02 285);
 
-  --popover: oklch(1.0 0 0);
+  --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.02 285);
 
   /* Elite Purple: Deep, authoritative, not playful */
@@ -92,11 +93,11 @@ code {
 
   /* Secondary: Soft lavender for depth without borders */
   --secondary: oklch(0.92 0.03 290);
-  --secondary-foreground: oklch(0.30 0.05 290);
+  --secondary-foreground: oklch(0.3 0.05 290);
 
   /* Muted: For metadata/subtext */
   --muted: oklch(0.96 0.01 285);
-  --muted-foreground: oklch(0.50 0.02 285);
+  --muted-foreground: oklch(0.5 0.02 285);
 
   /* Accent: AMBER mapping for "Home" warmth on interaction */
   --accent: oklch(0.94 0.06 85); /* Pale Amber wash */
@@ -111,10 +112,10 @@ code {
 
   /* Charting adjusted to Purple/Amber/Teal trio */
   --chart-1: oklch(0.45 0.18 290); /* Purple */
-  --chart-2: oklch(0.75 0.16 85);  /* Amber */
-  --chart-3: oklch(0.60 0.15 180); /* Teal */
-  --chart-4: oklch(0.55 0.10 250); /* Blue */
-  --chart-5: oklch(0.85 0.10 85);  /* Soft Amber */
+  --chart-2: oklch(0.75 0.16 85); /* Amber */
+  --chart-3: oklch(0.6 0.15 180); /* Teal */
+  --chart-4: oklch(0.55 0.1 250); /* Blue */
+  --chart-5: oklch(0.85 0.1 85); /* Soft Amber */
 
   /* Radii: Sleek but approachable (Apple/Linear standard) */
   --radius: 0.75rem;
@@ -123,9 +124,12 @@ code {
   --shadow-2xs: 0 1px 2px -1px rgb(0 0 0 / 0.05);
   --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.05);
   --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+  --shadow-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
 
   /* Sidebar: Blends with background */
@@ -144,23 +148,23 @@ code {
     DARK MODE: "The Void"
     Concept: Premium OLED. Deep violet tint, no gray wash.
   */
-  --background: oklch(0.10 0.02 280); /* Deep rich violet-black */
+  --background: oklch(0.1 0.02 280); /* Deep rich violet-black */
   --foreground: oklch(0.98 0.01 280);
 
   /* Invisible UI: Card matches background to create depth via borders/hover only */
-  --card: oklch(0.10 0.02 280);
+  --card: oklch(0.1 0.02 280);
   --card-foreground: oklch(0.98 0.01 280);
 
-  --popover: oklch(0.10 0.02 280);
+  --popover: oklch(0.1 0.02 280);
   --popover-foreground: oklch(0.98 0.01 280);
 
   /* Primary: Electric Violet - High energy */
   --primary: oklch(0.65 0.22 290);
-  --primary-foreground: oklch(0.10 0.02 280);
+  --primary-foreground: oklch(0.1 0.02 280);
 
   /* Secondary: Deep muted violet surface */
-  --secondary: oklch(0.20 0.04 285);
-  --secondary-foreground: oklch(0.90 0.02 285);
+  --secondary: oklch(0.2 0.04 285);
+  --secondary-foreground: oklch(0.9 0.02 285);
 
   /* Muted: Receded text */
   --muted: oklch(0.15 0.02 280);
@@ -168,40 +172,42 @@ code {
 
   /* Accent: Amber Glow - The "Hearth" in the dark */
   --accent: oklch(0.25 0.08 85); /* Dark Amber wash */
-  --accent-foreground: oklch(0.90 0.05 85); /* Bright Amber text */
+  --accent-foreground: oklch(0.9 0.05 85); /* Bright Amber text */
 
-  --destructive: oklch(0.5 0.20 25);
+  --destructive: oklch(0.5 0.2 25);
   --destructive-foreground: oklch(0.98 0 0);
 
   /* Borders: Very subtle, defining the "invisible" structure */
-  --border: oklch(0.20 0.02 280);
-  --input: oklch(0.20 0.02 280);
+  --border: oklch(0.2 0.02 280);
+  --input: oklch(0.2 0.02 280);
   --ring: oklch(0.65 0.22 290);
 
   /* Charting adjusted for dark mode contrast */
   --chart-1: oklch(0.65 0.22 290);
-  --chart-2: oklch(0.70 0.16 85);
-  --chart-3: oklch(0.60 0.15 180);
-  --chart-4: oklch(0.60 0.10 250);
-  --chart-5: oklch(0.80 0.10 85);
+  --chart-2: oklch(0.7 0.16 85);
+  --chart-3: oklch(0.6 0.15 180);
+  --chart-4: oklch(0.6 0.1 250);
+  --chart-5: oklch(0.8 0.1 85);
 
   /* Sidebar: Unified dark */
-  --sidebar: oklch(0.10 0.02 280);
+  --sidebar: oklch(0.1 0.02 280);
   --sidebar-foreground: oklch(0.98 0.01 280);
   --sidebar-primary: oklch(0.65 0.22 290);
-  --sidebar-primary-foreground: oklch(0.10 0.02 280);
+  --sidebar-primary-foreground: oklch(0.1 0.02 280);
   --sidebar-accent: oklch(0.25 0.08 85);
-  --sidebar-accent-foreground: oklch(0.90 0.05 85);
-  --sidebar-border: oklch(0.20 0.02 280);
+  --sidebar-accent-foreground: oklch(0.9 0.05 85);
+  --sidebar-border: oklch(0.2 0.02 280);
   --sidebar-ring: oklch(0.65 0.22 290);
-  
+
   /* Shadows: Removed colored tint, purely low-alpha black */
   --shadow-2xs: 0 1px 2px -1px rgb(0 0 0 / 0.2);
   --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.2);
   --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.2);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.3);
 }
 
@@ -252,7 +258,6 @@ code {
   --tracking-wider: 0.05em;
   --tracking-widest: 0.1em;
 }
-
 
 @layer base {
   * {
