@@ -67,7 +67,7 @@
     "@tanstack/router-plugin": "^1.140.1",
     "@tanstack/store": "^0.8.0",
     "@trpc/client": "^11.7.2",
-    "@trpc/server": "^11.7.2",
+    "@trpc/server": "^11.8.0",
     "@trpc/tanstack-react-query": "^11.7.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
