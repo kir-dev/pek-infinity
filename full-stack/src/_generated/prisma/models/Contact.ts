@@ -25,21 +25,18 @@ export type AggregateContact = {
 }
 
 export type ContactMinAggregateOutputType = {
-  id: string | null
   protocol: $Enums.ContactProtocol | null
   value: string | null
   ownerId: string | null
 }
 
 export type ContactMaxAggregateOutputType = {
-  id: string | null
   protocol: $Enums.ContactProtocol | null
   value: string | null
   ownerId: string | null
 }
 
 export type ContactCountAggregateOutputType = {
-  id: number
   protocol: number
   value: number
   ownerId: number
@@ -48,21 +45,18 @@ export type ContactCountAggregateOutputType = {
 
 
 export type ContactMinAggregateInputType = {
-  id?: true
   protocol?: true
   value?: true
   ownerId?: true
 }
 
 export type ContactMaxAggregateInputType = {
-  id?: true
   protocol?: true
   value?: true
   ownerId?: true
 }
 
 export type ContactCountAggregateInputType = {
-  id?: true
   protocol?: true
   value?: true
   ownerId?: true
@@ -142,7 +136,6 @@ export type ContactGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type ContactGroupByOutputType = {
-  id: string
   protocol: $Enums.ContactProtocol
   value: string
   ownerId: string
@@ -170,7 +163,6 @@ export type ContactWhereInput = {
   AND?: Prisma.ContactWhereInput | Prisma.ContactWhereInput[]
   OR?: Prisma.ContactWhereInput[]
   NOT?: Prisma.ContactWhereInput | Prisma.ContactWhereInput[]
-  id?: Prisma.StringFilter<"Contact"> | string
   protocol?: Prisma.EnumContactProtocolFilter<"Contact"> | $Enums.ContactProtocol
   value?: Prisma.StringFilter<"Contact"> | string
   ownerId?: Prisma.StringFilter<"Contact"> | string
@@ -178,7 +170,6 @@ export type ContactWhereInput = {
 }
 
 export type ContactOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
   protocol?: Prisma.SortOrder
   value?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
@@ -186,7 +177,7 @@ export type ContactOrderByWithRelationInput = {
 }
 
 export type ContactWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  protocol_value?: Prisma.ContactProtocolValueCompoundUniqueInput
   AND?: Prisma.ContactWhereInput | Prisma.ContactWhereInput[]
   OR?: Prisma.ContactWhereInput[]
   NOT?: Prisma.ContactWhereInput | Prisma.ContactWhereInput[]
@@ -194,10 +185,9 @@ export type ContactWhereUniqueInput = Prisma.AtLeast<{
   value?: Prisma.StringFilter<"Contact"> | string
   ownerId?: Prisma.StringFilter<"Contact"> | string
   owner?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>
-}, "id">
+}, "protocol_value">
 
 export type ContactOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
   protocol?: Prisma.SortOrder
   value?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
@@ -210,58 +200,73 @@ export type ContactScalarWhereWithAggregatesInput = {
   AND?: Prisma.ContactScalarWhereWithAggregatesInput | Prisma.ContactScalarWhereWithAggregatesInput[]
   OR?: Prisma.ContactScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ContactScalarWhereWithAggregatesInput | Prisma.ContactScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Contact"> | string
   protocol?: Prisma.EnumContactProtocolWithAggregatesFilter<"Contact"> | $Enums.ContactProtocol
   value?: Prisma.StringWithAggregatesFilter<"Contact"> | string
   ownerId?: Prisma.StringWithAggregatesFilter<"Contact"> | string
 }
 
 export type ContactCreateInput = {
-  id?: string
   protocol: $Enums.ContactProtocol
   value: string
   owner: Prisma.ProfileCreateNestedOneWithoutContactsInput
 }
 
 export type ContactUncheckedCreateInput = {
-  id?: string
   protocol: $Enums.ContactProtocol
   value: string
   ownerId: string
 }
 
 export type ContactUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
   owner?: Prisma.ProfileUpdateOneRequiredWithoutContactsNestedInput
 }
 
 export type ContactUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ContactCreateManyInput = {
-  id?: string
   protocol: $Enums.ContactProtocol
   value: string
   ownerId: string
 }
 
 export type ContactUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ContactUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ContactProtocolValueCompoundUniqueInput = {
+  protocol: $Enums.ContactProtocol
+  value: string
+}
+
+export type ContactCountOrderByAggregateInput = {
+  protocol?: Prisma.SortOrder
+  value?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+}
+
+export type ContactMaxOrderByAggregateInput = {
+  protocol?: Prisma.SortOrder
+  value?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+}
+
+export type ContactMinOrderByAggregateInput = {
+  protocol?: Prisma.SortOrder
+  value?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
 }
 
 export type ContactListRelationFilter = {
@@ -274,25 +279,8 @@ export type ContactOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ContactCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  protocol?: Prisma.SortOrder
-  value?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
-}
-
-export type ContactMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  protocol?: Prisma.SortOrder
-  value?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
-}
-
-export type ContactMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  protocol?: Prisma.SortOrder
-  value?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
+export type EnumContactProtocolFieldUpdateOperationsInput = {
+  set?: $Enums.ContactProtocol
 }
 
 export type ContactCreateNestedManyWithoutOwnerInput = {
@@ -337,18 +325,12 @@ export type ContactUncheckedUpdateManyWithoutOwnerNestedInput = {
   deleteMany?: Prisma.ContactScalarWhereInput | Prisma.ContactScalarWhereInput[]
 }
 
-export type EnumContactProtocolFieldUpdateOperationsInput = {
-  set?: $Enums.ContactProtocol
-}
-
 export type ContactCreateWithoutOwnerInput = {
-  id?: string
   protocol: $Enums.ContactProtocol
   value: string
 }
 
 export type ContactUncheckedCreateWithoutOwnerInput = {
-  id?: string
   protocol: $Enums.ContactProtocol
   value: string
 }
@@ -383,32 +365,27 @@ export type ContactScalarWhereInput = {
   AND?: Prisma.ContactScalarWhereInput | Prisma.ContactScalarWhereInput[]
   OR?: Prisma.ContactScalarWhereInput[]
   NOT?: Prisma.ContactScalarWhereInput | Prisma.ContactScalarWhereInput[]
-  id?: Prisma.StringFilter<"Contact"> | string
   protocol?: Prisma.EnumContactProtocolFilter<"Contact"> | $Enums.ContactProtocol
   value?: Prisma.StringFilter<"Contact"> | string
   ownerId?: Prisma.StringFilter<"Contact"> | string
 }
 
 export type ContactCreateManyOwnerInput = {
-  id?: string
   protocol: $Enums.ContactProtocol
   value: string
 }
 
 export type ContactUpdateWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ContactUncheckedUpdateWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ContactUncheckedUpdateManyWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   protocol?: Prisma.EnumContactProtocolFieldUpdateOperationsInput | $Enums.ContactProtocol
   value?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -416,7 +393,6 @@ export type ContactUncheckedUpdateManyWithoutOwnerInput = {
 
 
 export type ContactSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   protocol?: boolean
   value?: boolean
   ownerId?: boolean
@@ -424,7 +400,6 @@ export type ContactSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 }, ExtArgs["result"]["contact"]>
 
 export type ContactSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   protocol?: boolean
   value?: boolean
   ownerId?: boolean
@@ -432,7 +407,6 @@ export type ContactSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 }, ExtArgs["result"]["contact"]>
 
 export type ContactSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   protocol?: boolean
   value?: boolean
   ownerId?: boolean
@@ -440,13 +414,12 @@ export type ContactSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 }, ExtArgs["result"]["contact"]>
 
 export type ContactSelectScalar = {
-  id?: boolean
   protocol?: boolean
   value?: boolean
   ownerId?: boolean
 }
 
-export type ContactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "protocol" | "value" | "ownerId", ExtArgs["result"]["contact"]>
+export type ContactOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"protocol" | "value" | "ownerId", ExtArgs["result"]["contact"]>
 export type ContactInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
 }
@@ -463,7 +436,6 @@ export type $ContactPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     owner: Prisma.$ProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
     protocol: $Enums.ContactProtocol
     value: string
     ownerId: string
@@ -550,8 +522,8 @@ export interface ContactDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * // Get first 10 Contacts
    * const contacts = await prisma.contact.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const contactWithIdOnly = await prisma.contact.findMany({ select: { id: true } })
+   * // Only select the `value`
+   * const contactWithValueOnly = await prisma.contact.findMany({ select: { value: true } })
    * 
    */
   findMany<T extends ContactFindManyArgs>(args?: Prisma.SelectSubset<T, ContactFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -595,9 +567,9 @@ export interface ContactDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Create many Contacts and only return the `id`
-   * const contactWithIdOnly = await prisma.contact.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Contacts and only return the `value`
+   * const contactWithValueOnly = await prisma.contact.createManyAndReturn({
+   *   select: { value: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -686,9 +658,9 @@ export interface ContactDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Update zero or more Contacts and only return the `id`
-   * const contactWithIdOnly = await prisma.contact.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Contacts and only return the `value`
+   * const contactWithValueOnly = await prisma.contact.updateManyAndReturn({
+   *   select: { value: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -891,7 +863,6 @@ export interface Prisma__ContactClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the Contact model
  */
 export interface ContactFieldRefs {
-  readonly id: Prisma.FieldRef<"Contact", 'String'>
   readonly protocol: Prisma.FieldRef<"Contact", 'ContactProtocol'>
   readonly value: Prisma.FieldRef<"Contact", 'String'>
   readonly ownerId: Prisma.FieldRef<"Contact", 'String'>

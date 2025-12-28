@@ -385,6 +385,11 @@ export type ProfileUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type ProfileScalarRelationFilter = {
+  is?: Prisma.ProfileWhereInput
+  isNot?: Prisma.ProfileWhereInput
+}
+
 export type ProfileCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   firstName?: Prisma.SortOrder
@@ -424,26 +429,9 @@ export type ProfileMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type ProfileScalarRelationFilter = {
-  is?: Prisma.ProfileWhereInput
-  isNot?: Prisma.ProfileWhereInput
-}
-
 export type ProfileNullableScalarRelationFilter = {
   is?: Prisma.ProfileWhereInput | null
   isNot?: Prisma.ProfileWhereInput | null
-}
-
-export type NullableEnumDormitoryFieldUpdateOperationsInput = {
-  set?: $Enums.Dormitory | null
-}
-
-export type NullableEnumGenderFieldUpdateOperationsInput = {
-  set?: $Enums.Gender | null
-}
-
-export type NullableEnumStudentStatusFieldUpdateOperationsInput = {
-  set?: $Enums.StudentStatus | null
 }
 
 export type ProfileCreateNestedOneWithoutContactsInput = {
@@ -458,6 +446,18 @@ export type ProfileUpdateOneRequiredWithoutContactsNestedInput = {
   upsert?: Prisma.ProfileUpsertWithoutContactsInput
   connect?: Prisma.ProfileWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutContactsInput, Prisma.ProfileUpdateWithoutContactsInput>, Prisma.ProfileUncheckedUpdateWithoutContactsInput>
+}
+
+export type NullableEnumDormitoryFieldUpdateOperationsInput = {
+  set?: $Enums.Dormitory | null
+}
+
+export type NullableEnumGenderFieldUpdateOperationsInput = {
+  set?: $Enums.Gender | null
+}
+
+export type NullableEnumStudentStatusFieldUpdateOperationsInput = {
+  set?: $Enums.StudentStatus | null
 }
 
 export type ProfileCreateNestedOneWithoutUserInput = {

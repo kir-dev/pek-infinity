@@ -177,6 +177,23 @@ export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type EnumContactProtocolFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel> | $Enums.ContactProtocol
+}
+
+export type EnumContactProtocolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactProtocolWithAggregatesFilter<$PrismaModel> | $Enums.ContactProtocol
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
+}
+
 export type EnumPostCategoryFilter<$PrismaModel = never> = {
   equals?: $Enums.PostCategory | Prisma.EnumPostCategoryFieldRefInput<$PrismaModel>
   in?: $Enums.PostCategory[] | Prisma.ListEnumPostCategoryFieldRefInput<$PrismaModel>
@@ -336,23 +353,6 @@ export type EnumStudentStatusNullableWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStudentStatusNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStudentStatusNullableFilter<$PrismaModel>
-}
-
-export type EnumContactProtocolFilter<$PrismaModel = never> = {
-  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
-  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel> | $Enums.ContactProtocol
-}
-
-export type EnumContactProtocolWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
-  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumContactProtocolWithAggregatesFilter<$PrismaModel> | $Enums.ContactProtocol
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
 }
 
 export type NestedIntFilter<$PrismaModel = never> = {
@@ -531,6 +531,23 @@ export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedStringNullableFilter<$PrismaModel>
 }
 
+export type NestedEnumContactProtocolFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel> | $Enums.ContactProtocol
+}
+
+export type NestedEnumContactProtocolWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
+  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumContactProtocolWithAggregatesFilter<$PrismaModel> | $Enums.ContactProtocol
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
+}
+
 export type NestedEnumPostCategoryFilter<$PrismaModel = never> = {
   equals?: $Enums.PostCategory | Prisma.EnumPostCategoryFieldRefInput<$PrismaModel>
   in?: $Enums.PostCategory[] | Prisma.ListEnumPostCategoryFieldRefInput<$PrismaModel>
@@ -690,23 +707,6 @@ export type NestedEnumStudentStatusNullableWithAggregatesFilter<$PrismaModel = n
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStudentStatusNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStudentStatusNullableFilter<$PrismaModel>
-}
-
-export type NestedEnumContactProtocolFilter<$PrismaModel = never> = {
-  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
-  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel> | $Enums.ContactProtocol
-}
-
-export type NestedEnumContactProtocolWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.ContactProtocol | Prisma.EnumContactProtocolFieldRefInput<$PrismaModel>
-  in?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ContactProtocol[] | Prisma.ListEnumContactProtocolFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumContactProtocolWithAggregatesFilter<$PrismaModel> | $Enums.ContactProtocol
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumContactProtocolFilter<$PrismaModel>
 }
 
 

@@ -55,6 +55,11 @@ export type Statement = Prisma.StatementModel
  */
 export type PolicyAssignment = Prisma.PolicyAssignmentModel
 /**
+ * Model Contact
+ * 
+ */
+export type Contact = Prisma.ContactModel
+/**
  * Model GuidelineCollection
  * 
  */
@@ -114,11 +119,6 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type Profile = Prisma.ProfileModel
-/**
- * Model Contact
- * 
- */
-export type Contact = Prisma.ContactModel
 /**
  * Model Semester
  * 

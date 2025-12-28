@@ -387,6 +387,7 @@ export const ModelName = {
   Policy: 'Policy',
   Statement: 'Statement',
   PolicyAssignment: 'PolicyAssignment',
+  Contact: 'Contact',
   GuidelineCollection: 'GuidelineCollection',
   Guideline: 'Guideline',
   Scoreboard: 'Scoreboard',
@@ -399,7 +400,6 @@ export const ModelName = {
   MembershipStatus: 'MembershipStatus',
   Notification: 'Notification',
   Profile: 'Profile',
-  Contact: 'Contact',
   Semester: 'Semester',
   CurrentSemester: 'CurrentSemester',
   User: 'User',
@@ -419,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "policy" | "statement" | "policyAssignment" | "guidelineCollection" | "guideline" | "scoreboard" | "pointRequest" | "evaluation" | "entryAwardRequest" | "pointHistory" | "group" | "membership" | "membershipStatus" | "notification" | "profile" | "contact" | "semester" | "currentSemester" | "user" | "usernameHistory"
+    modelProps: "policy" | "statement" | "policyAssignment" | "contact" | "guidelineCollection" | "guideline" | "scoreboard" | "pointRequest" | "evaluation" | "entryAwardRequest" | "pointHistory" | "group" | "membership" | "membershipStatus" | "notification" | "profile" | "semester" | "currentSemester" | "user" | "usernameHistory"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -642,6 +642,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PolicyAssignmentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PolicyAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    Contact: {
+      payload: Prisma.$ContactPayload<ExtArgs>
+      fields: Prisma.ContactFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ContactFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ContactFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
+        }
+        findFirst: {
+          args: Prisma.ContactFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ContactFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
+        }
+        findMany: {
+          args: Prisma.ContactFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>[]
+        }
+        create: {
+          args: Prisma.ContactCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
+        }
+        createMany: {
+          args: Prisma.ContactCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ContactCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>[]
+        }
+        delete: {
+          args: Prisma.ContactDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
+        }
+        update: {
+          args: Prisma.ContactUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
+        }
+        deleteMany: {
+          args: Prisma.ContactDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ContactUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ContactUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>[]
+        }
+        upsert: {
+          args: Prisma.ContactUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
+        }
+        aggregate: {
+          args: Prisma.ContactAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContact>
+        }
+        groupBy: {
+          args: Prisma.ContactGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContactGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ContactCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContactCountAggregateOutputType> | number
         }
       }
     }
@@ -1533,80 +1607,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Contact: {
-      payload: Prisma.$ContactPayload<ExtArgs>
-      fields: Prisma.ContactFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ContactFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ContactFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
-        }
-        findFirst: {
-          args: Prisma.ContactFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ContactFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
-        }
-        findMany: {
-          args: Prisma.ContactFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>[]
-        }
-        create: {
-          args: Prisma.ContactCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
-        }
-        createMany: {
-          args: Prisma.ContactCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ContactCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>[]
-        }
-        delete: {
-          args: Prisma.ContactDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
-        }
-        update: {
-          args: Prisma.ContactUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
-        }
-        deleteMany: {
-          args: Prisma.ContactDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ContactUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ContactUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>[]
-        }
-        upsert: {
-          args: Prisma.ContactUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContactPayload>
-        }
-        aggregate: {
-          args: Prisma.ContactAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateContact>
-        }
-        groupBy: {
-          args: Prisma.ContactGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ContactGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ContactCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ContactCountAggregateOutputType> | number
-        }
-      }
-    }
     Semester: {
       payload: Prisma.$SemesterPayload<ExtArgs>
       fields: Prisma.SemesterFieldRefs
@@ -1986,6 +1986,15 @@ export const PolicyAssignmentScalarFieldEnum = {
 export type PolicyAssignmentScalarFieldEnum = (typeof PolicyAssignmentScalarFieldEnum)[keyof typeof PolicyAssignmentScalarFieldEnum]
 
 
+export const ContactScalarFieldEnum = {
+  protocol: 'protocol',
+  value: 'value',
+  ownerId: 'ownerId'
+} as const
+
+export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
 export const GuidelineCollectionScalarFieldEnum = {
   id: 'id',
   groupId: 'groupId',
@@ -2141,16 +2150,6 @@ export const ProfileScalarFieldEnum = {
 export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
 
 
-export const ContactScalarFieldEnum = {
-  id: 'id',
-  protocol: 'protocol',
-  value: 'value',
-  ownerId: 'ownerId'
-} as const
-
-export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
-
-
 export const SemesterScalarFieldEnum = {
   name: 'name'
 } as const
@@ -2263,6 +2262,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ContactProtocol'
+ */
+export type EnumContactProtocolFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactProtocol'>
+    
+
+
+/**
+ * Reference to a field of type 'ContactProtocol[]'
+ */
+export type ListEnumContactProtocolFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactProtocol[]'>
     
 
 
@@ -2393,20 +2406,6 @@ export type ListEnumStudentStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'ContactProtocol'
- */
-export type EnumContactProtocolFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactProtocol'>
-    
-
-
-/**
- * Reference to a field of type 'ContactProtocol[]'
- */
-export type ListEnumContactProtocolFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ContactProtocol[]'>
-    
-
-
-/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -2517,6 +2516,7 @@ export type GlobalOmitConfig = {
   policy?: Prisma.PolicyOmit
   statement?: Prisma.StatementOmit
   policyAssignment?: Prisma.PolicyAssignmentOmit
+  contact?: Prisma.ContactOmit
   guidelineCollection?: Prisma.GuidelineCollectionOmit
   guideline?: Prisma.GuidelineOmit
   scoreboard?: Prisma.ScoreboardOmit
@@ -2529,7 +2529,6 @@ export type GlobalOmitConfig = {
   membershipStatus?: Prisma.MembershipStatusOmit
   notification?: Prisma.NotificationOmit
   profile?: Prisma.ProfileOmit
-  contact?: Prisma.ContactOmit
   semester?: Prisma.SemesterOmit
   currentSemester?: Prisma.CurrentSemesterOmit
   user?: Prisma.UserOmit

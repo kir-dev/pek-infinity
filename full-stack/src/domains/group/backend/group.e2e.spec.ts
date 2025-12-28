@@ -68,7 +68,7 @@ vi.mock('@/middleware', async (importOriginal) => {
   };
 });
 
-import { GroupController } from '@/domains/group/api/group.controller';
+import { GroupController } from '@/domains/group/backend/group.controller';
 
 describe('GroupController (e2e)', () => {
   beforeEach(() => {

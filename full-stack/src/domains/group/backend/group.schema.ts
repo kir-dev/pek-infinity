@@ -1,6 +1,5 @@
 import z from 'zod/v4';
-import { GroupPurpose } from '@/_generated/prisma/enums';
-import type * as P from '@/_generated/prisma/models/Group';
+import { $Enums, type P } from '@/domains/prisma';
 import { zDate } from '@/utils/zod-extra';
 
 const BaseGroupId = z.string().nonempty();
@@ -16,7 +15,7 @@ export const GroupProfile = z.object({
   webpage: z.url().nullable(),
   mail: z.email().nullable(),
   parentId: GroupId.nullable(),
-  purpose: z.enum(GroupPurpose),
+  purpose: z.enum($Enums.GroupPurpose),
 });
 
 export const GroupConfig = z.object({
@@ -53,7 +52,7 @@ export const GroupUpdateConfigDto = GroupConfig.partial().extend(
 
 export const GroupChangeParentDto = z.object({
   parentId: GroupId.nullable(),
-}) satisfies z.ZodType<P.GroupUpdateArgs['data']>;
+}) satisfies z.ZodType<P.GroupUncheckedUpdateInput>;
 
 export const GroupCreateSubGroupDto = GroupSchema.omit({
   id: true,

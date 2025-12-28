@@ -9,6 +9,35 @@
 * 🟢 You can import this file directly.
 */
 
+export const ContactProtocol = {
+  X_FORMERLY_TWITTER: 'twitter',
+  SKYPE: 'skype',
+  CALL_SIGN: 'call_sign',
+  IRC: 'irc',
+  GTALK: 'gtalk',
+  JABBER: 'jabber',
+  META_FORMERLY_FACEBOOK: 'facebook',
+  TELEGRAM: 'telegram',
+  SCH_MAIL: 'sch_mail',
+  HIMZO: 'Hímzek',
+  GMAIL: 'gmail',
+  EASTER_EGG: '🍆',
+  WHATSAPP: 'whatsapp',
+  CELL_PHONE: 'cell_phone',
+  DISCORD: 'discord',
+  INSTAGRAM: 'instagram',
+  LINKEDIN: 'linkedin',
+  GITHUB: 'github',
+  STEAM: 'steam',
+  VIBER: 'viber',
+  SIGNAL: 'signal',
+  WEBPAGE: 'webpage',
+  EMAIL: 'email'
+} as const
+
+export type ContactProtocol = (typeof ContactProtocol)[keyof typeof ContactProtocol]
+
+
 export const PostCategory = {
   WORK: 'WORK',
   RESPONSIBILITY: 'RESPONSIBILITY'
@@ -101,32 +130,3 @@ export const StudentStatus = {
 } as const
 
 export type StudentStatus = (typeof StudentStatus)[keyof typeof StudentStatus]
-
-
-export const ContactProtocol = {
-  X_FORMERLY_TWITTER: 'twitter',
-  SKYPE: 'skype',
-  CALL_SIGN: 'call_sign',
-  IRC: 'irc',
-  GTALK: 'gtalk',
-  JABBER: 'jabber',
-  META_FORMERLY_FACEBOOK: 'facebook',
-  TELEGRAM: 'telegram',
-  SCH_MAIL: 'sch_mail',
-  HIMZO: 'Hímzek',
-  GMAIL: 'gmail',
-  EASTER_EGG: '🍆',
-  WHATSAPP: 'whatsapp',
-  CELL_PHONE: 'cell_phone',
-  DISCORD: 'discord',
-  INSTAGRAM: 'instagram',
-  LINKEDIN: 'linkedin',
-  GITHUB: 'github',
-  STEAM: 'steam',
-  VIBER: 'viber',
-  SIGNAL: 'signal',
-  WEBPAGE: 'webpage',
-  EMAIL: 'email'
-} as const
-
-export type ContactProtocol = (typeof ContactProtocol)[keyof typeof ContactProtocol]

@@ -24,13 +24,13 @@ type MockedPrisma = {
 export class MockPrismaService implements MockedPrisma {
   semester = new MockPrismaModel();
   currentSemester = new MockPrismaModel();
-  username = new MockPrismaModel();
+  usernameHistory = new MockPrismaModel();
   user = new MockPrismaModel();
   group = new MockPrismaModel();
   membership = new MockPrismaModel();
   entryAwardRequest = new MockPrismaModel();
   evaluation = new MockPrismaModel();
-  externalAccountLink = new MockPrismaModel();
+  contact = new MockPrismaModel();
   guideline = new MockPrismaModel();
   guidelineCollection = new MockPrismaModel();
   membershipStatus = new MockPrismaModel();

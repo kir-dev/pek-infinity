@@ -1,0 +1,35 @@
+model Contact {
+    protocol ContactProtocol
+    value    String
+    ownerId  String
+    owner    Profile         @relation(fields: [ownerId], references: [userId])
+
+    @@id([protocol, value])
+    @@index([ownerId])
+}
+
+enum ContactProtocol {
+    X_FORMERLY_TWITTER     @map("twitter")
+    SKYPE                  @map("skype")
+    CALL_SIGN              @map("call_sign")
+    IRC                    @map("irc")
+    GTALK                  @map("gtalk")
+    JABBER                 @map("jabber")
+    META_FORMERLY_FACEBOOK @map("facebook")
+    TELEGRAM               @map("telegram")
+    SCH_MAIL               @map("sch_mail")
+    HIMZO                  @map("Hímzek")
+    GMAIL                  @map("gmail")
+    EASTER_EGG             @map("🍆")
+    WHATSAPP               @map("whatsapp")
+    CELL_PHONE             @map("cell_phone")
+    DISCORD                @map("discord")
+    INSTAGRAM              @map("instagram")
+    LINKEDIN               @map("linkedin")
+    GITHUB                 @map("github")
+    STEAM                  @map("steam")
+    VIBER                  @map("viber")
+    SIGNAL                 @map("signal")
+    WEBPAGE                @map("webpage")
+    EMAIL                  @map("email")
+}

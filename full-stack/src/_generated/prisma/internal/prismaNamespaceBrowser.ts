@@ -54,6 +54,7 @@ export const ModelName = {
   Policy: 'Policy',
   Statement: 'Statement',
   PolicyAssignment: 'PolicyAssignment',
+  Contact: 'Contact',
   GuidelineCollection: 'GuidelineCollection',
   Guideline: 'Guideline',
   Scoreboard: 'Scoreboard',
@@ -66,7 +67,6 @@ export const ModelName = {
   MembershipStatus: 'MembershipStatus',
   Notification: 'Notification',
   Profile: 'Profile',
-  Contact: 'Contact',
   Semester: 'Semester',
   CurrentSemester: 'CurrentSemester',
   User: 'User',
@@ -131,6 +131,15 @@ export const PolicyAssignmentScalarFieldEnum = {
 } as const
 
 export type PolicyAssignmentScalarFieldEnum = (typeof PolicyAssignmentScalarFieldEnum)[keyof typeof PolicyAssignmentScalarFieldEnum]
+
+
+export const ContactScalarFieldEnum = {
+  protocol: 'protocol',
+  value: 'value',
+  ownerId: 'ownerId'
+} as const
+
+export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
 
 
 export const GuidelineCollectionScalarFieldEnum = {
@@ -286,16 +295,6 @@ export const ProfileScalarFieldEnum = {
 } as const
 
 export type ProfileScalarFieldEnum = (typeof ProfileScalarFieldEnum)[keyof typeof ProfileScalarFieldEnum]
-
-
-export const ContactScalarFieldEnum = {
-  id: 'id',
-  protocol: 'protocol',
-  value: 'value',
-  ownerId: 'ownerId'
-} as const
-
-export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
 
 
 export const SemesterScalarFieldEnum = {
