@@ -18,16 +18,16 @@ type Story = StoryObj;
 export const AllVariants: Story = {
   name: 'Overview',
   render: () => (
-    <div className='space-y-8 max-w-2xl'>
+    <div className='max-w-2xl space-y-8'>
       <div>
-        <h2 className='text-lg font-semibold mb-4'>Title Variants</h2>
+        <h2 className='mb-4 font-semibold text-lg'>Title Variants</h2>
         <div className='space-y-2'>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>Default</span>
+            <span className='w-32 text-muted-foreground text-xs'>Default</span>
             <Title>The Quick Brown Fox</Title>
           </div>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>
+            <span className='w-32 text-muted-foreground text-xs'>
               Emphasized
             </span>
             <Title>The Quick Brown Fox</Title>
@@ -36,14 +36,14 @@ export const AllVariants: Story = {
       </div>
 
       <div>
-        <h2 className='text-lg font-semibold mb-4'>Subtitle Variants</h2>
+        <h2 className='mb-4 font-semibold text-lg'>Subtitle Variants</h2>
         <div className='space-y-2'>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>Default</span>
+            <span className='w-32 text-muted-foreground text-xs'>Default</span>
             <Subtitle>The Quick Brown Fox</Subtitle>
           </div>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>
+            <span className='w-32 text-muted-foreground text-xs'>
               Emphasized
             </span>
             <Subtitle>The Quick Brown Fox</Subtitle>
@@ -52,34 +52,34 @@ export const AllVariants: Story = {
       </div>
 
       <div>
-        <h2 className='text-lg font-semibold mb-4'>Paragraph Variants</h2>
+        <h2 className='mb-4 font-semibold text-lg'>Paragraph Variants</h2>
         <div className='space-y-2'>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>Default</span>
+            <span className='w-32 text-muted-foreground text-xs'>Default</span>
             <Paragraph>The Quick Brown Fox</Paragraph>
           </div>
         </div>
       </div>
 
       <div>
-        <h2 className='text-lg font-semibold mb-4'>Body Variants</h2>
+        <h2 className='mb-4 font-semibold text-lg'>Body Variants</h2>
         <div className='space-y-2'>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>Default</span>
+            <span className='w-32 text-muted-foreground text-xs'>Default</span>
             <Text>The Quick Brown Fox</Text>
           </div>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>Muted</span>
+            <span className='w-32 text-muted-foreground text-xs'>Muted</span>
             <Text muted>The Quick Brown Fox</Text>
           </div>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>
+            <span className='w-32 text-muted-foreground text-xs'>
               Emphasized
             </span>
             <Text emphasized>The Quick Brown Fox</Text>
           </div>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>
+            <span className='w-32 text-muted-foreground text-xs'>
               Muted + Emphasized
             </span>
             <Text muted emphasized>
@@ -90,14 +90,14 @@ export const AllVariants: Story = {
       </div>
 
       <div>
-        <h2 className='text-lg font-semibold mb-4'>Detail Variants</h2>
+        <h2 className='mb-4 font-semibold text-lg'>Detail Variants</h2>
         <div className='space-y-2'>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>Default</span>
+            <span className='w-32 text-muted-foreground text-xs'>Default</span>
             <Detail>The Quick Brown Fox</Detail>
           </div>
           <div className='flex items-center gap-4'>
-            <span className='w-32 text-xs text-muted-foreground'>
+            <span className='w-32 text-muted-foreground text-xs'>
               Emphasized
             </span>
             <Detail emphasized>The Quick Brown Fox</Detail>
@@ -209,12 +209,12 @@ export const DetailEmphasized: Story = {
 export const YoutubeComment: Story = {
   name: 'YouTube Comment Example',
   render: () => (
-    <div className='max-w-md p-4 border rounded-lg'>
+    <div className='max-w-md rounded-lg border p-4'>
       <div className='flex gap-3'>
         {/* Avatar placeholder */}
-        <div className='w-9 h-9 rounded-full bg-muted shrink-0' />
+        <div className='h-9 w-9 shrink-0 rounded-full bg-muted' />
 
-        <div className='flex-1 min-w-0'>
+        <div className='min-w-0 flex-1'>
           {/* Header: username and date */}
           <div className='flex items-baseline gap-2'>
             <Text emphasized>John Doe</Text>
@@ -229,7 +229,7 @@ export const YoutubeComment: Story = {
           </Paragraph>
 
           {/* Actions row */}
-          <div className='flex items-center justify-between gap-2 mt-2'>
+          <div className='mt-2 flex items-center justify-between gap-2'>
             {/* Comments button */}
             <Button variant='link' className='w-fit p-0'>
               <Text emphasized>comments ▼</Text>
@@ -238,7 +238,7 @@ export const YoutubeComment: Story = {
             {/* Like button with count */}
             <Button variant='outline' size='xs' className='w-fit'>
               <svg
-                className='w-4 h-4'
+                className='h-4 w-4'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'
