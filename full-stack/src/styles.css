@@ -1,262 +1,119 @@
-/* 
-  ===========================================================================
-  PEK DESIGN SYSTEM (PDS) v4.0 - "THE ELITE DIGITAL HOME"
-  ===========================================================================
-  
-  CONTEXT FOR AGENTS:
-  You are building "Pek Infinity", a social-first Phonebook for the Schönherz 
-  dormitory. The users are Gen Z Engineers: bright, critical, and digital-native.
-  They use Revolut, Spotify, and Tinder. They do not use Bootstrap admin panels.
-  
-  THE PHILOSOPHY: "TACTILE PROFESSIONALISM"
-  This is not a website. It is a Progressive Web App (PWA) that feels native.
-  
-  1. NAVIGATION PHYSICS (THE "NO FLASH" RULE):
-     - REJECT: Full page reloads (White Flashes).
-     - REJECT: Hamburger Menus. They hide architecture and feel distinctively "Web 2.0".
-     - ADOPT: Bottom Navigation Bar (The Thumb Zone). This is the stable anchor.
-     - ADOPT: "Optimistic UI". State changes happen instantly, data syncs in the background.
-  
-  2. SHEETS OVER MODALS:
-     - Center modals are intrusive and alienate the user from their context.
-     - ADOPT: Sheets (Drawers) for all secondary flows (editing profiles, 
-       viewing details, filters) with option to open in full screen.
-     - Sheets preserve the feeling of "holding" the app. They are stackable and 
-       dismissible via gestures.
-  
-  3. PLANAR / INVISIBLE UI:
-     - REJECT: The "Box Strategy" (placing every distinct item in a card with a drop shadow).
-     - REJECT: Heavy, muddy drop shadows. Shadows are reserved only for "floating" 
-       elements (toasts, active sheets, sticky headers).
-     - ADOPT: Content-first structuring. Use negative space (margin/padding) and 
-       subtle 1px borders (`border-border`) to define hierarchy. 
-     - On Mobile: Lists should often bleed to the edge (no horizontal padding on the container).
-  
-  4. INTERACTIVITY & FEEDBACK:
-     - The interface must feel "Tactile". It allows the user to feel the software.
-     - Clickable elements must respond.
-     - Transitions should be fluid, rarely instant.
-  
-  5. "ELITE" AESTHETIC:
-     - Avoid overly "Gamified" or "Toy" looks. Rounded corners are `xl` or `2xl`, but 
-       typography is crisp and professional.
-     - Layouts should handle density well without feeling cluttered. These users 
-       process data fast.
-*/
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
-body {
-  @apply m-0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family:
-    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-@theme {
-  --transition-duration-instant: 50ms;
-  --transition-duration-quick: 150ms;
-  --transition-duration-snap: 250ms;
-  --transition-duration-fluid: 350ms;
-  --transition-duration-deliberate: 500ms;
-}
-
-.light,
 :root {
-  /* 
-    LIGHT MODE: "Tactile Professionalism"
-    Concept: A sheet of high-quality paper. Invisible cards.
-    Background: Pure white with a perceptible warmth.
-  */
-  --background: oklch(0.99 0.002 285);
-  --foreground: oklch(0.13 0.02 285); /* Nearly black, softened */
-
-  /* Invisible UI: Cards blend into background to reduce visual noise */
-  --card: oklch(0.99 0.002 285);
-  --card-foreground: oklch(0.13 0.02 285);
-
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0.02 285);
-
-  /* Elite Purple: Deep, authoritative, not playful */
-  --primary: oklch(0.45 0.18 290);
-  --primary-foreground: oklch(0.98 0 0);
-
-  /* Secondary: Soft lavender for depth without borders */
-  --secondary: oklch(0.92 0.03 290);
-  --secondary-foreground: oklch(0.3 0.05 290);
-
-  /* Muted: For metadata/subtext */
-  --muted: oklch(0.96 0.01 285);
-  --muted-foreground: oklch(0.5 0.02 285);
-
-  /* Accent: AMBER mapping for "Home" warmth on interaction */
-  --accent: oklch(0.94 0.06 85); /* Pale Amber wash */
-  --accent-foreground: oklch(0.35 0.08 80); /* Deep Amber text */
-
-  /* Destructive & Borders */
-  --destructive: oklch(0.6 0.18 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.92 0.01 285); /* Subtle structure */
-  --input: oklch(0.92 0.01 285);
-  --ring: oklch(0.45 0.18 290);
-
-  /* Charting adjusted to Purple/Amber/Teal trio */
-  --chart-1: oklch(0.45 0.18 290); /* Purple */
-  --chart-2: oklch(0.75 0.16 85); /* Amber */
-  --chart-3: oklch(0.6 0.15 180); /* Teal */
-  --chart-4: oklch(0.55 0.1 250); /* Blue */
-  --chart-5: oklch(0.85 0.1 85); /* Soft Amber */
-
-  /* Radii: Sleek but approachable (Apple/Linear standard) */
-  --radius: 0.75rem;
-
-  /* Shadows: "Invisible" - minimal spread, purely for lifting on z-index */
-  --shadow-2xs: 0 1px 2px -1px rgb(0 0 0 / 0.05);
-  --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.05);
-  --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.05);
-  --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  --shadow-xl:
-    0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
-
-  /* Sidebar: Blends with background */
-  --sidebar: oklch(0.99 0.002 285);
-  --sidebar-foreground: oklch(0.13 0.02 285);
-  --sidebar-primary: oklch(0.45 0.18 290);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.94 0.06 85);
-  --sidebar-accent-foreground: oklch(0.35 0.08 80);
-  --sidebar-border: oklch(0.92 0.01 285);
-  --sidebar-ring: oklch(0.45 0.18 290);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.67 0.16 58);
+  --primary-foreground: oklch(0.99 0.02 95);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.58 0.22 27);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.88 0.15 92);
+  --chart-2: oklch(0.77 0.16 70);
+  --chart-3: oklch(0.67 0.16 58);
+  --chart-4: oklch(0.56 0.15 49);
+  --chart-5: oklch(0.47 0.12 46);
+  --radius: 0.875rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.67 0.16 58);
+  --sidebar-primary-foreground: oklch(0.99 0.02 95);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
-  /* 
-    DARK MODE: "The Void"
-    Concept: Premium OLED. Deep violet tint, no gray wash.
-  */
-  --background: oklch(0.1 0.02 280); /* Deep rich violet-black */
-  --foreground: oklch(0.98 0.01 280);
-
-  /* Invisible UI: Card matches background to create depth via borders/hover only */
-  --card: oklch(0.1 0.02 280);
-  --card-foreground: oklch(0.98 0.01 280);
-
-  --popover: oklch(0.1 0.02 280);
-  --popover-foreground: oklch(0.98 0.01 280);
-
-  /* Primary: Electric Violet - High energy */
-  --primary: oklch(0.65 0.22 290);
-  --primary-foreground: oklch(0.1 0.02 280);
-
-  /* Secondary: Deep muted violet surface */
-  --secondary: oklch(0.2 0.04 285);
-  --secondary-foreground: oklch(0.9 0.02 285);
-
-  /* Muted: Receded text */
-  --muted: oklch(0.15 0.02 280);
-  --muted-foreground: oklch(0.65 0.02 280);
-
-  /* Accent: Amber Glow - The "Hearth" in the dark */
-  --accent: oklch(0.25 0.08 85); /* Dark Amber wash */
-  --accent-foreground: oklch(0.9 0.05 85); /* Bright Amber text */
-
-  --destructive: oklch(0.5 0.2 25);
-  --destructive-foreground: oklch(0.98 0 0);
-
-  /* Borders: Very subtle, defining the "invisible" structure */
-  --border: oklch(0.2 0.02 280);
-  --input: oklch(0.2 0.02 280);
-  --ring: oklch(0.65 0.22 290);
-
-  /* Charting adjusted for dark mode contrast */
-  --chart-1: oklch(0.65 0.22 290);
-  --chart-2: oklch(0.7 0.16 85);
-  --chart-3: oklch(0.6 0.15 180);
-  --chart-4: oklch(0.6 0.1 250);
-  --chart-5: oklch(0.8 0.1 85);
-
-  /* Sidebar: Unified dark */
-  --sidebar: oklch(0.1 0.02 280);
-  --sidebar-foreground: oklch(0.98 0.01 280);
-  --sidebar-primary: oklch(0.65 0.22 290);
-  --sidebar-primary-foreground: oklch(0.1 0.02 280);
-  --sidebar-accent: oklch(0.25 0.08 85);
-  --sidebar-accent-foreground: oklch(0.9 0.05 85);
-  --sidebar-border: oklch(0.2 0.02 280);
-  --sidebar-ring: oklch(0.65 0.22 290);
-
-  /* Shadows: Removed colored tint, purely low-alpha black */
-  --shadow-2xs: 0 1px 2px -1px rgb(0 0 0 / 0.2);
-  --shadow-xs: 0 1px 3px 0 rgb(0 0 0 / 0.2);
-  --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.2);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
-  --shadow-xl:
-    0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
-  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.3);
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.77 0.16 70);
+  --primary-foreground: oklch(0.28 0.07 46);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.88 0.15 92);
+  --chart-2: oklch(0.77 0.16 70);
+  --chart-3: oklch(0.67 0.16 58);
+  --chart-4: oklch(0.56 0.15 49);
+  --chart-5: oklch(0.47 0.12 46);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.77 0.16 70);
+  --sidebar-primary-foreground: oklch(0.28 0.07 46);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
+  --font-sans: "Geist Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
-
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
-  /* Native Mobile-first feel requires specific tracking */
-  --tracking-tighter: -0.05em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: 0em;
-  --tracking-wide: 0.025em;
-  --tracking-wider: 0.05em;
-  --tracking-widest: 0.1em;
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 @layer base {
@@ -264,6 +121,9 @@ code {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply font-sans bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
