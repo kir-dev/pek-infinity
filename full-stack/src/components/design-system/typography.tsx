@@ -18,7 +18,7 @@ export const Title = ({ className, asChild = false, ...props }: TitleProps) => {
 };
 
 // Subtitle Component: lg, medium, never muted
-const subtitleVariants = cva('text-lg font-medium');
+const subtitleVariants = cva('text-lg font-medium text-foreground');
 export interface SubtitleProps
   extends HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof subtitleVariants> {
