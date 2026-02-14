@@ -77,6 +77,8 @@
   --glass-elevated-inset: oklch(1 0 0 / 15%);
   --glass-elevated-shadow: oklch(0 0 0 / 8%);
   --glass-elevated-shadow-sm: oklch(0 0 0 / 4%);
+
+  --tier-gradient-angle: 135deg;
 }
 
 [data-theme="dark"] {
@@ -132,6 +134,21 @@
   --glass-elevated-shadow-sm: oklch(0 0 0 / 15%);
 }
 
+:root {
+  --space-page: 1rem; /* 16px */
+  --space-section: 1rem; /* 16px */
+  --space-card: 0.875rem; /* 14px */
+  --space-inline: 0.625rem; /* 10px */
+}
+@media (min-width: 768px) {
+  :root {
+    --space-page: 1.5rem; /* 24px */
+    --space-section: 1.25rem; /* 20px */
+    --space-card: 1rem; /* 16px */
+    --space-inline: 0.75rem; /* 12px */
+  }
+}
+
 @theme inline {
   --font-sans: "Geist Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
@@ -184,16 +201,16 @@
   --color-glass: var(--glass);
   --color-glass-elevated: var(--glass-elevated);
 
+  --duration-instant: 0ms;
   --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 400ms;
+  --duration-normal: 200ms;
+  --duration-slow: 500ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --spacing-page: 1.5rem;      /* 24px - page margins */
-  --spacing-section: 1.25rem;  /* 20px - section gaps */
-  --spacing-card: 1rem;        /* 16px - card padding */
-  --spacing-inline: 0.75rem;   /* 12px - inline gaps */
+  --spacing-page: var(--space-page);
+  --spacing-section: var(--space-section);
+  --spacing-card: var(--space-card);
+  --spacing-inline: var(--space-inline);
 }
 
 @layer base {
@@ -225,15 +242,15 @@
 }
 
 @utility tier-1 {
-  @apply bg-linear-120 from-tier-1-start to-tier-1-end;
+  @apply bg-linear-(--tier-gradient-angle) from-tier-1-start to-tier-1-end;
 }
 
 @utility tier-2 {
-  @apply bg-linear-120 from-tier-2-start to-tier-2-end;
+  @apply bg-linear-(--tier-gradient-angle) from-tier-2-start to-tier-2-end;
 }
 
 @utility tier-3 {
-  @apply bg-linear-120 from-tier-3-start to-tier-3-end;
+  @apply bg-linear-(--tier-gradient-angle) from-tier-3-start to-tier-3-end;
 }
 
 @utility tier-draft {
@@ -246,4 +263,15 @@
 
 @utility focus-ring {
   @apply outline-none ring-2 ring-ring/50 ring-offset-2 ring-offset-background;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
