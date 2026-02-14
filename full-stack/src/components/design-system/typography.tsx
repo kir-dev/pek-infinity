@@ -4,38 +4,47 @@ import type { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
 // Title Component: xl, bold, never muted
-const titleVariants = cva('text-xl font-bold text-foreground');
+const titleVariants = cva('font-bold text-foreground text-xl tracking-tight');
 
 export interface TitleProps
   extends HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof titleVariants> {
   asChild?: boolean;
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-export const Title = ({ className, asChild = false, ...props }: TitleProps) => {
-  const Comp = asChild ? Slot.Root : 'h1';
+export const Title = ({
+  className,
+  asChild = false,
+  level = 1,
+  ...props
+}: TitleProps) => {
+  const Comp = asChild ? Slot.Root : `h${level}`;
   return <Comp className={cn(titleVariants({ className }))} {...props} />;
 };
 
 // Subtitle Component: lg, medium, never muted
-const subtitleVariants = cva('text-lg font-medium text-foreground');
+const subtitleVariants = cva('font-medium text-foreground text-lg');
 export interface SubtitleProps
   extends HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof subtitleVariants> {
   asChild?: boolean;
+  level?: 2 | 3 | 4 | 5 | 6;
 }
 
 export const Subtitle = ({
   className,
   asChild = false,
+  level = 2,
   ...props
 }: SubtitleProps) => {
-  const Comp = asChild ? Slot.Root : 'h2';
+  const Comp = asChild ? Slot.Root : `h${level}`;
   return <Comp className={cn(subtitleVariants({ className }))} {...props} />;
 };
 
 // Text Component: 14px (base), can be muted or emphasized
-const textVariants = cva('text-sm leading-normal', {
+// used for UI elements, compact text
+const textVariants = cva('text-sm', {
   variants: {
     muted: {
       true: 'text-muted-foreground',
@@ -74,8 +83,9 @@ export const Text = ({
   );
 };
 
-// Paragraph Component: 14px (base)
-const paragraphVariants = cva('text-sm leading-normal text-foreground');
+// Paragraph Component: 14px (base), extra line height
+// used for user-authored prose
+const paragraphVariants = cva('text-foreground text-sm leading-normal');
 export interface ParagraphProps
   extends HTMLAttributes<HTMLParagraphElement>,
     VariantProps<typeof paragraphVariants> {
@@ -92,7 +102,8 @@ export const Paragraph = ({
 };
 
 // Detail Component: 12px, regular, always muted
-const detailVariants = cva('text-xs text-muted-foreground', {
+// used for metadata, secondary info
+const detailVariants = cva('text-muted-foreground text-xs tracking-wide', {
   variants: {
     emphasized: {
       true: 'font-medium',
