@@ -3,44 +3,79 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *)); /**
+# PEK DESIGN SYSTEM (PDS) v4
 
-:root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.67 0.16 58);
-  --primary-foreground: oklch(0.99 0.02 95);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.58 0.22 27);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.88 0.15 92);
-  --chart-2: oklch(0.77 0.16 70);
-  --chart-3: oklch(0.67 0.16 58);
-  --chart-4: oklch(0.56 0.15 49);
-  --chart-5: oklch(0.47 0.12 46);
-  --radius: 0.875rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.67 0.16 58);
-  --sidebar-primary-foreground: oklch(0.99 0.02 95);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
+## Traits
+- clean
+- minimalistic
+- native feeling
+- glassmorphism is felt, not seen
+
+## Tokens
+
+- award (tier-1): AB award (top 1%)
+- award (tier-2): KB award / highlighted (top 10%)
+- activity (tier-3): recorded activity without award
+- newbie (draft): new users outside the grading system
+- inactive: users with no activity
+
+*/
+
+  :root {
+    --tier-1-start: oklch(0.6 0.24 322.15);
+    --tier-1-end: oklch(0.46 0.22 293.01);
+    --tier-2-start: oklch(0.7 0.16 70.08);
+    --tier-2-end: oklch(0.52 0.21 17.59);
+    --tier-3-start: oklch(0.55 0.08 195);
+    --tier-3-end: oklch(0.6 0.06 220);
+    --tier-draft: oklch(0.7 0.06 240);
+    --tier-inactive: oklch(0.75 0.01 240);
+
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.67 0.16 58);
+    --primary-foreground: oklch(0.99 0.02 95);
+    --secondary: oklch(0.967 0.001 286.375);
+    --secondary-foreground: oklch(0.21 0.006 285.885);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.52 0.18 27);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.62 0.15 60);
+    --chart-1: oklch(0.88 0.15 92);
+    --chart-2: oklch(0.77 0.16 70);
+    --chart-3: oklch(0.67 0.16 58);
+    --chart-4: oklch(0.56 0.15 49);
+    --chart-5: oklch(0.47 0.12 46);
+    --radius: 0.875rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.67 0.16 58);
+    --sidebar-primary-foreground: oklch(0.99 0.02 95);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
 
 .dark {
+  --tier-1-start: oklch(0.44 0.33 322.15);
+  --tier-1-end: oklch(0.34 0.3 293.01);
+  --tier-2-start: oklch(0.78 0.2 70.08);
+  --tier-2-end: oklch(0.62 0.24 17.59);
+  --tier-3-start: oklch(0.65 0.1 195);
+  --tier-3-end: oklch(0.7 0.08 220);
+  --tier-draft: oklch(0.5 0.08 240);
+  --tier-inactive: oklch(0.35 0.01 240);
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -55,10 +90,10 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.371 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: oklch(0.58 0.2 28);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.69 0.17 60);
   --chart-1: oklch(0.88 0.15 92);
   --chart-2: oklch(0.77 0.16 70);
   --chart-3: oklch(0.67 0.16 58);
