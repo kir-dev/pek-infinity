@@ -1,92 +1,178 @@
+import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Detail, Subtitle, Text } from './typography';
 
-export const MembershipCard = () => {
-  // Card has a hidden linear gradient background
-  const transitionClassName = 'transition-all duration-fast';
-  const containerClassName =
-    'transition-colors duration-fast bg-linear-to-br from-tier-2-start/60 to-tier-2-end/60 group-hover/card:from-tier-2-start/80 group-hover/card:to-tier-2-end/80';
+const containerVariants = cva(
+  'glass-elevated cursor-pointer overflow-hidden rounded-3xl p-0',
+  {
+    variants: {
+      variant: {
+        tier1: '',
+        tier2: '',
+        active: '',
+        alumni: '',
+        newbie: 'border border-tier-draft border-dashed',
+      },
+    },
+  }
+);
+
+const headerVariants = cva('flex p-card', {
+  variants: {
+    variant: {
+      tier1:
+        'bg-linear-to-br from-tier-1-start/80 to-tier-1-end/80 group-hover/card:from-tier-1-start group-hover/card:to-tier-1-end',
+      tier2:
+        'bg-linear-to-br from-tier-2-start/80 to-tier-2-end/80 group-hover/card:from-tier-2-start group-hover/card:to-tier-2-end',
+      active: 'bg-neutral-500/60 group-hover/card:bg-neutral-500/80',
+      alumni: '',
+      newbie: '',
+    },
+  },
+});
+
+const avatarVariants = cva(
+  'flex items-center justify-center rounded-lg text-2xl text-medium transition-colors duration-fast',
+  {
+    variants: {
+      variant: {
+        tier1:
+          'glass bg-black/20 text-white backdrop-grayscale-50 group-hover/card:bg-black/30',
+        tier2:
+          'glass bg-black/20 text-white backdrop-grayscale-50 group-hover/card:bg-black/30',
+        active:
+          // black on neutral need stronger contrast
+          'glass bg-black/25 text-white backdrop-grayscale-50 group-hover/card:bg-black/34',
+        alumni:
+          'bg-muted/60 text-muted-foreground/60 group-hover/card:bg-muted/50',
+        newbie:
+          'border border-tier-draft border-dashed bg-muted text-muted-foreground group-hover/card:bg-muted/80',
+      },
+    },
+  }
+);
+
+export function MembershipCard({
+  className,
+  variant,
+  groupName,
+  roles,
+  endDate,
+}: {
+  className?: string;
+  variant: 'tier1' | 'tier2' | 'active' | 'alumni' | 'newbie';
+  groupName: string;
+  roles: string;
+  endDate: string;
+}) {
+  const hasBackground =
+    variant === 'tier1' || variant === 'tier2' || variant === 'active';
+  const separator = hasBackground ? null : (
+    <div className='mx-card h-px bg-border' />
+  );
 
   return (
-    <div className='group/card glass-elevated max-w-80 cursor-pointer overflow-hidden rounded-3xl'>
-      <Card
-        className={cn('gap-0 p-0', transitionClassName, containerClassName)}
-      >
-        <CardHeader className='flex flex-row items-center gap-card p-card'>
-          <GroupAvatar fallback='S' className='h-14 w-14 shrink-0' />
-          <div className='overflow-hidden *:truncate'>
-            <Subtitle className='group-hover/card:underline'>
-              Szent Schönherz Senior Lovagrend
-            </Subtitle>
-            <Text>körvezető, gazdaságis</Text>
-          </div>
-        </CardHeader>
-        {/* <div className='absolute right-3 left-3 h-px bg-linear-to-br from-tier-2-start to-tier-2-end opacity-50'></div> */}
-        <CardContent
+    <Card
+      className={cn(
+        containerVariants({ className, variant }),
+        'min-h-40 w-80 gap-0'
+      )}
+    >
+      <CardHeader className={headerVariants({ variant })}>
+        {/* Group Avatar */}
+        <div className={cn(avatarVariants({ variant }), 'h-14 w-14 shrink-0')}>
+          S
+        </div>
+        <div className='min-w-0 overflow-hidden *:truncate'>
+          {/* Group name */}
+          <Subtitle
+            className={cn(
+              'group-hover/card:underline',
+              hasBackground && 'text-white'
+            )}
+          >
+            {groupName}
+          </Subtitle>
+          {/* Roles */}
+          <Text
+            className={
+              hasBackground ? 'text-white/80' : 'text-muted-foreground'
+            }
+          >
+            {roles}
+          </Text>
+        </div>
+      </CardHeader>
+      {separator}
+      <CardContent className='mt-auto flex items-end justify-between p-1'>
+        {/* fix text baseline pushes content up a bit */}
+        <div className='p-card pb-[calc(var(--space-card)-0.2em)]'>
+          <Text
+            emphasized
+            className='uppercase leading-loose tracking-wide'
+            asChild
+          >
+            <p>
+              {variant === 'tier1' ||
+              variant === 'tier2' ||
+              variant === 'active'
+                ? 'RENDES TAG'
+                : null}
+              {variant === 'alumni' ? 'ALUMNI' : null}
+              {variant === 'newbie' ? 'ÚJONC' : null}
+            </p>
+          </Text>
+          <Text muted className='tabular-nums'>
+            {'2020 mar'}
+            {endDate ? (
+              <>
+                <br />
+                {endDate}
+              </>
+            ) : (
+              ' -'
+            )}
+          </Text>
+        </div>
+        <Button
+          type='button'
+          variant='ghost'
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
           className={cn(
-            'flex items-end justify-between p-card',
-            'bg-card/95 group-hover/card:bg-card',
-            transitionClassName
+            'relative flex min-h-fit min-w-fit cursor-pointer items-center rounded-2xl p-card!',
+            'border-border bg-input/50! opacity-70 transition-opacity duration-fast',
+            'group/activity overflow-hidden hover:opacity-100',
+            className
           )}
         >
-          <div className=''>
-            <Text emphasized className='uppercase leading-loose' asChild>
-              <p>RENDES TAG</p>
-            </Text>
-            <Text className='tabular-nums'>
-              2020 <span className='opacity-80'>mar</span> -
-            </Text>
+          {/* <Detail>Activity</Detail> */}
+          <div
+            className={cn(
+              'flex h-7 items-end gap-1 *:min-h-1.5 *:w-1.5 *:rounded-full',
+              'transition-transform duration-fast group-hover/activity:-translate-y-1.5'
+            )}
+          >
+            <div style={{ height: '82%' }} className='bg-tier-2-start' />
+            <div style={{ height: '100%' }} className='bg-tier-1-start' />
+            <div style={{ height: '78%' }} className='bg-tier-2-start' />
+            <div style={{ height: '45%' }} className='bg-foreground/90' />
+            <div style={{ height: '18%' }} className='bg-foreground/90' />
+            <div style={{ height: '67%' }} className='bg-foreground/90' />
+            <div style={{ height: '0%' }} className='bg-muted-foreground' />
           </div>
-          <ActivityBarChart className='' />
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
-function ActivityBarChart({ className }: { className?: string }) {
-  return (
-    <Button
-      variant='ghost'
-      className={cn(
-        'glass-elevated [--opacity:0.7] hover:[--opacity:1]',
-        'flex items-center gap-4',
-        className
-      )}
-    >
-      <Detail className='flex justify-center'>Activity</Detail>
-
-      <div className='flex h-8 items-end gap-1.5 opacity-(--opacity) *:w-1.5 *:rounded-full'>
-        <div style={{ height: '82%' }} className='bg-tier-1-start'></div>
-        <div style={{ height: '100%' }} className='h-7 bg-tier-1-start'></div>
-        <div style={{ height: '78%' }} className='h-5 bg-amber-600'></div>
-        <div style={{ height: '45%' }} className='h-3 bg-foreground'></div>
-        <div style={{ height: '18%' }} className='h-2 bg-foreground'></div>
-        <div style={{ height: '67%' }} className='h-3 bg-foreground'></div>
-        <div className='h-1.5 bg-muted-foreground'></div>
-      </div>
-    </Button>
-  );
-}
-
-function GroupAvatar({
-  fallback,
-  className,
-}: {
-  fallback?: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        'glass flex items-center justify-center rounded-lg bg-black/20 backdrop-grayscale-50 transition-colors duration-fast group-hover/card:bg-black/30',
-        className
-      )}
-    >
-      <Text emphasized className='text-2xl text-white'>
-        {fallback}
-      </Text>
-    </div>
+          <Detail
+            emphasized
+            className='absolute bottom-1 text-transparent transition-all duration-fast group-hover/activity:text-muted-foreground'
+          >
+            pontozás
+          </Detail>
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
