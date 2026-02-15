@@ -24,18 +24,31 @@ const headerVariants = cva('flex p-card', {
   variants: {
     variant: {
       tier1:
-        'bg-linear-to-br from-tier-1-start/80 to-tier-1-end/80 group-hover/card:from-tier-1-start group-hover/card:to-tier-1-end',
+        'bg-linear-to-br from-tier-1-start/85 to-tier-1-end/85 group-hover/card:from-tier-1-start/95 group-hover/card:to-tier-1-end/95',
       tier2:
-        'bg-linear-to-br from-tier-2-start/80 to-tier-2-end/80 group-hover/card:from-tier-2-start group-hover/card:to-tier-2-end',
-      active: 'bg-neutral-500/60 group-hover/card:bg-neutral-500/80',
+        'bg-linear-to-br from-tier-2-start/85 to-tier-2-end/85 group-hover/card:from-tier-2-start/95 group-hover/card:to-tier-2-end/95',
+      active:
+        'bg-linear-to-br from-tier-3-start/55 to-tier-3-end/55 group-hover/card:from-tier-3-start/75 group-hover/card:to-tier-3-end/75',
       alumni: '',
       newbie: '',
     },
   },
 });
 
+const accentVariants = cva('my-1 h-0.5 w-6 rounded-full', {
+  variants: {
+    variant: {
+      tier1: 'bg-tier-1-start',
+      tier2: 'bg-tier-2-start',
+      active: 'bg-tier-3-start',
+      alumni: 'bg-foreground/15',
+      newbie: 'bg-tier-draft',
+    },
+  },
+});
+
 const avatarVariants = cva(
-  'flex items-center justify-center rounded-lg text-2xl text-medium transition-colors duration-fast',
+  'flex items-center justify-center rounded-lg font-medium text-2xl transition-colors duration-fast',
   {
     variants: {
       variant: {
@@ -44,10 +57,9 @@ const avatarVariants = cva(
         tier2:
           'glass bg-black/20 text-white backdrop-grayscale-50 group-hover/card:bg-black/30',
         active:
-          // black on neutral need stronger contrast
-          'glass bg-black/25 text-white backdrop-grayscale-50 group-hover/card:bg-black/34',
+          'glass bg-black/20 text-white backdrop-grayscale-50 group-hover/card:bg-black/30',
         alumni:
-          'bg-muted/60 text-muted-foreground group-hover/card:bg-muted/80',
+          'bg-muted/50 text-muted-foreground/50 group-hover/card:bg-muted/60',
         newbie:
           'bg-muted/60 text-muted-foreground group-hover/card:bg-muted/80',
       },
@@ -70,6 +82,7 @@ export function MembershipCard({
 }) {
   const hasBackground =
     variant === 'tier1' || variant === 'tier2' || variant === 'active';
+  const isAlumni = variant === 'alumni';
   const separator = hasBackground ? null : <div className='mx-card border-b' />;
 
   return (
@@ -89,7 +102,8 @@ export function MembershipCard({
           <Subtitle
             className={cn(
               'group-hover/card:underline',
-              hasBackground && 'text-white'
+              hasBackground && 'text-white',
+              isAlumni && 'text-foreground/90' // just a subtle fade
             )}
           >
             {groupName}
@@ -110,7 +124,10 @@ export function MembershipCard({
         <div className='p-card pb-[calc(var(--space-card)-0.2em)]'>
           <Text
             emphasized
-            className='uppercase leading-loose tracking-wide'
+            className={cn(
+              'uppercase leading-loose tracking-wide',
+              isAlumni && 'text-foreground/90'
+            )}
             asChild
           >
             <p>
@@ -123,6 +140,7 @@ export function MembershipCard({
               {variant === 'newbie' ? 'ÚJONC' : null}
             </p>
           </Text>
+          <div className={accentVariants({ variant })} />
           <Text muted className='tabular-nums'>
             {'2020 mar'}
             {endDate ? (
@@ -144,12 +162,11 @@ export function MembershipCard({
           }}
           className={cn(
             'relative flex min-h-fit min-w-fit cursor-pointer items-center rounded-2xl p-card!',
-            'border-border bg-input/50! opacity-70 transition-opacity duration-fast',
+            'bg-muted/40! opacity-70 transition-opacity duration-fast',
             'group/activity overflow-hidden hover:opacity-100',
             className
           )}
         >
-          {/* <Detail>Activity</Detail> */}
           <div
             className={cn(
               'flex h-7 items-end gap-1 *:min-h-1.5 *:w-1.5 *:rounded-full',
@@ -159,9 +176,9 @@ export function MembershipCard({
             <div style={{ height: '82%' }} className='bg-tier-2-start' />
             <div style={{ height: '100%' }} className='bg-tier-1-start' />
             <div style={{ height: '78%' }} className='bg-tier-2-start' />
-            <div style={{ height: '45%' }} className='bg-foreground/90' />
-            <div style={{ height: '18%' }} className='bg-foreground/90' />
-            <div style={{ height: '67%' }} className='bg-foreground/90' />
+            <div style={{ height: '45%' }} className='bg-foreground/80' />
+            <div style={{ height: '18%' }} className='bg-foreground/80' />
+            <div style={{ height: '67%' }} className='bg-foreground/80' />
             <div style={{ height: '0%' }} className='bg-muted-foreground' />
           </div>
           <Detail
