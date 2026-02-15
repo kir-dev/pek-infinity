@@ -78,7 +78,7 @@
   --glass-elevated-shadow: oklch(0 0 0 / 8%);
   --glass-elevated-shadow-sm: oklch(0 0 0 / 4%);
 
-  --tier-gradient-angle: 135deg;
+  --tw-gradient-position: 135deg;
 }
 
 [data-theme="dark"] {
@@ -201,10 +201,6 @@
   --color-glass: var(--glass);
   --color-glass-elevated: var(--glass-elevated);
 
-  --duration-instant: 0ms;
-  --duration-fast: 150ms;
-  --duration-normal: 200ms;
-  --duration-slow: 500ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
   --spacing-page: var(--space-page);
@@ -227,42 +223,40 @@
 
 /* Light system - glass effects */
 @utility glass {
-  @apply backdrop-blur-md backdrop-saturate-150 bg-glass border border-(--glass-border);
+  @apply backdrop-blur-md backdrop-saturate-150 bg-glass;
+  border: 1px solid var(--glass-border);
   box-shadow:
     inset 0 1px 0 var(--glass-inset),
     0 4px 24px var(--glass-shadow);
 }
 
 @utility glass-elevated {
-  @apply backdrop-blur-xl backdrop-saturate-200 bg-glass-elevated border border-(--glass-elevated-border);
+  @apply backdrop-blur-xl backdrop-saturate-200 bg-glass-elevated;
+  border: 1px solid var(--glass-elevated-border);
   box-shadow:
     inset 0 1px 0 var(--glass-elevated-inset),
     0 8px 32px var(--glass-elevated-shadow),
     0 2px 8px var(--glass-elevated-shadow-sm);
 }
 
-@utility tier-1 {
-  @apply bg-linear-(--tier-gradient-angle) from-tier-1-start to-tier-1-end;
-}
-
-@utility tier-2 {
-  @apply bg-linear-(--tier-gradient-angle) from-tier-2-start to-tier-2-end;
-}
-
-@utility tier-3 {
-  @apply bg-linear-(--tier-gradient-angle) from-tier-3-start to-tier-3-end;
-}
-
-@utility tier-draft {
-  @apply bg-tier-draft border-dashed border-tier-draft;
-}
-
-@utility tier-inactive {
-  @apply bg-tier-inactive;
-}
-
 @utility focus-ring {
   @apply outline-none ring-2 ring-ring/50 ring-offset-2 ring-offset-background;
+}
+
+@utility duration-instant {
+  @apply duration-[0s];
+}
+
+@utility duration-fast {
+  @apply duration-150;
+}
+
+@utility duration-normal {
+  @apply duration-300;
+}
+
+@utility duration-slow {
+  @apply duration-700;
 }
 
 @keyframes fadeIn {
