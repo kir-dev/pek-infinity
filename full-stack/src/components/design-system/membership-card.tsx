@@ -5,15 +5,16 @@ import { Card, CardContent, CardHeader } from '../ui/card';
 import { Detail, Subtitle, Text } from './typography';
 
 const containerVariants = cva(
-  'glass-elevated cursor-pointer overflow-hidden rounded-3xl p-0',
+  'cursor-pointer overflow-hidden rounded-3xl p-0',
   {
     variants: {
       variant: {
-        tier1: '',
-        tier2: '',
-        active: '',
-        alumni: '',
-        newbie: 'border border-tier-draft border-dashed',
+        tier1: 'glass',
+        tier2: 'glass',
+        active: 'glass',
+        alumni: 'glass',
+        newbie:
+          'border border-tier-draft border-dashed bg-card shadow-none ring-0',
       },
     },
   }
@@ -46,9 +47,9 @@ const avatarVariants = cva(
           // black on neutral need stronger contrast
           'glass bg-black/25 text-white backdrop-grayscale-50 group-hover/card:bg-black/34',
         alumni:
-          'bg-muted/60 text-muted-foreground/60 group-hover/card:bg-muted/50',
+          'bg-muted/60 text-muted-foreground group-hover/card:bg-muted/80',
         newbie:
-          'border border-tier-draft border-dashed bg-muted text-muted-foreground group-hover/card:bg-muted/80',
+          'bg-muted/60 text-muted-foreground group-hover/card:bg-muted/80',
       },
     },
   }
@@ -69,9 +70,7 @@ export function MembershipCard({
 }) {
   const hasBackground =
     variant === 'tier1' || variant === 'tier2' || variant === 'active';
-  const separator = hasBackground ? null : (
-    <div className='mx-card h-px bg-border' />
-  );
+  const separator = hasBackground ? null : <div className='mx-card border-b' />;
 
   return (
     <Card
