@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader } from '../ui/card';
 import { Detail, Subtitle, Text } from './typography';
 
 export const MembershipCard = () => {
@@ -10,8 +11,10 @@ export const MembershipCard = () => {
 
   return (
     <div className='group/card glass-elevated max-w-80 cursor-pointer overflow-hidden rounded-3xl'>
-      <div className={cn(transitionClassName, containerClassName)}>
-        <div className='flex flex-row items-center gap-card p-card'>
+      <Card
+        className={cn('gap-0 p-0', transitionClassName, containerClassName)}
+      >
+        <CardHeader className='flex flex-row items-center gap-card p-card'>
           <GroupAvatar fallback='S' className='h-14 w-14 shrink-0' />
           <div className='overflow-hidden *:truncate'>
             <Subtitle className='group-hover/card:underline'>
@@ -19,9 +22,9 @@ export const MembershipCard = () => {
             </Subtitle>
             <Text>körvezető, gazdaságis</Text>
           </div>
-        </div>
+        </CardHeader>
         {/* <div className='absolute right-3 left-3 h-px bg-linear-to-br from-tier-2-start to-tier-2-end opacity-50'></div> */}
-        <div
+        <CardContent
           className={cn(
             'flex items-end justify-between p-card',
             'bg-card/95 group-hover/card:bg-card',
@@ -37,8 +40,8 @@ export const MembershipCard = () => {
             </Text>
           </div>
           <ActivityBarChart className='' />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
