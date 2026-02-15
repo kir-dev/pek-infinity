@@ -66,7 +66,7 @@ export function MembershipCard({
   variant: 'tier1' | 'tier2' | 'active' | 'alumni' | 'newbie';
   groupName: string;
   roles: string;
-  endDate: string;
+  endDate?: string;
 }) {
   const hasBackground =
     variant === 'tier1' || variant === 'tier2' || variant === 'active';
