@@ -1,0 +1,6 @@
+{
+  "ignore": {
+    "rules": [],
+    "files": ["src/components/ui/**", "src/_generated/**"]
+  }
+}
