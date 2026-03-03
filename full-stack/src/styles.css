@@ -24,7 +24,7 @@
 
 */
 
-  :root,
+:root,
 [data-theme="light"] {
   --tier-1-start: oklch(0.62 0.29 322);
   --tier-1-end: oklch(0.48 0.26 293);
