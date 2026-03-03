@@ -27,6 +27,7 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
+      "@pds4/*": ["./src/components/design-system/*"],
       "@/*": ["./src/*"],
       "@test/*": ["./test/*"]
     }

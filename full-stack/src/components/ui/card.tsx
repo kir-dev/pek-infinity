@@ -1,6 +1,10 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Subtitle, SubtitleProps, Text, TextProps } from "@pds4/typography"
+
+// # changelog
+// 1. CardTitle as Subtitle, CardDescription as Text
 
 function Card({
   className,
@@ -30,21 +34,20 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+function CardTitle(props: SubtitleProps) {
   return (
-    <div
+    <Subtitle
       data-slot="card-title"
-      className={cn("text-base font-medium", className)}
       {...props}
     />
   )
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
+function CardDescription(props: TextProps) {
   return (
-    <div
+    <Text
+      muted
       data-slot="card-description"
-      className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
   )

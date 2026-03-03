@@ -52,16 +52,16 @@ export function StoreDevtoolPanel() {
   }, []);
 
   return (
-    <div className='p-4 grid gap-4 grid-cols-[1fr_10fr]'>
-      <div className='text-sm font-bold text-gray-500 whitespace-nowrap'>
+    <div className='grid grid-cols-[1fr_10fr] gap-4 p-4'>
+      <div className='whitespace-nowrap font-bold text-gray-500 text-sm'>
         First Name
       </div>
       <div className='text-sm'>{state?.firstName}</div>
-      <div className='text-sm font-bold text-gray-500 whitespace-nowrap'>
+      <div className='whitespace-nowrap font-bold text-gray-500 text-sm'>
         Last Name
       </div>
       <div className='text-sm'>{state?.lastName}</div>
-      <div className='text-sm font-bold text-gray-500 whitespace-nowrap'>
+      <div className='whitespace-nowrap font-bold text-gray-500 text-sm'>
         Full Name
       </div>
       <div className='text-sm'>{state?.fullName}</div>
