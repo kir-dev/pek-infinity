@@ -1,18 +1,15 @@
 import { EventClient } from '@tanstack/devtools-event-client';
-import { Derived, Store } from '@tanstack/store';
+import { createStore } from '@tanstack/store';
 import { useEffect, useState } from 'react';
 
-export const store = new Store({
+export const store = createStore({
   firstName: 'Jane',
   lastName: 'Smith',
 });
 
-export const fullName = new Derived({
-  fn: () => `${store.state.firstName} ${store.state.lastName}`,
-  deps: [store],
-});
-
-fullName.mount();
+export const fullName = createStore(
+  () => `${store.state.firstName} ${store.state.lastName}`
+);
 
 type EventMap = {
   'store-devtools:state': {
@@ -33,7 +30,7 @@ class StoreDevtoolsEventClient extends EventClient<EventMap> {
 const sdec = new StoreDevtoolsEventClient();
 
 store.subscribe(() => {
-  sdec.emit('state', {
+  sdec.emit('store-devtools:state', {
     firstName: store.state.firstName,
     lastName: store.state.lastName,
     fullName: fullName.state,
@@ -48,7 +45,7 @@ export function StoreDevtoolPanel() {
   }));
 
   useEffect(() => {
-    return sdec.on('state', (e) => setState(e.payload));
+    return sdec.on('store-devtools:state', (e) => setState(e.payload));
   }, []);
 
   return (

@@ -9,7 +9,7 @@
       "**/.storybook/**/*",
       "**/.vscode/**/*",
       "**/index.html",
-      "**/vite.config.js",
+      "**/vite*.config.*",
       "!**/src/routeTree.gen.ts",
       "!**/src/_generated/**/*",
       "!**/src/components/ui/**/*"

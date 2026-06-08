@@ -8,12 +8,18 @@
     "generate": "npx prisma generate --no-hints --require-models"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.4.0",
-    "@prisma/client": "^7.4.0"
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.15",
-    "dotenv": "^17.3.1",
-    "prisma": "^7.4.0"
+    "@biomejs/biome": "2.4.16",
+    "dotenv": "^17.4.2",
+    "prisma": "^7.8.0"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.8.0": true,
+    "esbuild@0.27.7": true,
+    "msgpackr-extract@3.0.4": true,
+    "prisma@7.8.0": true
   }
 }
