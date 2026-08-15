@@ -230,7 +230,7 @@ export type ScoreboardGroupByOutputType = {
   _max: ScoreboardMaxAggregateOutputType | null
 }
 
-type GetScoreboardGroupByPayload<T extends ScoreboardGroupByArgs> = Prisma.PrismaPromise<
+export type GetScoreboardGroupByPayload<T extends ScoreboardGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ScoreboardGroupByOutputType, T['by']> &
       {
@@ -2237,6 +2237,11 @@ export type ScoreboardFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` Scoreboards.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Scoreboards.
+   */
   distinct?: Prisma.ScoreboardScalarFieldEnum | Prisma.ScoreboardScalarFieldEnum[]
 }
 
