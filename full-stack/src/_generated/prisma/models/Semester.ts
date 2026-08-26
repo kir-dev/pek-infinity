@@ -130,7 +130,7 @@ export type SemesterGroupByOutputType = {
   _max: SemesterMaxAggregateOutputType | null
 }
 
-type GetSemesterGroupByPayload<T extends SemesterGroupByArgs> = Prisma.PrismaPromise<
+export type GetSemesterGroupByPayload<T extends SemesterGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SemesterGroupByOutputType, T['by']> &
       {
@@ -1206,6 +1206,11 @@ export type SemesterFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` Semesters.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Semesters.
+   */
   distinct?: Prisma.SemesterScalarFieldEnum | Prisma.SemesterScalarFieldEnum[]
 }
 

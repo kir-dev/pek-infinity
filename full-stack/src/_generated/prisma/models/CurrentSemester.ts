@@ -130,7 +130,7 @@ export type CurrentSemesterGroupByOutputType = {
   _max: CurrentSemesterMaxAggregateOutputType | null
 }
 
-type GetCurrentSemesterGroupByPayload<T extends CurrentSemesterGroupByArgs> = Prisma.PrismaPromise<
+export type GetCurrentSemesterGroupByPayload<T extends CurrentSemesterGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CurrentSemesterGroupByOutputType, T['by']> &
       {
@@ -842,6 +842,11 @@ export type CurrentSemesterFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` CurrentSemesters.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CurrentSemesters.
+   */
   distinct?: Prisma.CurrentSemesterScalarFieldEnum | Prisma.CurrentSemesterScalarFieldEnum[]
 }
 

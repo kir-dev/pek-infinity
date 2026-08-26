@@ -151,7 +151,7 @@ export type MembershipStatusGroupByOutputType = {
   _max: MembershipStatusMaxAggregateOutputType | null
 }
 
-type GetMembershipStatusGroupByPayload<T extends MembershipStatusGroupByArgs> = Prisma.PrismaPromise<
+export type GetMembershipStatusGroupByPayload<T extends MembershipStatusGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MembershipStatusGroupByOutputType, T['by']> &
       {
@@ -1098,6 +1098,11 @@ export type MembershipStatusFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` MembershipStatuses.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MembershipStatuses.
+   */
   distinct?: Prisma.MembershipStatusScalarFieldEnum | Prisma.MembershipStatusScalarFieldEnum[]
 }
 

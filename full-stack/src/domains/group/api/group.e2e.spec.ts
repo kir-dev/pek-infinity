@@ -1,76 +1,13 @@
 import 'reflect-metadata';
-import { createMiddleware } from '@tanstack/react-start';
 import { container } from 'tsyringe';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { GroupService } from '@/domains/group';
 import { PrismaService } from '@/domains/prisma';
 import { MockPrismaService } from '@/domains/prisma/__test__/prisma.service.mock';
 
-let mockPrisma: MockPrismaService;
-
-vi.mock(import('@/domains/auth/backend/auth.guard'), async () => {
-  return {
-    authGuard: (_requiredScopes: string[]) =>
-      createMiddleware().server(async ({ next, context = {} }) => {
-        return await next({
-          context: {
-            ...context,
-            prisma: mockPrisma as any,
-          },
-        });
-      }),
-  };
-});
-
-vi.mock('@/middleware', async (importOriginal) => {
-  const originalModule: any = await importOriginal();
-  return {
-    SCOPE: originalModule.SCOPE,
-    authGuard: (_requiredScopes: string[]) =>
-      createMiddleware({ type: 'function' })
-        .client(async ({ next, context = {} }) => {
-          return await next({
-            sendContext: {
-              ...context,
-              prisma: mockPrisma as any,
-            } as any,
-          });
-        })
-        .server(async ({ next, context = {} }) => {
-          return await next({
-            sendContext: {
-              ...context,
-              prisma: mockPrisma as any,
-            } as any,
-          });
-        }),
-    injectService: (ServiceClass: any) =>
-      createMiddleware({ type: 'function' })
-        .client(async ({ next, context = {} }) => {
-          return await next({
-            sendContext: {
-              ...context,
-              get service() {
-                return container.resolve(ServiceClass);
-              },
-            } as any,
-          });
-        })
-        .server(async ({ next, context = {} }) => {
-          return await next({
-            sendContext: {
-              ...context,
-              get service() {
-                return container.resolve(ServiceClass);
-              },
-            } as any,
-          });
-        }),
-  };
-});
-
-import { GroupController } from '@/domains/group/api/group.controller';
-
 describe('GroupController (e2e)', () => {
+  let mockPrisma: MockPrismaService;
+
   beforeEach(() => {
     container.clearInstances();
     mockPrisma = new MockPrismaService();
@@ -91,15 +28,15 @@ describe('GroupController (e2e)', () => {
     ];
     mockPrisma.group.findMany.mockResolvedValue(mockGroups as any);
 
-    const resp = await GroupController.findMany({
-      data: { page: { skip: 0, take: 10 } },
-    } as any);
+    const result = await container.resolve(GroupService).findMany({
+      skip: 0,
+      take: 10,
+    });
 
-    const body = await resp?.json();
-
-    await new Promise((r) => setTimeout(r, 500));
-
-    // expect(mockPrisma.group.findMany).toHaveBeenCalled();
-    expect(body).toEqual(mockGroups);
+    expect(mockPrisma.group.findMany).toHaveBeenCalledWith({
+      skip: 0,
+      take: 10,
+    });
+    expect(result).toEqual(mockGroups);
   });
 });

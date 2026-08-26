@@ -269,7 +269,7 @@ export type StatementGroupByOutputType = {
   _max: StatementMaxAggregateOutputType | null
 }
 
-type GetStatementGroupByPayload<T extends StatementGroupByArgs> = Prisma.PrismaPromise<
+export type GetStatementGroupByPayload<T extends StatementGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<StatementGroupByOutputType, T['by']> &
       {
@@ -1927,6 +1927,11 @@ export type StatementFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` Statements.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Statements.
+   */
   distinct?: Prisma.StatementScalarFieldEnum | Prisma.StatementScalarFieldEnum[]
 }
 

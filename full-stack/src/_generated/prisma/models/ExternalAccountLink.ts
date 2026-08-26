@@ -151,7 +151,7 @@ export type ExternalAccountLinkGroupByOutputType = {
   _max: ExternalAccountLinkMaxAggregateOutputType | null
 }
 
-type GetExternalAccountLinkGroupByPayload<T extends ExternalAccountLinkGroupByArgs> = Prisma.PrismaPromise<
+export type GetExternalAccountLinkGroupByPayload<T extends ExternalAccountLinkGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ExternalAccountLinkGroupByOutputType, T['by']> &
       {
@@ -1091,6 +1091,11 @@ export type ExternalAccountLinkFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` ExternalAccountLinks.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ExternalAccountLinks.
+   */
   distinct?: Prisma.ExternalAccountLinkScalarFieldEnum | Prisma.ExternalAccountLinkScalarFieldEnum[]
 }
 

@@ -25,7 +25,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
     "paths": {
       "@pds4/*": ["./src/components/design-system/*"],
       "@/*": ["./src/*"],

@@ -151,7 +151,7 @@ export type GuidelineCollectionGroupByOutputType = {
   _max: GuidelineCollectionMaxAggregateOutputType | null
 }
 
-type GetGuidelineCollectionGroupByPayload<T extends GuidelineCollectionGroupByArgs> = Prisma.PrismaPromise<
+export type GetGuidelineCollectionGroupByPayload<T extends GuidelineCollectionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<GuidelineCollectionGroupByOutputType, T['by']> &
       {
@@ -1408,6 +1408,11 @@ export type GuidelineCollectionFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` GuidelineCollections.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GuidelineCollections.
+   */
   distinct?: Prisma.GuidelineCollectionScalarFieldEnum | Prisma.GuidelineCollectionScalarFieldEnum[]
 }
 
