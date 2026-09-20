@@ -1,5 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { getInitials } from '@/utils/string';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Detail, Subtitle, Text } from './typography';
@@ -72,13 +73,17 @@ export function MembershipCard({
   variant,
   groupName,
   roles,
+  startDate = '2020 mar',
   endDate,
+  onOpen,
 }: {
   className?: string;
   variant: 'tier1' | 'tier2' | 'active' | 'alumni' | 'newbie';
   groupName: string;
   roles: string;
+  startDate?: string;
   endDate?: string;
+  onOpen?: () => void;
 }) {
   const hasBackground =
     variant === 'tier1' || variant === 'tier2' || variant === 'active';
@@ -87,6 +92,7 @@ export function MembershipCard({
 
   return (
     <Card
+      onClick={onOpen}
       className={cn(
         containerVariants({ className, variant }),
         'min-h-40 w-80 gap-0'
@@ -95,7 +101,7 @@ export function MembershipCard({
       <CardHeader className={headerVariants({ variant })}>
         {/* Group Avatar */}
         <div className={cn(avatarVariants({ variant }), 'h-14 w-14 shrink-0')}>
-          S
+          {getInitials(groupName)}
         </div>
         <div className='min-w-0 overflow-hidden *:truncate'>
           {/* Group name */}
@@ -142,7 +148,7 @@ export function MembershipCard({
           </Text>
           <div className={accentVariants({ variant })} />
           <Text muted className='tabular-nums'>
-            {'2020 mar'}
+            {startDate}
             {endDate ? (
               <>
                 <br />
