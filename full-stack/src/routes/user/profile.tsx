@@ -1,17 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router';
 import {
+  Antenna,
+  AtSign,
   ChevronDown,
   Clock,
   GraduationCap,
   Home,
   type LucideIcon,
+  MessageCircle,
   Moon,
   MoreVertical,
   Search,
   Send,
   Sun,
+  ThumbsUp,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MembershipCard } from '@/components/design-system/membership-card';
 import { Text } from '@/components/design-system/typography';
 import {
@@ -21,6 +25,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Sheet } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { getInitials } from '@/utils/string';
@@ -99,6 +104,19 @@ const INFO_ITEMS: Array<{ icon: LucideIcon; value: string; label: string }> = [
   { icon: GraduationCap, value: '2025', label: 'Last Active' },
 ];
 
+const MOCK_CONTACTS: Array<{
+  id: string;
+  icon: LucideIcon;
+  value: string;
+  label: string;
+}> = [
+  { id: 'twitter', icon: AtSign, value: 'janedoe', label: 'twitter' },
+  { id: 'callsign', icon: Antenna, value: 'HA5KFU', label: 'call sign' },
+  { id: 'telegram', icon: Send, value: 'janedoe', label: 'telegram' },
+  { id: 'facebook', icon: ThumbsUp, value: 'janedoe', label: 'facebook' },
+  { id: 'discord', icon: MessageCircle, value: 'janedoe', label: '(✿‿✿)つ□~' },
+];
+
 function ContactButton({
   className,
   onClick,
@@ -125,14 +143,19 @@ function ContactButton({
 }
 
 function UserProfilePage() {
-  // TODO: wire behavior
-  function handleOpenContact() {}
+  const [contactOpen, _setContactOpen] = useState(false);
+  const setContactOpen = useCallback((v: boolean) => {
+    _setContactOpen(prev => (prev === v ? prev : v));
+  }, []);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  function handleOpenContact() {
+    setContactOpen(true);
+  }
   function handleToggleHandleMenu() {}
   function handleSearchSubmit() {}
   function handleOpenOverflowMenu() {}
   function handleOpenGroup(_group: GroupData) {}
-
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   return (
     <div
@@ -263,6 +286,40 @@ function UserProfilePage() {
           </Tabs>
         </main>
       </div>
+
+      <Sheet open={contactOpen} onOpenChange={setContactOpen} theme={theme}>
+        <div className='flex items-start justify-between px-6 pt-6 pb-4'>
+          <div>
+            <h2 className='text-base font-bold text-foreground'>
+              Pék profil
+            </h2>
+            <p className='text-sm text-muted-foreground'>pek.sch.bme.hu</p>
+          </div>
+ 
+        </div>
+        <Separator className='mx-0' />
+        <div className='flex-1 overflow-y-auto px-6 py-4'>
+          <div className='grid grid-cols-2 gap-3'>
+            {MOCK_CONTACTS.map(({ id, icon: Icon, value, label }) => (
+              <button
+                key={id}
+                type='button'
+                className='flex items-center gap-3 rounded-xl bg-secondary p-4 text-left transition-colors hover:bg-accent'
+              >
+                <Icon className='size-6 shrink-0 text-muted-foreground' />
+                <span className='min-w-0'>
+                  <span className='block truncate text-sm font-semibold text-foreground'>
+                    {value}
+                  </span>
+                  <span className='block truncate text-xs text-muted-foreground'>
+                    {label}
+                  </span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </Sheet>
     </div>
   );
 }
