@@ -5,7 +5,6 @@ import {
   Scripts,
 } from '@tanstack/react-router';
 import { Devtools } from '@/devtools';
-import { Header } from '../components/header';
 import appCss from '../styles.css?url';
 
 export const Route = createRootRouteWithContext<{
@@ -43,7 +42,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Header />
         {children}
 
         <Scripts />

@@ -34,6 +34,9 @@
   --tier-3-end: oklch(0.52 0.1 220);
   --tier-draft: oklch(0.7 0.06 240 / 60%);
   --tier-inactive: oklch(0.75 0.01 240);
+  --status-member: oklch(0.67 0.18 277);
+  --status-newbie: oklch(0.76 0.18 163);
+  --status-alumni: var(--muted-foreground);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -90,6 +93,9 @@
   --tier-3-end: oklch(0.7 0.08 220);
   --tier-draft: oklch(0.5 0.08 240 / 60%);
   --tier-inactive: oklch(0.35 0.01 240);
+  --status-member: oklch(0.67 0.18 277);
+  --status-newbie: oklch(0.76 0.18 163);
+  --status-alumni: var(--muted-foreground);
 
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -135,6 +141,8 @@
 }
 
 :root {
+  --banner: oklch(0.2 0.04 255);
+
   --space-page: 1rem; /* 16px */
   --space-section: 1rem; /* 16px */
   --space-card: 0.875rem; /* 14px */
@@ -143,7 +151,7 @@
 @media (min-width: 768px) {
   :root {
     --space-page: 1.5rem; /* 24px */
-    --space-section: 1.25rem; /* 20px */
+    --space-section: 2rem; /* 32px */
     --space-card: 1rem; /* 16px */
     --space-inline: 0.75rem; /* 12px */
   }
@@ -198,8 +206,12 @@
   --color-tier-3-end: var(--tier-3-end);
   --color-tier-draft: var(--tier-draft);
   --color-tier-inactive: var(--tier-inactive);
+  --color-status-member: var(--status-member);
+  --color-status-newbie: var(--status-newbie);
+  --color-status-alumni: var(--status-alumni);
   --color-glass: var(--glass);
   --color-glass-elevated: var(--glass-elevated);
+  --color-banner: var(--banner);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -257,6 +269,49 @@
 
 @utility duration-slow {
   @apply duration-700;
+}
+
+@utility avatar-small {
+  @apply size-10 ring-2;
+  [data-slot="avatar-fallback"] {
+    @apply text-xs;
+  }
+  [data-slot="user-avatar-badge"],
+  [data-slot="avatar-badge"] {
+    display: none;
+  }
+  [data-slot="avatar-group-count"] {
+    @apply size-6 [&>svg]:size-3;
+  }
+}
+
+@utility avatar-default {
+  @apply size-30 ring-4;
+  [data-slot="avatar-fallback"] {
+    @apply text-lg;
+  }
+  [data-slot="avatar-badge"] {
+    @apply size-2.5 [&>svg]:size-2;
+  }
+  [data-slot="avatar-group-count"] {
+    @apply size-8 [&>svg]:size-4;
+  }
+}
+
+@utility avatar-large {
+  @apply size-50 ring-6;
+  [data-slot="avatar-fallback"] {
+    @apply text-3xl;
+  }
+  [data-slot="user-avatar-badge"] {
+    @apply origin-bottom-left scale-2;
+  }
+  [data-slot="avatar-badge"] {
+    @apply size-3 [&>svg]:size-2;
+  }
+  [data-slot="avatar-group-count"] {
+    @apply size-10 [&>svg]:size-5;
+  }
 }
 
 @keyframes fadeIn {
