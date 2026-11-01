@@ -292,7 +292,7 @@
     @apply text-3xl;
   }
   [data-slot="user-avatar-badge"] {
-    @apply origin-bottom-left scale-2;
+    @apply origin-bottom-left scale-[157.5%];
   }
   [data-slot="avatar-badge"] {
     @apply size-3 [&>svg]:size-2;
