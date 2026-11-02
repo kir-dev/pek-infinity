@@ -1,8 +1,32 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
+import { getInitials } from '@/utils/string';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Detail, Subtitle, Text } from './typography';
+
+export type SemesterAward = 'kb' | 'ab';
+
+export interface ScoringBar {
+  value: number;
+  award?: SemesterAward;
+}
+
+const AWARD_BAR_CLASS: Record<SemesterAward, string> = {
+  kb: 'bg-tier-2-start',
+  ab: 'bg-tier-1-start',
+};
+
+const NO_AWARD_BAR_CLASS = 'bg-foreground/25';
+
+const DEFAULT_SCORING: ScoringBar[] = [
+  { value: 82, award: 'ab' },
+  { value: 100, award: 'kb' },
+  { value: 78, award: 'ab' },
+  { value: 45, award: 'kb' },
+  { value: 18, award: 'ab' },
+  { value: 67, award: 'kb' },
+];
 
 const containerVariants = cva(
   'cursor-pointer overflow-hidden rounded-3xl p-0',
@@ -72,13 +96,19 @@ export function MembershipCard({
   variant,
   groupName,
   roles,
+  startDate = '2020 mar',
   endDate,
+  scoring = DEFAULT_SCORING,
+  onOpen,
 }: {
   className?: string;
   variant: 'tier1' | 'tier2' | 'active' | 'alumni' | 'newbie';
   groupName: string;
   roles: string;
+  startDate?: string;
   endDate?: string;
+  scoring?: ScoringBar[];
+  onOpen?: () => void;
 }) {
   const hasBackground =
     variant === 'tier1' || variant === 'tier2' || variant === 'active';
@@ -87,6 +117,7 @@ export function MembershipCard({
 
   return (
     <Card
+      onClick={onOpen}
       className={cn(
         containerVariants({ className, variant }),
         'min-h-40 w-80 gap-0'
@@ -95,7 +126,7 @@ export function MembershipCard({
       <CardHeader className={headerVariants({ variant })}>
         {/* Group Avatar */}
         <div className={cn(avatarVariants({ variant }), 'h-14 w-14 shrink-0')}>
-          S
+          {getInitials(groupName)}
         </div>
         <div className='min-w-0 overflow-hidden *:truncate'>
           {/* Group name */}
@@ -119,7 +150,7 @@ export function MembershipCard({
         </div>
       </CardHeader>
       {separator}
-      <CardContent className='mt-auto flex items-end justify-between p-1'>
+      <CardContent className='mt-auto flex items-stretch justify-between p-1'>
         {/* fix text baseline pushes content up a bit */}
         <div className='p-card pb-[calc(var(--space-card)-0.2em)]'>
           <Text
@@ -141,45 +172,39 @@ export function MembershipCard({
             </p>
           </Text>
           <div className={accentVariants({ variant })} />
-          <Text muted className='tabular-nums'>
-            {'2020 mar'}
-            {endDate ? (
-              <>
-                <br />
-                {endDate}
-              </>
-            ) : (
-              ' -'
-            )}
+          <Text muted className='whitespace-nowrap tabular-nums'>
+            {startDate} –{endDate ? ` ${endDate}` : ''}
           </Text>
         </div>
         <Button
           type='button'
-          variant='ghost'
+          variant='secondary'
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
           }}
           className={cn(
-            'relative flex min-h-fit min-w-fit cursor-pointer items-center rounded-2xl p-card!',
-            'bg-muted/40! opacity-70 transition-opacity duration-fast',
-            'group/activity overflow-hidden hover:opacity-100',
+            'relative flex h-auto min-h-fit min-w-fit cursor-pointer items-end rounded-2xl p-card',
+            'group/activity m-1 overflow-hidden',
+            'hover:bg-border dark:bg-card dark:hover:bg-muted',
             className
           )}
         >
           <div
             className={cn(
-              'flex h-7 items-end gap-1 *:min-h-1.5 *:w-1.5 *:rounded-full',
+              'flex h-full items-end gap-1 *:min-h-1.5 *:w-1.5 *:rounded-full',
               'transition-transform duration-fast group-hover/activity:-translate-y-1.5'
             )}
           >
-            <div style={{ height: '82%' }} className='bg-tier-2-start' />
-            <div style={{ height: '100%' }} className='bg-tier-1-start' />
-            <div style={{ height: '78%' }} className='bg-tier-2-start' />
-            <div style={{ height: '45%' }} className='bg-foreground/80' />
-            <div style={{ height: '18%' }} className='bg-foreground/80' />
-            <div style={{ height: '67%' }} className='bg-foreground/80' />
-            <div style={{ height: '0%' }} className='bg-muted-foreground' />
+            {scoring.map((bar, i) => (
+              <div
+                key={i}
+                style={{ height: `${bar.value}%` }}
+                className={
+                  bar.award ? AWARD_BAR_CLASS[bar.award] : NO_AWARD_BAR_CLASS
+                }
+              />
+            ))}
           </div>
           <Detail
             emphasized

@@ -246,21 +246,21 @@ export const AllSizes: Story = {
   name: 'All Sizes',
   render: () => (
     <div className='flex flex-wrap items-end gap-8'>
-      <UserAvatar tier='tier-1' size='sm'>
+      <UserAvatar tier='tier-1' className='avatar-small'>
         <UserAvatarImage
           src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop'
           alt='Small'
         />
         <UserAvatarFallback>JD</UserAvatarFallback>
       </UserAvatar>
-      <UserAvatar tier='tier-1' size='default'>
+      <UserAvatar tier='tier-1' className='avatar-default'>
         <UserAvatarImage
           src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop'
           alt='Default'
         />
         <UserAvatarFallback>JD</UserAvatarFallback>
       </UserAvatar>
-      <UserAvatar tier='tier-1' size='lg'>
+      <UserAvatar tier='tier-1' className='avatar-large'>
         <UserAvatarImage
           src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop'
           alt='Large'
@@ -277,61 +277,61 @@ export const AllVariants: Story = {
     <div className='flex flex-col gap-8'>
       {/* Tier 1 row */}
       <div className='flex items-end gap-4'>
-        <UserAvatar tier='tier-1' size='sm'>
+        <UserAvatar tier='tier-1' className='avatar-small'>
           <UserAvatarFallback>T1</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='tier-1' size='default'>
+        <UserAvatar tier='tier-1' className='avatar-default'>
           <UserAvatarFallback>T1</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='tier-1' size='lg'>
+        <UserAvatar tier='tier-1' className='avatar-large'>
           <UserAvatarFallback>T1</UserAvatarFallback>
         </UserAvatar>
       </div>
       {/* Tier 2 row */}
       <div className='flex items-end gap-4'>
-        <UserAvatar tier='tier-2' size='sm'>
+        <UserAvatar tier='tier-2' className='avatar-small'>
           <UserAvatarFallback>T2</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='tier-2' size='default'>
+        <UserAvatar tier='tier-2' className='avatar-default'>
           <UserAvatarFallback>T2</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='tier-2' size='lg'>
+        <UserAvatar tier='tier-2' className='avatar-large'>
           <UserAvatarFallback>T2</UserAvatarFallback>
         </UserAvatar>
       </div>
       {/* Tier 3 row */}
       <div className='flex items-end gap-4'>
-        <UserAvatar tier='active' size='sm'>
+        <UserAvatar tier='active' className='avatar-small'>
           <UserAvatarFallback>T3</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='active' size='default'>
+        <UserAvatar tier='active' className='avatar-default'>
           <UserAvatarFallback>T3</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='active' size='lg'>
+        <UserAvatar tier='active' className='avatar-large'>
           <UserAvatarFallback>T3</UserAvatarFallback>
         </UserAvatar>
       </div>
       {/* Draft row */}
       <div className='flex items-end gap-4'>
-        <UserAvatar tier='unknown' size='sm'>
+        <UserAvatar tier='unknown' className='avatar-small'>
           <UserAvatarFallback>DR</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='unknown' size='default'>
+        <UserAvatar tier='unknown' className='avatar-default'>
           <UserAvatarFallback>DR</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='unknown' size='lg'>
+        <UserAvatar tier='unknown' className='avatar-large'>
           <UserAvatarFallback>DR</UserAvatarFallback>
         </UserAvatar>
       </div>
       {/* Inactive row */}
       <div className='flex items-end gap-4'>
-        <UserAvatar tier='inactive' size='sm'>
+        <UserAvatar tier='inactive' className='avatar-small'>
           <UserAvatarFallback>IN</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='inactive' size='default'>
+        <UserAvatar tier='inactive' className='avatar-default'>
           <UserAvatarFallback>IN</UserAvatarFallback>
         </UserAvatar>
-        <UserAvatar tier='inactive' size='lg'>
+        <UserAvatar tier='inactive' className='avatar-large'>
           <UserAvatarFallback>IN</UserAvatarFallback>
         </UserAvatar>
       </div>

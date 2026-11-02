@@ -8,18 +8,19 @@ export type UserAvatarTier =
   | 'active'
   | 'inactive'
   | 'unknown';
-export type UserAvatarSize = 'sm' | 'default' | 'lg';
+export type AvatarSizeClass =
+  | 'avatar-small'
+  | 'avatar-default'
+  | 'avatar-large';
 
 export interface UserAvatarProps extends ComponentProps<typeof Avatar> {
   tier?: UserAvatarTier;
-  size?: UserAvatarSize;
   showBadge?: boolean;
   children?: React.ReactNode;
 }
 
 export function UserAvatar({
   tier = 'unknown',
-  size = 'default',
   showBadge = true,
   className,
   children,
@@ -29,24 +30,18 @@ export function UserAvatar({
     <Avatar
       data-slot='user-avatar'
       data-tier={tier}
-      data-size={size}
       className={cn(
         'relative rounded-full',
         // Ring styling per tier
-        'ring-4 data-[size=lg]:ring-6 data-[size=sm]:ring-2',
         'ring-transparent data-[tier=active]:ring-tier-3-start data-[tier=inactive]:ring-tier-inactive data-[tier=tier-1]:ring-tier-1-start data-[tier=tier-2]:ring-tier-2-start',
-        // Size styling
-        'data-[size=default]:size-30 data-[size=lg]:size-50 data-[size=sm]:size-10',
         className
       )}
       {...props}
     >
       {children}
-      {showBadge &&
-        size !== 'sm' &&
-        (tier === 'tier-1' || tier === 'tier-2') && (
-          <UserAvatarBadge large={size === 'lg'} tier={tier} />
-        )}
+      {showBadge && (tier === 'tier-1' || tier === 'tier-2') && (
+        <UserAvatarBadge tier={tier} />
+      )}
     </Avatar>
   );
 }
@@ -78,8 +73,6 @@ export function UserAvatarFallback({
       className={cn(
         'flex size-full items-center justify-center rounded-full',
         'font-semibold text-lg',
-        'data-[size=sm]:text-xs',
-        'data-[size=lg]:text-3xl',
         className
       )}
       {...props}
@@ -89,13 +82,7 @@ export function UserAvatarFallback({
   );
 }
 
-function UserAvatarBadge({
-  large,
-  tier,
-}: {
-  large: boolean;
-  tier: 'tier-1' | 'tier-2';
-}) {
+function UserAvatarBadge({ tier }: { tier: 'tier-1' | 'tier-2' }) {
   const BadgeIcon = tier === 'tier-2' ? KBCard : ABCard;
 
   return (
@@ -110,9 +97,7 @@ function UserAvatarBadge({
         // Tier gradient background
         'bg-linear-to-br',
         'data-[tier=tier-1]:from-tier-1-start data-[tier=tier-1]:to-tier-1-end',
-        'data-[tier=tier-2]:from-tier-2-start data-[tier=tier-2]:to-tier-2-end',
-        // Size-based scaling
-        large && 'origin-bottom-left scale-[2]'
+        'data-[tier=tier-2]:from-tier-2-start data-[tier=tier-2]:to-tier-2-end'
       )}
     >
       <BadgeIcon className='h-7 w-fit' />
