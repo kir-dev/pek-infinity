@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   ChevronDown,
@@ -7,12 +8,14 @@ import {
   type LucideIcon,
   Moon,
   MoreVertical,
-  Search,
   Send,
   Sun,
 } from 'lucide-react';
 import { useState } from 'react';
-import { MembershipCard } from '@/components/design-system/membership-card';
+import {
+  MembershipCard,
+  type ScoringBar,
+} from '@/components/design-system/membership-card';
 import { Text } from '@/components/design-system/typography';
 import {
   UserAvatar,
@@ -37,6 +40,7 @@ interface GroupData {
   groupName: string;
   roles: string;
   startDate: string;
+  scoring?: ScoringBar[];
   startUnit?: string;
   endDate?: string;
 }
@@ -54,6 +58,14 @@ const MOCK_GROUPS: Array<GroupData> = [
     groupName: 'Szent Schönherz Senior Lovagrend',
     roles: 'körvezető, administrátor',
     startDate: '2000 MAR',
+    scoring: [
+      { value: 90, award: 'kb' },
+      { value: 70, award: 'ab' },
+      { value: 95, award: 'kb' },
+      { value: 50, award: 'ab' },
+      { value: 80, award: 'kb' },
+      { value: 35 },
+    ],
   },
   {
     id: 'lovagrend-2',
@@ -61,6 +73,14 @@ const MOCK_GROUPS: Array<GroupData> = [
     groupName: 'Szent Schönherz Senior Lovagrend',
     roles: 'körvezető, administrátor',
     startDate: '2000 MAR',
+    scoring: [
+      { value: 40, award: 'ab' },
+      { value: 85, award: 'kb' },
+      { value: 55, award: 'ab' },
+      { value: 95, award: 'kb' },
+      { value: 25 },
+      { value: 70, award: 'kb' },
+    ],
   },
   {
     id: 'lovagrend-3',
@@ -68,6 +88,14 @@ const MOCK_GROUPS: Array<GroupData> = [
     groupName: 'Szent Schönherz Senior Lovagrend',
     roles: 'körvezető, administrátor',
     startDate: '2000 MAR',
+    scoring: [
+      { value: 60, award: 'kb' },
+      { value: 30, award: 'ab' },
+      { value: 80, award: 'kb' },
+      { value: 15 },
+      { value: 45, award: 'kb' },
+      { value: 65, award: 'ab' },
+    ],
   },
   {
     id: 'lovagrend-4',
@@ -75,6 +103,14 @@ const MOCK_GROUPS: Array<GroupData> = [
     groupName: 'Szent Schönherz Senior Lovagrend',
     roles: 'körvezető, administrátor',
     startDate: '2000 MAR',
+    scoring: [
+      { value: 20, award: 'ab' },
+      { value: 75, award: 'kb' },
+      { value: 40, award: 'ab' },
+      { value: 90, award: 'kb' },
+      { value: 10 },
+      { value: 55, award: 'kb' },
+    ],
   },
   {
     id: 'lovagrend-5',
@@ -82,6 +118,14 @@ const MOCK_GROUPS: Array<GroupData> = [
     groupName: 'Szent Schönherz Senior Lovagrend',
     roles: 'körvezető, administrátor',
     startDate: '2000 MAR',
+    scoring: [
+      { value: 50, award: 'kb' },
+      { value: 50, award: 'ab' },
+      { value: 50, award: 'kb' },
+      { value: 50, award: 'ab' },
+      { value: 50, award: 'kb' },
+      { value: 50, award: 'ab' },
+    ],
   },
   {
     id: 'lovagrend-6',
@@ -90,13 +134,21 @@ const MOCK_GROUPS: Array<GroupData> = [
     roles: 'alumni',
     startDate: '2000 MAR',
     endDate: '2025 JUN',
+    scoring: [
+      { value: 10, award: 'ab' },
+      { value: 25, award: 'kb' },
+      { value: 15, award: 'ab' },
+      { value: 35, award: 'kb' },
+      { value: 5 },
+      { value: 20, award: 'kb' },
+    ],
   },
 ];
 
 const INFO_ITEMS: Array<{ icon: LucideIcon; value: string; label: string }> = [
   { icon: Home, value: 'SCH-1313', label: 'Residence' },
   { icon: Clock, value: '2021', label: 'Joined' },
-  { icon: GraduationCap, value: '2025', label: 'Last Active' },
+  { icon: GraduationCap, value: '2025 autumn', label: 'Last Active Semester' },
 ];
 
 function ContactButton({
@@ -108,17 +160,16 @@ function ContactButton({
 }) {
   return (
     <Button
-      variant='outline'
-      size='sm'
+      variant='secondary'
       className={cn(
-        'justify-center max-lg:aspect-square max-lg:h-full max-lg:w-fit',
+        'w-fit justify-center rounded-[6px] p-5 hover:bg-border dark:bg-card dark:hover:bg-muted',
         className
       )}
       onClick={onClick}
     >
       <span className='flex items-center gap-2'>
         <Send className='size-5' />
-        <Text className='max-lg:hidden'>Contact</Text>
+        <Text>Contact</Text>
       </span>
     </Button>
   );
@@ -128,7 +179,6 @@ function UserProfilePage() {
   // TODO: wire behavior
   function handleOpenContact() {}
   function handleToggleHandleMenu() {}
-  function handleSearchSubmit() {}
   function handleOpenOverflowMenu() {}
   function handleOpenGroup(_group: GroupData) {}
 
@@ -161,7 +211,7 @@ function UserProfilePage() {
               <Button
                 variant='ghost'
                 size='sm'
-                className='m-0 justify-start px-0'
+                className='my-0 mr-0 -ml-2.5 w-fit justify-start'
                 onClick={handleToggleHandleMenu}
               >
                 <span className='flex items-center gap-1.5 text-muted-foreground'>
@@ -180,7 +230,7 @@ function UserProfilePage() {
           <div className='flex flex-wrap items-center gap-x-4 gap-y-3 lg:flex-col lg:items-start'>
             {INFO_ITEMS.map(({ icon: Icon, value, label }) => (
               <div key={label} className='flex items-center gap-2.5'>
-                <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-card p-2'>
+                <div className='flex h-9 w-9 shrink-0 items-center justify-center p-2'>
                   <Icon className='size-5 text-muted-foreground' />
                 </div>
                 <div className='flex flex-col leading-none'>
@@ -197,7 +247,7 @@ function UserProfilePage() {
 
         <main className='flex-1 flex-col p-section'>
           <Tabs defaultValue='groups' className='min-h-0 w-full flex-1'>
-            <div className='flex justify-between gap-3 pb-4 lg:items-center'>
+            <div className='flex justify-between gap-3 pb-8 lg:items-center'>
               <TabsList aria-label='Groups / Activity'>
                 <TabsTrigger value='groups'>Groups</TabsTrigger>
                 <TabsTrigger value='activity'>Activity</TabsTrigger>
@@ -208,13 +258,7 @@ function UserProfilePage() {
                   orientation='vertical'
                   className='hidden h-8 lg:block'
                 />
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  onClick={handleSearchSubmit}
-                >
-                  <Search className='size-5' />
-                </Button>
+
                 <div className='flex flex-row gap-3 max-lg:fixed max-lg:top-4 max-lg:right-4 max-lg:z-40'>
                   <Button
                     aria-label='Téma váltása'
@@ -252,6 +296,7 @@ function UserProfilePage() {
                     roles={group.roles}
                     startDate={group.startDate}
                     endDate={group.endDate}
+                    scoring={group.scoring}
                     onOpen={() => handleOpenGroup(group)}
                   />
                 ))}
