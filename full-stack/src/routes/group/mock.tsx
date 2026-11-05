@@ -113,7 +113,6 @@ const MOCK_CHILDREN: GroupRef[] = [
 
 const FOUNDATION_YEAR = 2001;
 const TOTAL_ACTIVITY = 12_450;
-const SEMESTER_BADGE = 'Aktív szemeszter';
 
 const POINTS_MAX = 50;
 
@@ -134,6 +133,8 @@ function tierTone(tier: UserAvatarTier): { text: string; bar: string } {
 }
 
 function openMember(_member: MemberData) {}
+
+function openActivity() {}
 
 function MemberRow({ member }: { member: MemberData }) {
   const tier = member.tier ?? 'unknown';
@@ -243,37 +244,38 @@ function GroupProfilePage() {
         </Button>
       </div>
 
-      <header className='bg-banner'>
-        <div className='flex w-full mx-auto max-w-6xl flex-col gap-6 p-page md:flex-row md:items-end md:justify-between'>
+      <header className='border-b-2 border-border/60'>
+        <div className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-page md:flex-row md:items-end md:justify-between'>
           <div className='flex min-w-0 flex-col gap-3 px-section'>
-            <span className='inline-flex w-fit items-center rounded-md bg-black/30 px-2.5 py-1 font-semibold text-[11px] text-slate-200 uppercase tracking-wider'>
-              {SEMESTER_BADGE}
-            </span>
-            <h1 className='font-bold text-4xl text-white tracking-tight md:text-5xl'>
+            <h1 className='font-bold text-4xl text-foreground tracking-tight md:text-5xl'>
               {CURRENT_GROUP.name}
             </h1>
-            <p className='max-w-lg text-slate-400 text-sm leading-relaxed'>
+            <p className='max-w-lg text-muted-foreground text-sm leading-relaxed'>
               Alapítva: {FOUNDATION_YEAR} • {OBJECTIVE_TEXT}
             </p>
           </div>
-          <dl className='flex shrink-0 items-end gap-x-10 px-section'>
-            <div className='flex flex-col gap-1 text-left md:text-right'>
-              <dt className='font-medium text-slate-400 text-xs uppercase tracking-wider'>
+          <div className='flex shrink-0 items-end gap-x-10 px-section'>
+            <button
+              type='button'
+              onClick={openActivity}
+              className='flex cursor-pointer flex-col gap-1 text-left hover:underline md:text-right'
+            >
+              <span className='font-medium text-muted-foreground text-xs uppercase tracking-wider'>
                 Aktivitás
-              </dt>
-              <dd className='font-bold text-2xl text-white tabular-nums'>
+              </span>
+              <span className='font-bold text-2xl text-foreground tabular-nums'>
                 {TOTAL_ACTIVITY.toLocaleString('en-US')}
-              </dd>
-            </div>
+              </span>
+            </button>
             <div className='flex flex-col gap-1 text-left md:text-right'>
-              <dt className='font-medium text-slate-400 text-xs uppercase tracking-wider'>
+              <span className='font-medium text-muted-foreground text-xs uppercase tracking-wider'>
                 Tagok
-              </dt>
-              <dd className='font-bold text-2xl text-white tabular-nums'>
+              </span>
+              <span className='font-bold text-2xl text-foreground tabular-nums'>
                 {MOCK_MEMBERS.length}
-              </dd>
+              </span>
             </div>
-          </dl>
+          </div>
         </div>
       </header>
 
@@ -281,7 +283,7 @@ function GroupProfilePage() {
         <div className='grid gap-y-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-section'>
           <div className='flex flex-col gap-8'>
             {/*TODO org tree component*/}
-            <section className='flex flex-col gap-3 px-section hidden md:block'>
+            <section className='flex-col gap-3 px-section'>
               <Subtitle>Struktúra</Subtitle>
               <ul className='list-disc space-y-1 pl-5 text-sm'>
                 {[...MOCK_PARENTS, CURRENT_GROUP, ...MOCK_CHILDREN].map(
