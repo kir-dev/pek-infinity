@@ -244,7 +244,7 @@ function GroupProfilePage() {
         </Button>
       </div>
 
-      <header className='border-b-2 border-border/60'>
+      <header className='border-border/60 border-b-2'>
         <div className='mx-auto flex w-full max-w-6xl flex-col gap-6 p-page md:flex-row md:items-end md:justify-between'>
           <div className='flex min-w-0 flex-col gap-3 px-section'>
             <h1 className='font-bold text-4xl text-foreground tracking-tight md:text-5xl'>
@@ -255,18 +255,26 @@ function GroupProfilePage() {
             </p>
           </div>
           <div className='flex shrink-0 items-end gap-x-10 px-section'>
-            <button
-              type='button'
-              onClick={openActivity}
-              className='flex cursor-pointer flex-col gap-1 text-left hover:underline md:text-right'
-            >
-              <span className='font-medium text-muted-foreground text-xs uppercase tracking-wider'>
-                Aktivitás
-              </span>
-              <span className='font-bold text-2xl text-foreground tabular-nums'>
-                {TOTAL_ACTIVITY.toLocaleString('en-US')}
-              </span>
-            </button>
+            {TOTAL_ACTIVITY > 0 ? (
+              <button
+                type='button'
+                onClick={openActivity}
+                className='flex cursor-pointer flex-col gap-1 text-left hover:underline md:text-right'
+              >
+                <span className='font-medium text-muted-foreground text-xs uppercase tracking-wider'>
+                  Aktivitás
+                </span>
+                <span className='font-bold text-2xl text-foreground tabular-nums'>
+                  {TOTAL_ACTIVITY.toLocaleString('en-US')}
+                </span>
+              </button>
+            ) : (
+              <div className='flex flex-col gap-1 self-start text-left md:text-right'>
+                <span className='font-medium text-muted-foreground text-xs uppercase tracking-wider'>
+                  A kör inaktív
+                </span>
+              </div>
+            )}
             <div className='flex flex-col gap-1 text-left md:text-right'>
               <span className='font-medium text-muted-foreground text-xs uppercase tracking-wider'>
                 Tagok
