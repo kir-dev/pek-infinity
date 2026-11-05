@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { createFileRoute } from '@tanstack/react-router';
 import {
   ChevronDown,
